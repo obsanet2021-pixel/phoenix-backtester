@@ -62,7 +62,9 @@ const PhoenixBacktesterNew = () => {
     }
 
     return () => {
-      document.body.removeChild(script)
+      if (document.body.contains(script)) {
+        document.body.removeChild(script)
+      }
     }
   }, [])
 
@@ -165,7 +167,8 @@ const PhoenixBacktesterNew = () => {
           display: 'flex',
           flexDirection: 'column',
           position: 'relative',
-          background: '#1e222d'
+          background: '#1e222d',
+          height: '100%'
         }}>
           {/* Chart Header with buttons */}
           <div style={{
@@ -263,9 +266,9 @@ const PhoenixBacktesterNew = () => {
             id="tradingview_chart"
             ref={chartRef}
             style={{
-              flex: 1,
               width: '100%',
-              height: '100%'
+              height: '100%',
+              minHeight: '500px'
             }}
           />
         </div>
