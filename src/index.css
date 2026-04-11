@@ -337,7 +337,7 @@ tr:hover td { background: rgba(255,255,255,0.02); }
 .account-btn.secondary { background: transparent; color: #ff6b00; }
 .account-btn.secondary:hover { background: rgba(255,107,0,0.1); }
 
-.challenge-modal { max-width: 600px; }
+.challenge-modal { max-width: 800px; max-height: 90vh; overflow-y: auto; }
 .challenge-summary { background: #0a0a0a; border: 1px solid #2a2a2a; border-radius: 8px; padding: 16px; margin-bottom: 20px; }
 .summary-item { display: flex; justify-content: space-between; align-items: center; padding: 4px 0; }
 .summary-label { font-size: 12px; color: #666; }
