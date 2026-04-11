@@ -12,6 +12,7 @@ const PhoenixBacktesterNew = () => {
   const [sidebarTab, setSidebarTab] = useState('News')
   const [activeCurrency, setActiveCurrency] = useState('USD')
   const [selectedImpact, setSelectedImpact] = useState([])
+  const [notes, setNotes] = useState('')
   
   const [tradeData, setTradeData] = useState({
     entryPrice: '4483.415',
@@ -64,6 +65,40 @@ const PhoenixBacktesterNew = () => {
       document.body.removeChild(script)
     }
   }, [])
+
+  // Load notes from localStorage
+  useEffect(() => {
+    const savedNotes = localStorage.getItem('phoenixBacktesterNotes');
+    if (savedNotes) {
+      setNotes(savedNotes);
+    }
+  }, []);
+
+  // Save notes to localStorage and journal
+  useEffect(() => {
+    localStorage.setItem('phoenixBacktesterNotes', notes);
+    
+    // Also save to journal
+    const journalEntries = JSON.parse(localStorage.getItem('phoenixTrades') || '[]');
+    const backtesterNote = {
+      id: 'backtester-note',
+      type: 'note',
+      content: notes,
+      date: new Date().toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: 'numeric' }),
+      time: new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }),
+      status: 'note'
+    };
+    
+    // Update or add the backtester note
+    const existingIndex = journalEntries.findIndex(e => e.id === 'backtester-note');
+    if (existingIndex >= 0) {
+      journalEntries[existingIndex] = backtesterNote;
+    } else {
+      journalEntries.push(backtesterNote);
+    }
+    
+    localStorage.setItem('phoenixTrades', JSON.stringify(journalEntries));
+  }, [notes]);
 
   const handleExport = () => {
     const trades = JSON.parse(localStorage.getItem('phoenixTrades') || '[]')
@@ -129,7 +164,7 @@ const PhoenixBacktesterNew = () => {
           style={{
             position: 'fixed',
             top: '20px',
-            right: '400px',
+            right: '20px',
             padding: '10px 20px',
             background: '#2a2e39',
             color: '#d1d4dc',
@@ -150,7 +185,7 @@ const PhoenixBacktesterNew = () => {
           <div style={{
             position: 'fixed',
             top: '55px',
-            right: '400px',
+            right: '20px',
             background: '#1e222d',
             border: '1px solid #2a2e39',
             borderRadius: '4px',
@@ -192,15 +227,15 @@ const PhoenixBacktesterNew = () => {
         <button
           style={{
             position: 'fixed',
-            bottom: '100px',
-            left: '20px',
-            padding: '15px 30px',
+            top: '20px',
+            right: '150px',
+            padding: '10px 20px',
             background: '#ff6b00',
             color: 'white',
             border: 'none',
-            borderRadius: '6px',
-            fontSize: '16px',
-            fontWeight: '700',
+            borderRadius: '4px',
+            fontSize: '14px',
+            fontWeight: '600',
             cursor: 'pointer',
             boxShadow: '0 4px 12px rgba(255, 107, 0, 0.4)',
             zIndex: 100,
@@ -252,11 +287,11 @@ const PhoenixBacktesterNew = () => {
           </div>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
-            <svg style={{ width: '40px', height: '40px', color: '#ff6b00' }} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M12 2L2 7l10 5 10-5-10-5z"/>
-              <path d="M2 17l10 5 10-5"/>
-              <path d="M2 12l10 5 10-5"/>
-            </svg>
+            <img 
+              src="/phoenix-logo.png" 
+              alt="Phoenix Logo" 
+              style={{ width: '40px', height: '40px', objectFit: 'contain' }}
+            />
             <span style={{ fontSize: '32px', fontWeight: '700', color: '#ff6b00' }}>
               Phoenix Backtester
             </span>
@@ -332,105 +367,137 @@ const PhoenixBacktesterNew = () => {
         </div>
 
         <div style={{ padding: '20px', overflowY: 'auto', flex: 1 }}>
-          <div style={{ marginBottom: '20px' }}>
-            <span style={{ fontSize: '18px', fontWeight: '700', marginBottom: '5px', display: 'block' }}>
-              News (+/- 7 days)
-            </span>
-            <button style={{
-              float: 'right',
-              background: 'none',
-              border: 'none',
-              color: '#787b86',
-              cursor: 'pointer',
-              fontSize: '14px'
-            }}>
-              Refresh
-            </button>
-            <div style={{ fontSize: '12px', color: '#787b86' }}>
-              Times are shown in Europe/London.
-            </div>
-          </div>
-
-          <div style={{ marginBottom: '25px' }}>
-            <div style={{ fontSize: '13px', fontWeight: '700', marginBottom: '10px' }}>
-              IMPACT
-            </div>
-            <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-              {['High', 'Medium', 'Low', 'Holiday'].map(impact => (
-                <span
-                  key={impact}
-                  style={{
-                    padding: '6px 12px',
-                    borderRadius: '4px',
-                    fontSize: '12px',
-                    fontWeight: '600',
-                    background: selectedImpact.includes(impact) ? '#ff6b00' : 'transparent',
-                    color: selectedImpact.includes(impact) ? 'white' : '#ff6b00',
-                    border: selectedImpact.includes(impact) ? 'none' : '1px solid #ff6b00',
-                    cursor: 'pointer'
-                  }}
-                  onClick={() => toggleImpact(impact)}
-                >
-                  {impact}
+          {sidebarTab === 'News' ? (
+            <>
+              <div style={{ marginBottom: '20px' }}>
+                <span style={{ fontSize: '18px', fontWeight: '700', marginBottom: '5px', display: 'block' }}>
+                  News (+/- 7 days)
                 </span>
-              ))}
-            </div>
-          </div>
-
-          <div style={{ marginBottom: '25px' }}>
-            <div style={{ fontSize: '13px', fontWeight: '700', marginBottom: '10px' }}>
-              CURRENCIES
-            </div>
-            <div style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(4, 1fr)',
-              gap: '8px'
-            }}>
-              {['AUD', 'CAD', 'CHF', 'CNY', 'EUR', 'GBP', 'JPY', 'NZD', 'USD'].map(currency => (
-                <button
-                  key={currency}
-                  style={{
-                    padding: '8px',
-                    background: activeCurrency === currency ? '#ff6b00' : '#2a2e39',
-                    border: 'none',
-                    borderRadius: '4px',
-                    color: activeCurrency === currency ? 'white' : '#d1d4dc',
-                    fontSize: '12px',
-                    fontWeight: '600',
-                    cursor: 'pointer',
-                    transition: 'all 0.2s'
-                  }}
-                  onClick={() => setActiveCurrency(currency)}
-                >
-                  {currency}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <div style={{ marginBottom: '15px' }}>
-            {['Today', 'Next week', 'Last week'].map(period => (
-              <div
-                key={period}
-                style={{
-                  padding: '12px',
-                  background: '#2a2e39',
-                  borderRadius: '4px',
-                  marginBottom: '10px',
+                <button style={{
+                  float: 'right',
+                  background: 'none',
+                  border: 'none',
+                  color: '#787b86',
                   cursor: 'pointer',
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center'
-                }}
-              >
-                <span>{period}</span>
-                <span>▼</span>
+                  fontSize: '14px'
+                }}>
+                  Refresh
+                </button>
+                <div style={{ fontSize: '12px', color: '#787b86' }}>
+                  Times are shown in Europe/London.
+                </div>
               </div>
-            ))}
-            <div style={{ padding: '20px', textAlign: 'center', color: '#787b86', fontSize: '13px' }}>
-              No events for this period.
+
+              <div style={{ marginBottom: '25px' }}>
+                <div style={{ fontSize: '13px', fontWeight: '700', marginBottom: '10px' }}>
+                  IMPACT
+                </div>
+                <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                  {['High', 'Medium', 'Low', 'Holiday'].map(impact => (
+                    <span
+                      key={impact}
+                      style={{
+                        padding: '6px 12px',
+                        borderRadius: '4px',
+                        fontSize: '12px',
+                        fontWeight: '600',
+                        background: selectedImpact.includes(impact) ? '#ff6b00' : 'transparent',
+                        color: selectedImpact.includes(impact) ? 'white' : '#ff6b00',
+                        border: selectedImpact.includes(impact) ? 'none' : '1px solid #ff6b00',
+                        cursor: 'pointer'
+                      }}
+                      onClick={() => toggleImpact(impact)}
+                    >
+                      {impact}
+                    </span>
+                  ))}
+                </div>
+              </div>
+
+              <div style={{ marginBottom: '25px' }}>
+                <div style={{ fontSize: '13px', fontWeight: '700', marginBottom: '10px' }}>
+                  CURRENCIES
+                </div>
+                <div style={{
+                  display: 'grid',
+                  gridTemplateColumns: 'repeat(4, 1fr)',
+                  gap: '8px'
+                }}>
+                  {['AUD', 'CAD', 'CHF', 'CNY', 'EUR', 'GBP', 'JPY', 'NZD', 'USD'].map(currency => (
+                    <button
+                      key={currency}
+                      style={{
+                        padding: '8px',
+                        background: activeCurrency === currency ? '#ff6b00' : '#2a2e39',
+                        border: 'none',
+                        borderRadius: '4px',
+                        color: activeCurrency === currency ? 'white' : '#d1d4dc',
+                        fontSize: '12px',
+                        fontWeight: '600',
+                        cursor: 'pointer',
+                        transition: 'all 0.2s'
+                      }}
+                      onClick={() => setActiveCurrency(currency)}
+                    >
+                      {currency}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div style={{ marginBottom: '15px' }}>
+                {['Today', 'Next week', 'Last week'].map(period => (
+                  <div
+                    key={period}
+                    style={{
+                      padding: '12px',
+                      background: '#2a2e39',
+                      borderRadius: '4px',
+                      marginBottom: '10px',
+                      cursor: 'pointer',
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'center'
+                    }}
+                  >
+                    <span>{period}</span>
+                    <span>▼</span>
+                  </div>
+                ))}
+                <div style={{ padding: '20px', textAlign: 'center', color: '#787b86', fontSize: '13px' }}>
+                  No events for this period.
+                </div>
+              </div>
+            </>
+          ) : (
+            <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+              <div style={{ marginBottom: '20px' }}>
+                <span style={{ fontSize: '18px', fontWeight: '700', marginBottom: '5px', display: 'block' }}>
+                  Backtester Notes
+                </span>
+                <div style={{ fontSize: '12px', color: '#787b86' }}>
+                  Add your notes here - they will be saved to the journal
+                </div>
+              </div>
+              <textarea
+                value={notes}
+                onChange={(e) => setNotes(e.target.value)}
+                placeholder="Enter your notes here..."
+                style={{
+                  flex: 1,
+                  minHeight: '300px',
+                  padding: '15px',
+                  background: '#2a2e39',
+                  border: '1px solid #363a45',
+                  borderRadius: '8px',
+                  color: '#d1d4dc',
+                  fontSize: '14px',
+                  fontFamily: 'inherit',
+                  resize: 'none'
+                }}
+              />
             </div>
-          </div>
+          )}
         </div>
       </div>
 
