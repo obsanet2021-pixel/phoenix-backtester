@@ -3,6 +3,52 @@ import { Chart } from 'chart.js/auto'
 
 const PhoenixAnalytics = () => {
   const [activeTab, setActiveTab] = useState('overview')
+  const [analyticsData, setAnalyticsData] = useState({
+    totalTrades: 0,
+    winRate: 0,
+    totalPnL: 0,
+    avgWin: 0,
+    avgLoss: 0,
+    bestTrade: 0,
+    worstTrade: 0,
+    profitFactor: 0
+  })
+
+  // Load analytics data from localStorage
+  useEffect(() => {
+    const loadAnalytics = () => {
+      const journalTrades = JSON.parse(localStorage.getItem('phoenixJournalTrades') || '[]');
+      const tradesData = JSON.parse(localStorage.getItem('phoenixTradesData') || '[]');
+      const allTrades = [...journalTrades, ...tradesData];
+      
+      const closedTrades = allTrades.filter(t => t.status === 'closed');
+      const totalPnL = closedTrades.reduce((sum, t) => sum + (t.pnl || 0), 0);
+      const wins = closedTrades.filter(t => (t.pnl || 0) > 0);
+      const losses = closedTrades.filter(t => (t.pnl || 0) < 0);
+      
+      const avgWin = wins.length > 0 ? wins.reduce((sum, t) => sum + t.pnl, 0) / wins.length : 0;
+      const avgLoss = losses.length > 0 ? Math.abs(losses.reduce((sum, t) => sum + t.pnl, 0)) / losses.length : 0;
+      const bestTrade = closedTrades.length > 0 ? Math.max(...closedTrades.map(t => t.pnl || 0)) : 0;
+      const worstTrade = closedTrades.length > 0 ? Math.min(...closedTrades.map(t => t.pnl || 0)) : 0;
+      const profitFactor = avgLoss > 0 ? (avgWin * wins.length) / (avgLoss * losses.length) : 0;
+      
+      setAnalyticsData({
+        totalTrades: allTrades.length,
+        winRate: closedTrades.length > 0 ? (wins.length / closedTrades.length) * 100 : 0,
+        totalPnL,
+        avgWin,
+        avgLoss,
+        bestTrade,
+        worstTrade,
+        profitFactor
+      });
+    };
+
+    loadAnalytics();
+    const interval = setInterval(loadAnalytics, 5000);
+    return () => clearInterval(interval);
+  }, []);
+
   const chartRefs = {
     plTime: useRef(null),
     plDay: useRef(null),
