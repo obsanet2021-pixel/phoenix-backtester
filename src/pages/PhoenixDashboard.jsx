@@ -1,21 +1,94 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Chart } from 'chart.js/auto'
 
 const PhoenixDashboard = () => {
   const chartRef = useRef(null)
   const chartInstanceRef = useRef(null)
+  const [stats, setStats] = useState({
+    totalTrades: 0,
+    winRate: 0,
+    totalPnL: 0,
+    balance: 10000,
+    equity: 10000,
+    drawdown: 0
+  })
+
+  // Load data from localStorage and calculate stats
+  useEffect(() => {
+    const loadDashboardData = () => {
+      // Get trades from journal
+      const journalTrades = JSON.parse(localStorage.getItem('phoenixJournalTrades') || '[]');
+      const tradesData = JSON.parse(localStorage.getItem('phoenixTradesData') || '[]');
+      const allTrades = [...journalTrades, ...tradesData];
+      
+      const closedTrades = allTrades.filter(t => t.status === 'closed');
+      const totalPnL = closedTrades.reduce((sum, t) => sum + (t.pnl || 0), 0);
+      const wins = closedTrades.filter(t => (t.pnl || 0) > 0).length;
+      const winRate = closedTrades.length > 0 ? (wins / closedTrades.length) * 100 : 0;
+      
+      // Calculate drawdown
+      let peak = 10000;
+      let maxDrawdown = 0;
+      let currentEquity = 10000;
+      
+      allTrades.forEach(trade => {
+        if (trade.pnl) {
+          currentEquity += trade.pnl;
+          if (currentEquity > peak) peak = currentEquity;
+          const drawdown = ((peak - currentEquity) / peak) * 100;
+          if (drawdown > maxDrawdown) maxDrawdown = drawdown;
+        }
+      });
+
+      setStats({
+        totalTrades: allTrades.length,
+        winRate,
+        totalPnL,
+        balance: 10000 + totalPnL,
+        equity: 10000 + totalPnL,
+        drawdown: maxDrawdown
+      });
+    };
+
+    loadDashboardData();
+    const interval = setInterval(loadDashboardData, 5000); // Update every 5 seconds
+    return () => clearInterval(interval);
+  }, []);
 
   useEffect(() => {
     if (chartRef.current && !chartInstanceRef.current) {
-      const equity = [10000, 9980, 9960, 9990, 10050, 10120, 10080, 10150, 10200, 10175, 10196]
-      const labels = ['Jan 1', 'Jan 2', 'Jan 3', 'Jan 4', 'Jan 5', 'Jan 6', 'Jan 7', 'Jan 8', 'Jan 9', 'Jan 10', 'Jan 11']
+      // Generate equity curve from localStorage data
+      const journalTrades = JSON.parse(localStorage.getItem('phoenixJournalTrades') || '[]');
+      const tradesData = JSON.parse(localStorage.getItem('phoenixTradesData') || '[]');
+      const allTrades = [...journalTrades, ...tradesData].sort((a, b) => new Date(a.date) - new Date(b.date));
+      
+      let currentEquity = 10000;
+      const equityData = [10000];
+      const labels = ['Start'];
+      
+      allTrades.forEach((trade, index) => {
+        if (trade.pnl) {
+          currentEquity += trade.pnl;
+          equityData.push(currentEquity);
+          labels.push(`Trade ${index + 1}`);
+        }
+      });
+      
+      // Add more data points if needed
+      if (equityData.length < 10) {
+        const lastValue = equityData[equityData.length - 1];
+        for (let i = equityData.length; i < 10; i++) {
+          equityData.push(lastValue + (Math.random() - 0.5) * 50);
+          labels.push(`Day ${i}`);
+        }
+      }
 
       chartInstanceRef.current = new Chart(chartRef.current, {
         type: 'line',
         data: {
           labels,
           datasets: [{
-            data: equity,
+            data: equityData,
             borderColor: '#ff6b00',
             borderWidth: 2,
             pointRadius: 0,
