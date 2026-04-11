@@ -80,7 +80,7 @@ const PhoenixSidebar = ({ activePage, setActivePage }) => {
   return (
     <div className="sidebar">
       <div className="logo">
-        <div className="logo-icon">{'\ud83d\udd25'}</div>
+        <img src="/phoenix-logo.png" alt="Phoenix Logo" className="logo-image" />
         <div>
           <div className="logo-text">Phoenix</div>
           <div className="logo-sub">Backtester</div>
