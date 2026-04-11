@@ -11,16 +11,48 @@ import {
 
 const PhoenixTrades = () => {
   const [activeTab, setActiveTab] = useState('open')
-  const [trades, setTrades] = useState([
-    { id: 1, date: '2025-01-08', time: '14:32', pair: 'XAU/USD', type: 'BUY', entry: 2025.50, exit: null, sl: 2020.00, tp: 2030.00, size: 0.1, pnl: '+$126.00', status: 'open', duration: '1h 26m' },
-    { id: 2, date: '2025-01-08', time: '11:15', pair: 'EUR/USD', type: 'SELL', entry: 1.0850, exit: 1.0845, sl: 1.0870, tp: 1.0820, size: 0.2, pnl: '+$10.00', status: 'closed', duration: '45m' },
-    { id: 3, date: '2025-01-07', time: '16:45', pair: 'GBP/USD', type: 'BUY', entry: 1.2750, exit: 1.2730, sl: 1.2720, tp: 1.2800, size: 0.15, pnl: '-$30.00', status: 'closed', duration: '2h 15m' },
-    { id: 4, date: '2025-01-07', time: '09:30', pair: 'USD/JPY', type: 'SELL', entry: 148.50, exit: 148.45, sl: 148.70, tp: 148.20, size: 0.1, pnl: '+$5.00', status: 'closed', duration: '1h 10m' },
-    { id: 5, date: '2025-01-06', time: '13:20', pair: 'AUD/USD', type: 'BUY', entry: 0.6750, exit: null, sl: 0.6720, tp: 0.6800, size: 0.25, pnl: '0.00', status: 'open', duration: '3h 45m' }
-  ])
-
+  const [trades, setTrades] = useState([])
   const [showNewTrade, setShowNewTrade] = useState(false)
   const [selectedTrade, setSelectedTrade] = useState(null)
+
+  // Load trades from localStorage
+  useEffect(() => {
+    const savedTrades = localStorage.getItem('phoenixTradesData');
+    if (savedTrades) {
+      setTrades(JSON.parse(savedTrades));
+    }
+  }, []);
+
+  // Save trades to localStorage
+  useEffect(() => {
+    if (trades.length > 0) {
+      localStorage.setItem('phoenixTradesData', JSON.stringify(trades));
+    }
+  }, [trades]);
+
+  const calculatePnL = (trade) => {
+    if (!trade.exit) return 0;
+    const entry = parseFloat(trade.entry);
+    const exit = parseFloat(trade.exit);
+    const size = parseFloat(trade.size);
+    const multiplier = trade.type === 'BUY' ? 1 : -1;
+    return (exit - entry) * size * multiplier;
+  };
+
+  const closeTrade = (tradeId) => {
+    const trade = trades.find(t => t.id === tradeId);
+    if (trade && !trade.exit) {
+      const currentPrice = prompt('Enter exit price:', trade.entry);
+      if (currentPrice) {
+        const updatedTrades = trades.map(t => 
+          t.id === tradeId 
+            ? { ...t, exit: currentPrice, status: 'closed', pnl: calculatePnL({ ...t, exit: currentPrice }) }
+            : t
+        );
+        setTrades(updatedTrades);
+      }
+    }
+  };
 
   const chartRefs = {
     performanceChart: useRef(null),
