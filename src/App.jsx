@@ -11,7 +11,7 @@ import PhoenixTrades from './pages/PhoenixTrades'
 import PhoenixSimulator from './pages/PhoenixSimulator'
 import PhoenixChallenge from './pages/PhoenixChallenge'
 import PhoenixChart from './pages/PhoenixChart'
-import PhoenixBacktester from './components/PhoenixBacktester'
+import PhoenixBacktester from './components/PhoenixBacktesterNew'
 
 function App() {
   const [activePage, setActivePage] = useState('dashboard')
