@@ -14,7 +14,7 @@ import PhoenixJournalFixed from './pages/PhoenixJournalFixed'
 import PhoenixChart from './pages/PhoenixChart'
 import StandaloneReplayChart from './pages/StandaloneReplayChart'
 import StandaloneBacktester from './pages/StandaloneBacktester'
-import PhoenixBacktesterFixed from './components/PhoenixBacktesterFixed'
+import PhoenixBacktester from './components/PhoenixBacktester'
 
 function App() {
   const [activePage, setActivePage] = useState('dashboard')
@@ -89,7 +89,7 @@ function App() {
       {/* Standalone replay chart route */}
       <Route path="/replay-chart" element={<StandaloneReplayChart />} />
       <Route path="/backtester" element={<StandaloneBacktester />} />
-      <Route path="/phoenix-backtester" element={<PhoenixBacktesterFixed />} />
+      <Route path="/phoenix-backtester" element={<PhoenixBacktester />} />
       
       {/* Main app with sidebar */}
       <Route path="/*" element={

@@ -15,16 +15,62 @@ const PhoenixBacktester = () => {
   const [speed, setSpeed] = useState(1);
   const [chartData, setChartData] = useState([]);
   const [currentPrice, setCurrentPrice] = useState(4483.415);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [trades, setTrades] = useState([]);
+  const [riskPercent, setRiskPercent] = useState(1);
+  const [riskAmount, setRiskAmount] = useState(100);
   
   const chartContainerRef = useRef(null);
   const chartRef = useRef(null);
   const seriesRef = useRef(null);
   const intervalRef = useRef(null);
 
-  // Generate sample data (replace with real API call)
+  // Load saved data from localStorage
   useEffect(() => {
+    const savedData = localStorage.getItem('phoenixBacktesterData');
+    if (savedData) {
+      const data = JSON.parse(savedData);
+      setBalance(data.balance || 10000);
+      setEquity(data.equity || 10000);
+      setActivePositions(data.activePositions || []);
+      setClosedPositions(data.closedPositions || []);
+      setTrades(data.trades || []);
+      setRiskPercent(data.riskPercent || 1);
+    }
     generateHistoricalData();
   }, []);
+
+  // Save data to localStorage
+  useEffect(() => {
+    const data = {
+      balance,
+      equity,
+      activePositions,
+      closedPositions,
+      trades,
+      riskPercent,
+      timestamp: new Date().toISOString()
+    };
+    localStorage.setItem('phoenixBacktesterData', JSON.stringify(data));
+  }, [balance, equity, activePositions, closedPositions, trades, riskPercent]);
+
+  // Calculate P&L for positions
+  useEffect(() => {
+    let totalUnrealized = 0;
+    activePositions.forEach(pos => {
+      const pnl = (currentPrice - pos.entryPrice) * pos.quantity * (pos.side === 'Buy' ? 1 : -1);
+      totalUnrealized += pnl;
+    });
+    setUnrealizedPnL(totalUnrealized);
+    setEquity(balance + totalUnrealized);
+  }, [activePositions, currentPrice, balance]);
+
+  // Update risk amount
+  useEffect(() => {
+    const amount = (balance * riskPercent) / 100;
+    setRiskAmount(amount);
+  }, [riskPercent, balance]);
 
   const generateHistoricalData = () => {
     const data = [];
@@ -130,26 +176,85 @@ const PhoenixBacktester = () => {
   };
 
   const placeOrder = (orderData) => {
-    const newPosition = {
-      id: Date.now(),
-      side: orderData.side,
-      entryPrice: orderData.entryPrice,
-      quantity: orderData.riskAmount / orderData.entryPrice,
-      stopLoss: orderData.stopLoss,
-      takeProfit: orderData.takeProfit,
-      entryTime: new Date(),
-      unrealizedPnL: 0,
-    };
-    setActivePositions(prev => [...prev, newPosition]);
+    try {
+      setIsLoading(true);
+      const positionSize = orderData.riskAmount / orderData.entryPrice;
+      
+      if (orderData.riskAmount > balance) {
+        setError('Insufficient balance for this trade');
+        setIsLoading(false);
+        return;
+      }
+
+      const newPosition = {
+        id: Date.now(),
+        side: orderData.side,
+        entryPrice: orderData.entryPrice,
+        quantity: positionSize,
+        stopLoss: orderData.stopLoss,
+        takeProfit: orderData.takeProfit,
+        entryTime: new Date().toISOString(),
+        unrealizedPnL: 0,
+        status: 'open'
+      };
+
+      setActivePositions(prev => [...prev, newPosition]);
+      setBalance(prev => prev - orderData.riskAmount);
+      
+      const trade = {
+        id: Date.now(),
+        ...newPosition,
+        riskAmount: orderData.riskAmount,
+        timestamp: new Date().toISOString()
+      };
+      setTrades(prev => [trade, ...prev]);
+      
+      setIsLoading(false);
+      setError(null);
+    } catch (err) {
+      setError('Failed to place order: ' + err.message);
+      setIsLoading(false);
+    }
+  };
+
+  const closePosition = (positionId) => {
+    try {
+      const position = activePositions.find(p => p.id === positionId);
+      if (!position) return;
+
+      const pnl = (currentPrice - position.entryPrice) * position.quantity * (position.side === 'Buy' ? 1 : -1);
+      const closedPosition = {
+        ...position,
+        exitPrice: currentPrice,
+        exitTime: new Date().toISOString(),
+        pnl: pnl,
+        status: 'closed'
+      };
+
+      setBalance(prev => prev + position.quantity * currentPrice + pnl);
+      setActivePositions(prev => prev.filter(p => p.id !== positionId));
+      setClosedPositions(prev => [closedPosition, ...prev]);
+      
+      setTrades(prev => prev.map(t => 
+        t.id === positionId ? { ...t, ...closedPosition } : t
+      ));
+    } catch (err) {
+      setError('Failed to close position: ' + err.message);
+    }
   };
 
   const exportData = () => {
     const data = {
-      closedPositions,
       balance,
-      totalPnL: closedPositions.reduce((sum, pos) => sum + pos.closedPnL, 0),
-      winRate: closedPositions.length > 0 ? (closedPositions.filter(p => p.closedPnL > 0).length / closedPositions.length) * 100 : 0,
+      equity,
+      unrealizedPnL,
+      activePositions,
+      closedPositions,
+      trades,
+      riskPercent,
+      exportDate: new Date().toISOString()
     };
+    
     const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
@@ -231,10 +336,73 @@ const PhoenixBacktester = () => {
 
         {/* Right Panel - Trade */}
         <div className="right-panel">
+          {error && (
+            <div className="error-message" style={{
+              background: '#ef4444',
+              color: 'white',
+              padding: '10px',
+              margin: '10px',
+              borderRadius: '8px',
+              fontSize: '14px'
+            }}>
+              {error}
+            </div>
+          )}
+          {activePositions.length > 0 && (
+            <div className="active-positions" style={{
+              background: '#1f2937',
+              padding: '15px',
+              margin: '10px',
+              borderRadius: '8px',
+              border: '1px solid #374151'
+            }}>
+              <h4 style={{color: '#ff6b00', marginBottom: '10px'}}>Active Positions</h4>
+              {activePositions.map(position => (
+                <div key={position.id} style={{
+                  background: '#111827',
+                  padding: '10px',
+                  margin: '5px 0',
+                  borderRadius: '6px',
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center'
+                }}>
+                  <div>
+                    <span style={{color: position.side === 'Buy' ? '#22c55e' : '#ef4444', fontWeight: 'bold'}}>
+                      {position.side}
+                    </span>
+                    <span style={{marginLeft: '10px'}}>
+                      {position.quantity.toFixed(4)} @ {position.entryPrice.toFixed(5)}
+                    </span>
+                    <span style={{marginLeft: '10px', color: '#9ca3af'}}>
+                      P&L: <span style={{color: ((currentPrice - position.entryPrice) * position.quantity * (position.side === 'Buy' ? 1 : -1)) >= 0 ? '#22c55e' : '#ef4444'}}>
+                        ${((currentPrice - position.entryPrice) * position.quantity * (position.side === 'Buy' ? 1 : -1)).toFixed(2)}
+                      </span>
+                    </span>
+                  </div>
+                  <button 
+                    onClick={() => closePosition(position.id)}
+                    style={{
+                      background: '#ef4444',
+                      color: 'white',
+                      border: 'none',
+                      padding: '5px 10px',
+                      borderRadius: '4px',
+                      cursor: 'pointer'
+                    }}
+                  >
+                    Close
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
           <TradePanel 
             onPlaceOrder={placeOrder}
             currentPrice={currentPrice}
             balance={balance}
+            riskPercent={riskPercent}
+            setRiskPercent={setRiskPercent}
           />
         </div>
       </div>

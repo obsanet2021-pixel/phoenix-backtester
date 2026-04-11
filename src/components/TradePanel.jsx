@@ -1,15 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import './TradePanel.css';
 
-const TradePanel = ({ onPlaceOrder, currentPrice, balance }) => {
+const TradePanel = ({ onPlaceOrder, currentPrice, balance, riskPercent, setRiskPercent }) => {
   const [orderType, setOrderType] = useState('Market');
   const [side, setSide] = useState('Buy');
   const [entryPrice, setEntryPrice] = useState(currentPrice);
-  const [takeProfit, setTakeProfit] = useState(0);
-  const [stopLoss, setStopLoss] = useState(0);
-  const [riskPercent, setRiskPercent] = useState(1);
-  const [riskAmount, setRiskAmount] = useState(49.94);
+  const [takeProfit, setTakeProfit] = useState('');
+  const [stopLoss, setStopLoss] = useState('');
+  const [riskAmount, setRiskAmount] = useState((balance * riskPercent) / 100);
   const [partials, setPartials] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     setEntryPrice(currentPrice);
@@ -22,9 +23,52 @@ const TradePanel = ({ onPlaceOrder, currentPrice, balance }) => {
   };
 
   const handleRiskPercentChange = (value) => {
-    setRiskPercent(value);
-    const amount = (balance * value) / 100;
+    const newRiskPercent = Math.max(0.1, Math.min(5, value));
+    setRiskPercent(newRiskPercent);
+    const amount = (balance * newRiskPercent) / 100;
     setRiskAmount(amount);
+  };
+
+  const placeOrder = () => {
+    try {
+      setError(null);
+      setIsLoading(true);
+
+      // Validation
+      if (orderType !== 'Market' && (!entryPrice || parseFloat(entryPrice) <= 0)) {
+        throw new Error('Please enter a valid entry price');
+      }
+
+      if (riskAmount > balance) {
+        throw new Error('Risk amount exceeds available balance');
+      }
+
+      if (riskAmount <= 0) {
+        throw new Error('Risk amount must be greater than 0');
+      }
+
+      const orderData = {
+        side,
+        orderType,
+        entryPrice: orderType === 'Market' ? currentPrice : parseFloat(entryPrice),
+        riskAmount: riskAmount,
+        stopLoss: stopLoss ? parseFloat(stopLoss) : null,
+        takeProfit: takeProfit ? parseFloat(takeProfit) : null,
+        partials
+      };
+
+      onPlaceOrder(orderData);
+      
+      // Reset form
+      setTakeProfit('');
+      setStopLoss('');
+      setPartials([]);
+      
+      setIsLoading(false);
+    } catch (err) {
+      setError(err.message);
+      setIsLoading(false);
+    }
   };
 
   const addPartial = () => {
@@ -41,18 +85,7 @@ const TradePanel = ({ onPlaceOrder, currentPrice, balance }) => {
     setPartials(partials.filter((_, i) => i !== index));
   };
 
-  const placeOrder = () => {
-    const orderData = {
-      side: side.toUpperCase(),
-      orderType,
-      entryPrice,
-      takeProfit: takeProfit || null,
-      stopLoss: stopLoss || null,
-      riskAmount,
-    };
-    onPlaceOrder(orderData);
-  };
-
+  
   const goToTime = (timezone) => {
     // Implement time navigation logic
     console.log(`Go to ${timezone} time`);
