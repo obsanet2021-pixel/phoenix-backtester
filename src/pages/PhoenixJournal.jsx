@@ -2,17 +2,155 @@ import React, { useState, useEffect, useRef } from 'react'
 import { Chart } from 'chart.js/auto'
 
 const PhoenixJournal = () => {
-  const [activeTab, setActiveTab] = useState('entries')
-  const [entries, setEntries] = useState([
-    { id: 1, date: '2025-01-08', title: 'Great XAU/USD Trade', content: 'Perfect entry at support level, took profit at resistance. Good risk management with 2:1 ratio.', mood: 'positive', pair: 'XAU/USD', pnl: '+$126.00' },
-    { id: 2, date: '2025-01-07', title: 'Revenge Trading Mistake', content: 'Lost on EUR/USD and immediately entered another trade without analysis. Need to be more disciplined.', mood: 'negative', pair: 'EUR/USD', pnl: '-$85.00' },
-    { id: 3, date: '2025-01-06', title: 'Patience Paid Off', content: 'Waited for the perfect setup on GBP/USD, took 3 hours but resulted in a 50 pip win.', mood: 'positive', pair: 'GBP/USD', pnl: '+$200.00' },
-    { id: 4, date: '2025-01-05', title: 'News Trading Risk', content: 'Traded during NFP release, got stopped out quickly. Should avoid high-impact news events.', mood: 'neutral', pair: 'USDJPY', pnl: '-$45.00' },
-    { id: 5, date: '2025-01-04', title: 'Strategy Followed Perfectly', content: 'Stuck to my trading plan, used proper position sizing, and followed all rules. Great discipline.', mood: 'positive', pair: 'AUDUSD', pnl: '+$75.00' }
-  ])
-
+  const [activeTab, setActiveTab] = useState('trades')
+  const [entries, setEntries] = useState([])
+  const [trades, setTrades] = useState([])
   const [showNewEntry, setShowNewEntry] = useState(false)
   const [selectedEntry, setSelectedEntry] = useState(null)
+  const [newTrade, setNewTrade] = useState({
+    date: new Date().toISOString().split('T')[0],
+    time: new Date().toTimeString().split(' ')[0].substring(0, 5),
+    pair: 'GBP/USD',
+    type: 'Buy',
+    entry: '',
+    exit: '',
+    sl: '',
+    tp: '',
+    size: '',
+    notes: '',
+    mood: 'neutral'
+  })
+  const [filter, setFilter] = useState('all')
+  const [searchTerm, setSearchTerm] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
+
+  // Load trades from localStorage
+  useEffect(() => {
+    const savedTrades = localStorage.getItem('phoenixJournalTrades');
+    if (savedTrades) {
+      setTrades(JSON.parse(savedTrades));
+    }
+  }, []);
+
+  // Save trades to localStorage
+  useEffect(() => {
+    if (trades.length > 0) {
+      localStorage.setItem('phoenixJournalTrades', JSON.stringify(trades));
+    }
+  }, [trades]);
+
+  const addTrade = () => {
+    if (!newTrade.entry || !newTrade.size) {
+      alert('Please fill in entry price and position size');
+      return;
+    }
+
+    setIsLoading(true);
+    
+    const trade = {
+      id: Date.now(),
+      ...newTrade,
+      pnl: newTrade.exit ? calculatePnL(newTrade) : 0,
+      status: newTrade.exit ? 'closed' : 'open',
+      timestamp: new Date().toISOString()
+    };
+
+    setTrades([trade, ...trades]);
+    setNewTrade({
+      date: new Date().toISOString().split('T')[0],
+      time: new Date().toTimeString().split(' ')[0].substring(0, 5),
+      pair: 'GBP/USD',
+      type: 'Buy',
+      entry: '',
+      exit: '',
+      sl: '',
+      tp: '',
+      size: '',
+      notes: '',
+      mood: 'neutral'
+    });
+    setShowNewEntry(false);
+    setIsLoading(false);
+  };
+
+  const calculatePnL = (trade) => {
+    const entry = parseFloat(trade.entry);
+    const exit = parseFloat(trade.exit);
+    const size = parseFloat(trade.size);
+    const multiplier = trade.type === 'Buy' ? 1 : -1;
+    return (exit - entry) * size * multiplier;
+  };
+
+  const deleteTrade = (tradeId) => {
+    if (confirm('Are you sure you want to delete this trade?')) {
+      setTrades(trades.filter(t => t.id !== tradeId));
+    }
+  };
+
+  const editTrade = (tradeId) => {
+    const trade = trades.find(t => t.id === tradeId);
+    if (trade) {
+      setNewTrade({
+        ...trade,
+        date: trade.date,
+        time: trade.time
+      });
+      setShowNewEntry(true);
+    }
+  };
+
+  const closeTrade = (tradeId) => {
+    const trade = trades.find(t => t.id === tradeId);
+    if (trade && !trade.exit) {
+      const currentPrice = prompt('Enter exit price:', newTrade.entry);
+      if (currentPrice) {
+        const updatedTrades = trades.map(t => 
+          t.id === tradeId 
+            ? { ...t, exit: currentPrice, status: 'closed', pnl: calculatePnL({ ...t, exit: currentPrice }) }
+            : t
+        );
+        setTrades(updatedTrades);
+      }
+    }
+  };
+
+  const exportJournal = () => {
+    const data = {
+      trades,
+      entries,
+      exportDate: new Date().toISOString(),
+      summary: {
+        totalTrades: trades.length,
+        closedTrades: trades.filter(t => t.status === 'closed').length,
+        openTrades: trades.filter(t => t.status === 'open').length,
+        totalPnL: trades.filter(t => t.status === 'closed').reduce((sum, t) => sum + t.pnl, 0)
+      }
+    };
+    
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'phoenix-journal.json';
+    a.click();
+  };
+
+  const filteredTrades = trades.filter(trade => {
+    const matchesFilter = filter === 'all' || trade.status === filter;
+    const matchesSearch = searchTerm === '' || 
+      trade.pair.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      trade.type.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      trade.notes.toLowerCase().includes(searchTerm.toLowerCase());
+    return matchesFilter && matchesSearch;
+  });
+
+  const summary = {
+    total: trades.length,
+    open: trades.filter(t => t.status === 'open').length,
+    closed: trades.filter(t => t.status === 'closed').length,
+    pnl: trades.filter(t => t.status === 'closed').reduce((sum, t) => sum + t.pnl, 0),
+    winRate: trades.filter(t => t.status === 'closed' && t.pnl > 0).length / Math.max(1, trades.filter(t => t.status === 'closed').length) * 100
+  };
 
   const chartRefs = {
     moodChart: useRef(null),
