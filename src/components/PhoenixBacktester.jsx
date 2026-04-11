@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { createChart, ColorType } from 'lightweight-charts';
 import NewsPanel from './NewsPanel';
 import TradePanel from './TradePanel';
+import phoenixLogo from '../assets/phoenix-logo.png';
 import './PhoenixBacktester.css';
 
 const PhoenixBacktester = () => {
@@ -241,7 +242,10 @@ const PhoenixBacktester = () => {
 
       {/* Bottom Bar */}
       <div className="bottom-bar">
-        <div className="app-title">Phoenix Backtester</div>
+        <div className="app-branding">
+          <img src={phoenixLogo} alt="Phoenix Logo" className="phoenix-logo" />
+          <span className="app-title">Phoenix Backtester</span>
+        </div>
         <div className="bottom-actions">
           <button onClick={exportData} className="export-btn">Export Data</button>
           <button onClick={exitSession} className="exit-btn">Exit Session</button>
