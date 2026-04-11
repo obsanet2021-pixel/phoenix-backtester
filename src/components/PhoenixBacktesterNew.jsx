@@ -159,102 +159,116 @@ const PhoenixBacktesterNew = () => {
         flexDirection: 'column',
         position: 'relative'
       }}>
-        {/* Go To Button */}
-        <button
-          style={{
-            position: 'fixed',
-            top: '20px',
-            right: '20px',
-            padding: '10px 20px',
-            background: '#2a2e39',
-            color: '#d1d4dc',
-            border: 'none',
-            borderRadius: '4px',
-            fontSize: '14px',
-            fontWeight: '600',
-            cursor: 'pointer',
-            zIndex: 99
-          }}
-          onClick={() => setShowGotoDropdown(!showGotoDropdown)}
-        >
-          Go To ▼
-        </button>
-
-        {/* Go To Dropdown */}
-        {showGotoDropdown && (
+        {/* TradingView Chart with buttons */}
+        <div style={{
+          flex: 1,
+          display: 'flex',
+          flexDirection: 'column',
+          position: 'relative',
+          background: '#1e222d'
+        }}>
+          {/* Chart Header with buttons */}
           <div style={{
-            position: 'fixed',
-            top: '55px',
-            right: '20px',
-            background: '#1e222d',
-            border: '1px solid #2a2e39',
-            borderRadius: '4px',
-            padding: '10px 0',
-            zIndex: 100,
-            minWidth: '150px'
+            position: 'absolute',
+            top: '10px',
+            right: '10px',
+            display: 'flex',
+            gap: '10px',
+            zIndex: 100
           }}>
-            {['London', 'New York', 'Tokyo', 'Custom Time', 'Customise'].map(item => (
-              <div
-                key={item}
+            {/* Open Position Button */}
+            <button
+              style={{
+                padding: '10px 20px',
+                background: '#ff6b00',
+                color: 'white',
+                border: 'none',
+                borderRadius: '4px',
+                fontSize: '14px',
+                fontWeight: '600',
+                cursor: 'pointer',
+                boxShadow: '0 4px 12px rgba(255, 107, 0, 0.4)',
+                transition: 'all 0.2s'
+              }}
+              onClick={() => setShowTradeModal(true)}
+              onMouseEnter={(e) => {
+                e.target.style.background = '#e55f00'
+                e.target.style.transform = 'translateY(-2px)'
+                e.target.style.boxShadow = '0 6px 16px rgba(255, 107, 0, 0.5)'
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.background = '#ff6b00'
+                e.target.style.transform = 'translateY(0)'
+                e.target.style.boxShadow = '0 4px 12px rgba(255, 107, 0, 0.4)'
+              }}
+            >
+              Open Position Card
+            </button>
+
+            {/* Go To Button */}
+            <div style={{ position: 'relative' }}>
+              <button
                 style={{
                   padding: '10px 20px',
+                  background: '#2a2e39',
                   color: '#d1d4dc',
-                  cursor: 'pointer',
-                  fontSize: '14px'
+                  border: 'none',
+                  borderRadius: '4px',
+                  fontSize: '14px',
+                  fontWeight: '600',
+                  cursor: 'pointer'
                 }}
-                onClick={() => {
-                  console.log('Changing timezone to:', item)
-                  setShowGotoDropdown(false)
-                }}
+                onClick={() => setShowGotoDropdown(!showGotoDropdown)}
               >
-                {item}
-              </div>
-            ))}
+                Go To ▼
+              </button>
+
+              {/* Go To Dropdown */}
+              {showGotoDropdown && (
+                <div style={{
+                  position: 'absolute',
+                  top: '45px',
+                  right: '0',
+                  background: '#1e222d',
+                  border: '1px solid #2a2e39',
+                  borderRadius: '4px',
+                  padding: '10px 0',
+                  zIndex: 101,
+                  minWidth: '150px'
+                }}>
+                  {['London', 'New York', 'Tokyo', 'Custom Time', 'Customise'].map(item => (
+                    <div
+                      key={item}
+                      style={{
+                        padding: '10px 20px',
+                        color: '#d1d4dc',
+                        cursor: 'pointer',
+                        fontSize: '14px'
+                      }}
+                      onClick={() => {
+                        console.log('Changing timezone to:', item)
+                        setShowGotoDropdown(false)
+                      }}
+                    >
+                      {item}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
-        )}
 
-        {/* TradingView Chart */}
-        <div
-          id="tradingview_chart"
-          ref={chartRef}
-          style={{
-            flex: 1,
-            background: '#1e222d'
-          }}
-        />
-
-        {/* Open Position Button */}
-        <button
-          style={{
-            position: 'fixed',
-            top: '20px',
-            right: '150px',
-            padding: '10px 20px',
-            background: '#ff6b00',
-            color: 'white',
-            border: 'none',
-            borderRadius: '4px',
-            fontSize: '14px',
-            fontWeight: '600',
-            cursor: 'pointer',
-            boxShadow: '0 4px 12px rgba(255, 107, 0, 0.4)',
-            zIndex: 100,
-            transition: 'all 0.2s'
-          }}
-          onClick={() => setShowTradeModal(true)}
-          onMouseEnter={(e) => {
-            e.target.style.background = '#e55f00'
-            e.target.style.transform = 'translateY(-2px)'
-            e.target.style.boxShadow = '0 6px 16px rgba(255, 107, 0, 0.5)'
-          }}
-          onMouseLeave={(e) => {
-            e.target.style.background = '#ff6b00'
-            e.target.style.transform = 'translateY(0)'
-            e.target.style.boxShadow = '0 4px 12px rgba(255, 107, 0, 0.4)'
-          }}
-        >
-          Open Position Card
-        </button>
+          {/* TradingView Chart */}
+          <div
+            id="tradingview_chart"
+            ref={chartRef}
+            style={{
+              flex: 1,
+              width: '100%',
+              height: '100%'
+            }}
+          />
+        </div>
 
         {/* Bottom Bar */}
         <div style={{
