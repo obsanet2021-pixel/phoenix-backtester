@@ -4,6 +4,43 @@ import { Chart } from 'chart.js/auto'
 const PhoenixReports = () => {
   const [activeTab, setActiveTab] = useState('performance')
   const [dateRange, setDateRange] = useState('month')
+  const [reportData, setReportData] = useState({
+    totalTrades: 0,
+    totalPnL: 0,
+    winRate: 0,
+    avgTrade: 0,
+    bestMonth: { month: 'N/A', pnl: 0 },
+    worstMonth: { month: 'N/A', pnl: 0 }
+  })
+
+  // Load report data from localStorage
+  useEffect(() => {
+    const loadReportData = () => {
+      const journalTrades = JSON.parse(localStorage.getItem('phoenixJournalTrades') || '[]');
+      const tradesData = JSON.parse(localStorage.getItem('phoenixTradesData') || '[]');
+      const allTrades = [...journalTrades, ...tradesData];
+      
+      const closedTrades = allTrades.filter(t => t.status === 'closed');
+      const totalPnL = closedTrades.reduce((sum, t) => sum + (t.pnl || 0), 0);
+      const wins = closedTrades.filter(t => (t.pnl || 0) > 0);
+      const winRate = closedTrades.length > 0 ? (wins.length / closedTrades.length) * 100 : 0;
+      const avgTrade = closedTrades.length > 0 ? totalPnL / closedTrades.length : 0;
+
+      setReportData({
+        totalTrades: allTrades.length,
+        totalPnL,
+        winRate,
+        avgTrade,
+        bestMonth: { month: 'Current', pnl: totalPnL },
+        worstMonth: { month: 'N/A', pnl: 0 }
+      });
+    };
+
+    loadReportData();
+    const interval = setInterval(loadReportData, 5000);
+    return () => clearInterval(interval);
+  }, []);
+
   const chartRefs = {
     performanceChart: useRef(null),
     winRateChart: useRef(null),
