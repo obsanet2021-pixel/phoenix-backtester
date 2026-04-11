@@ -298,8 +298,8 @@ const PhoenixReports = () => {
                   <div className="ov-title">Performance Summary</div>
                   <div className="ov-badge neutral">Last 30 Days</div>
                 </div>
-                {performanceData.map((item, index) => (
-                  <div key={index} className="ov-row">
+                {performanceData.map((item) => (
+                  <div key={item.metric} className="ov-row">
                     <div className="ov-key">{item.metric}</div>
                     <div className={`ov-val ${item.status === 'positive' ? 'green' : 'red'}`}>
                       {item.value}
@@ -433,8 +433,8 @@ const PhoenixReports = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {tradeData.map((trade, index) => (
-                      <tr key={index} style={{ borderBottom: '1px solid #141414' }}>
+                    {tradeData.map((trade) => (
+                      <tr key={trade.id} style={{ borderBottom: '1px solid #141414' }}>
                         <td style={{ padding: '8px', color: '#aaa' }}>{trade.date}</td>
                         <td style={{ padding: '8px', color: '#ddd' }}>{trade.pair}</td>
                         <td style={{ padding: '8px' }}>

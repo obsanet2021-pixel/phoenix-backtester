@@ -3,6 +3,9 @@ import { Chart } from 'chart.js/auto'
 
 const PhoenixAnalytics = () => {
   const [activeTab, setActiveTab] = useState('overview')
+  const [chartTimeframe, setChartTimeframe] = useState('30 Min')
+  const [dayChartMode, setDayChartMode] = useState('Total')
+  const [monthChartMode, setMonthChartMode] = useState('All')
   const [analyticsData, setAnalyticsData] = useState({
     totalTrades: 0,
     winRate: 0,
@@ -418,7 +421,7 @@ const PhoenixAnalytics = () => {
       
       days.push(
         <div
-          key={d}
+          key={key}
           style={{
             height: '36px',
             borderRadius: '5px',
@@ -495,8 +498,15 @@ const PhoenixAnalytics = () => {
                 <div className="chart-header">
                   <div className="chart-title">P&amp;L by Time</div>
                   <div className="chart-tabs">
-                    <div className="ctab">30 Min</div>
-                    <div className="ctab active">1 Hour</div>
+                    {['30 Min', '1 Hour'].map(timeframe => (
+                      <div
+                        key={timeframe}
+                        className={`ctab ${chartTimeframe === timeframe ? 'active' : ''}`}
+                        onClick={() => setChartTimeframe(timeframe)}
+                      >
+                        {timeframe}
+                      </div>
+                    ))}
                   </div>
                 </div>
                 <div style={{ position: 'relative', height: '180px' }}>
@@ -507,8 +517,15 @@ const PhoenixAnalytics = () => {
                 <div className="chart-header">
                   <div className="chart-title">P&amp;L by Day</div>
                   <div className="chart-tabs">
-                    <div className="ctab">Separate</div>
-                    <div className="ctab active">Total</div>
+                    {['Separate', 'Total'].map(mode => (
+                      <div
+                        key={mode}
+                        className={`ctab ${dayChartMode === mode ? 'active' : ''}`}
+                        onClick={() => setDayChartMode(mode)}
+                      >
+                        {mode}
+                      </div>
+                    ))}
                   </div>
                 </div>
                 <div style={{ position: 'relative', height: '180px' }}>
@@ -653,9 +670,15 @@ const PhoenixAnalytics = () => {
               <div className="chart-header">
                 <div className="chart-title">Percentage Profit by Month</div>
                 <div className="chart-tabs">
-                  <div className="ctab">Percent</div>
-                  <div className="ctab">Profit</div>
-                  <div className="ctab active">All</div>
+                  {['Percent', 'Profit', 'All'].map(mode => (
+                    <div
+                      key={mode}
+                      className={`ctab ${monthChartMode === mode ? 'active' : ''}`}
+                      onClick={() => setMonthChartMode(mode)}
+                    >
+                      {mode}
+                    </div>
+                  ))}
                 </div>
               </div>
               <div style={{ overflowX: 'auto', marginBottom: '16px' }}>
@@ -671,7 +694,7 @@ const PhoenixAnalytics = () => {
                   </thead>
                   <tbody>
                     {[calData2024, calData2025].map((row, rowIndex) => (
-                      <tr key={rowIndex}>
+                      <tr key={`cal-row-${rowIndex}`}>
                         {row.map((v, i) => {
                           const isPos = v.startsWith('+') || (v.includes('%') && !v.startsWith('---') && parseFloat(v) > 0)
                           const isDash = v === '---'

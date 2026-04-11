@@ -471,8 +471,8 @@ const PhoenixSimulator = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {simulationHistory.map((sim, index) => (
-                    <tr key={index} className="trade-row">
+                  {simulationHistory.map((sim) => (
+                    <tr key={sim.id} className="trade-row">
                       <td className="trade-cell">{sim.name}</td>
                       <td className="trade-cell">{sim.completedAt}</td>
                       <td className="trade-cell">{sim.duration}</td>

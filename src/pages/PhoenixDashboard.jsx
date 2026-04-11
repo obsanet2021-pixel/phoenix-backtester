@@ -4,6 +4,7 @@ import { Chart } from 'chart.js/auto'
 const PhoenixDashboard = () => {
   const chartRef = useRef(null)
   const chartInstanceRef = useRef(null)
+  const [chartTimeframe, setChartTimeframe] = useState('1W')
   const [stats, setStats] = useState({
     totalTrades: 0,
     winRate: 0,
@@ -234,10 +235,15 @@ const PhoenixDashboard = () => {
             <div className="chart-header">
               <div className="chart-title">Equity Curve</div>
               <div className="chart-tabs">
-                <div className="chart-tab">1D</div>
-                <div className="chart-tab active">1W</div>
-                <div className="chart-tab">1M</div>
-                <div className="chart-tab">All</div>
+                {['1D', '1W', '1M', 'All'].map(timeframe => (
+                  <div
+                    key={timeframe}
+                    className={`chart-tab ${chartTimeframe === timeframe ? 'active' : ''}`}
+                    onClick={() => setChartTimeframe(timeframe)}
+                  >
+                    {timeframe}
+                  </div>
+                ))}
               </div>
             </div>
             <div style={{ position: 'relative', height: '200px' }}>
