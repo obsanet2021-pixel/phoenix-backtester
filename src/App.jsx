@@ -9,11 +9,12 @@ import PhoenixReports from './pages/PhoenixReports'
 import PhoenixBacktest from './pages/PhoenixBacktest'
 import PhoenixTrades from './pages/PhoenixTrades'
 import PhoenixSimulator from './pages/PhoenixSimulator'
-import PhoenixChallenge from './pages/PhoenixChallenge'
+import PhoenixChallengeFixed from './pages/PhoenixChallengeFixed'
+import PhoenixJournalFixed from './pages/PhoenixJournalFixed'
 import PhoenixChart from './pages/PhoenixChart'
 import StandaloneReplayChart from './pages/StandaloneReplayChart'
 import StandaloneBacktester from './pages/StandaloneBacktester'
-import PhoenixBacktesterNew from './components/PhoenixBacktesterNew'
+import PhoenixBacktesterFixed from './components/PhoenixBacktesterFixed'
 
 function App() {
   const [activePage, setActivePage] = useState('dashboard')
@@ -23,7 +24,7 @@ function App() {
       case 'journal':
         return (
           <ErrorBoundary>
-            <PhoenixJournal />
+            <PhoenixJournalFixed />
           </ErrorBoundary>
         )
       case 'dashboard':
@@ -59,7 +60,7 @@ function App() {
       case 'challenge':
         return (
           <ErrorBoundary>
-            <PhoenixChallenge />
+            <PhoenixChallengeFixed />
           </ErrorBoundary>
         )
       case 'chart':
@@ -88,7 +89,7 @@ function App() {
       {/* Standalone replay chart route */}
       <Route path="/replay-chart" element={<StandaloneReplayChart />} />
       <Route path="/backtester" element={<StandaloneBacktester />} />
-      <Route path="/phoenix-backtester" element={<PhoenixBacktesterNew />} />
+      <Route path="/phoenix-backtester" element={<PhoenixBacktesterFixed />} />
       
       {/* Main app with sidebar */}
       <Route path="/*" element={
