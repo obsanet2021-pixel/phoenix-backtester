@@ -2,10 +2,21 @@ import React, { useState, useEffect, useRef } from 'react'
 import { Chart } from 'chart.js/auto'
 
 const PhoenixChallenge = () => {
-  const [activeTab, setActiveTab] = useState('accounts')
+  const [activeTab, setActiveTab] = useState('challenges')
   const [selectedAccount, setSelectedAccount] = useState(null)
   const [showRequestModal, setShowRequestModal] = useState(false)
   const [userChallenges, setUserChallenges] = useState([])
+  const [userProgress, setUserProgress] = useState({
+    totalTrades: 0,
+    winRate: 0,
+    profitLoss: 0,
+    challengesCompleted: 0,
+    currentStreak: 0,
+    xp: 0,
+    level: 1
+  })
+  const [activeChallenge, setActiveChallenge] = useState(null)
+  const [isLoading, setIsLoading] = useState(false)
 
   const accountTypes = [
     { id: 1, size: 2500, price: 47, profitTarget: 5, maxDrawdown: 5, dailyDrawdown: 4, phase: '1-Phase', timeLimit: 'Unlimited', refundable: true },
@@ -20,6 +31,165 @@ const PhoenixChallenge = () => {
     { id: 10, size: 500000, price: 4347, profitTarget: 10, maxDrawdown: 10, dailyDrawdown: 5, phase: '1-Phase', timeLimit: 'Unlimited', refundable: true },
     { id: 11, size: 1000000, price: 8147, profitTarget: 10, maxDrawdown: 10, dailyDrawdown: 5, phase: '1-Phase', timeLimit: 'Unlimited', refundable: true }
   ]
+
+  // Demo challenges for new users
+  const demoChallenges = [
+    {
+      id: 1,
+      title: "First Trade Challenge",
+      description: "Place your first trade and learn the basics",
+      difficulty: "Beginner",
+      requirements: {
+        trades: 1,
+        profit: 0
+      },
+      reward: "100 XP",
+      icon: "target",
+      status: "available",
+      xpReward: 100
+    },
+    {
+      id: 2,
+      title: "Risk Management Master",
+      description: "Complete 10 trades with maximum 2% risk per trade",
+      difficulty: "Intermediate",
+      requirements: {
+        trades: 10,
+        maxRisk: 2
+      },
+      reward: "250 XP",
+      icon: "shield",
+      status: userProgress.totalTrades >= 5 ? "available" : "locked",
+      xpReward: 250
+    },
+    {
+      id: 3,
+      title: "Profit Target Pro",
+      description: "Achieve $500 profit in a single trading session",
+      difficulty: "Advanced",
+      requirements: {
+        profit: 500,
+        trades: 5
+      },
+      reward: "500 XP",
+      icon: "trending-up",
+      status: userProgress.totalTrades >= 20 ? "available" : "locked",
+      xpReward: 500
+    },
+    {
+      id: 4,
+      title: "Consistency King",
+      description: "Maintain 60% win rate over 50 trades",
+      difficulty: "Expert",
+      requirements: {
+        trades: 50,
+        winRate: 60
+      },
+      reward: "1000 XP",
+      icon: "crown",
+      status: userProgress.totalTrades >= 50 ? "available" : "locked",
+      xpReward: 1000
+    }
+  ]
+
+  // Load user progress from localStorage
+  useEffect(() => {
+    const savedProgress = localStorage.getItem('phoenixChallengeProgress');
+    if (savedProgress) {
+      const data = JSON.parse(savedProgress);
+      setUserProgress(data);
+    }
+  }, []);
+
+  // Save progress to localStorage
+  useEffect(() => {
+    localStorage.setItem('phoenixChallengeProgress', JSON.stringify(userProgress));
+  }, [userProgress]);
+
+  const startChallenge = (challenge) => {
+    if (challenge.status === 'locked') {
+      alert('This challenge is locked! Complete previous challenges first.');
+      return;
+    }
+
+    setActiveChallenge(challenge);
+    setIsLoading(true);
+    
+    setTimeout(() => {
+      setIsLoading(false);
+      alert(`Started: ${challenge.title}\n\n${challenge.description}\n\nGood luck!`);
+    }, 1000);
+  };
+
+  const updateProgress = (tradeData) => {
+    const newProgress = {
+      ...userProgress,
+      totalTrades: userProgress.totalTrades + 1,
+      winRate: userProgress.totalTrades > 0 ? 
+        ((userProgress.winRate * userProgress.totalTrades + (tradeData.profit > 0 ? 100 : 0)) / (userProgress.totalTrades + 1)) : 0,
+      profitLoss: userProgress.profitLoss + tradeData.profit,
+      currentStreak: tradeData.profit > 0 ? userProgress.currentStreak + 1 : 0
+    };
+
+    // Check challenge completion
+    demoChallenges.forEach(challenge => {
+      if (challenge.status === 'available' || challenge.status === 'active') {
+        let completed = false;
+        
+        if (challenge.id === 1 && newProgress.totalTrades >= challenge.requirements.trades) {
+          completed = true;
+        }
+        if (challenge.id === 2 && newProgress.totalTrades >= challenge.requirements.trades) {
+          completed = true;
+        }
+        if (challenge.id === 3 && newProgress.profitLoss >= challenge.requirements.profit) {
+          completed = true;
+        }
+        if (challenge.id === 4 && newProgress.totalTrades >= challenge.requirements.trades && newProgress.winRate >= challenge.requirements.winRate) {
+          completed = true;
+        }
+
+        if (completed) {
+          challenge.status = 'completed';
+          newProgress.challengesCompleted += 1;
+          newProgress.xp += challenge.xpReward;
+          newProgress.level = Math.floor(newProgress.xp / 1000) + 1;
+          alert(`Challenge Completed: ${challenge.title}\n+${challenge.reward}`);
+        }
+      }
+    });
+
+    setUserProgress(newProgress);
+  };
+
+  const simulateTrade = () => {
+    const profit = Math.random() > 0.5 ? 25 : -15;
+    updateProgress({ profit });
+  };
+
+  const resetProgress = () => {
+    if (confirm('Are you sure you want to reset all progress?')) {
+      const resetData = {
+        totalTrades: 0,
+        winRate: 0,
+        profitLoss: 0,
+        challengesCompleted: 0,
+        currentStreak: 0,
+        xp: 0,
+        level: 1
+      };
+      setUserProgress(resetData);
+      
+      // Reset challenge statuses
+      demoChallenges.forEach(challenge => {
+        if (challenge.id === 1) {
+          challenge.status = 'available';
+        } else {
+          challenge.status = 'locked';
+        }
+      });
+    }
+  };
 
   const chartRefs = {
     comparisonChart: useRef(null),
