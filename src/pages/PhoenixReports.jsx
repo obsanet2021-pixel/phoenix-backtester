@@ -16,9 +16,7 @@ const PhoenixReports = () => {
   // Load report data from localStorage
   useEffect(() => {
     const loadReportData = () => {
-      const journalTrades = JSON.parse(localStorage.getItem('phoenixJournalTrades') || '[]');
-      const tradesData = JSON.parse(localStorage.getItem('phoenixTradesData') || '[]');
-      const allTrades = [...journalTrades, ...tradesData];
+      const allTrades = JSON.parse(localStorage.getItem('phoenixTrades') || '[]');
       
       const closedTrades = allTrades.filter(t => t.status === 'closed');
       const totalPnL = closedTrades.reduce((sum, t) => sum + (t.pnl || 0), 0);

@@ -17,7 +17,7 @@ const PhoenixTrades = () => {
 
   // Load trades from localStorage
   useEffect(() => {
-    const savedTrades = localStorage.getItem('phoenixTradesData');
+    const savedTrades = localStorage.getItem('phoenixTrades');
     if (savedTrades) {
       setTrades(JSON.parse(savedTrades));
     }
@@ -25,9 +25,7 @@ const PhoenixTrades = () => {
 
   // Save trades to localStorage
   useEffect(() => {
-    if (trades.length > 0) {
-      localStorage.setItem('phoenixTradesData', JSON.stringify(trades));
-    }
+    localStorage.setItem('phoenixTrades', JSON.stringify(trades));
   }, [trades]);
 
   const calculatePnL = (trade) => {

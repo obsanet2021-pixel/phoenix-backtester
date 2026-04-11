@@ -16,10 +16,8 @@ const PhoenixDashboard = () => {
   // Load data from localStorage and calculate stats
   useEffect(() => {
     const loadDashboardData = () => {
-      // Get trades from journal
-      const journalTrades = JSON.parse(localStorage.getItem('phoenixJournalTrades') || '[]');
-      const tradesData = JSON.parse(localStorage.getItem('phoenixTradesData') || '[]');
-      const allTrades = [...journalTrades, ...tradesData];
+      // Get trades from unified localStorage
+      const allTrades = JSON.parse(localStorage.getItem('phoenixTrades') || '[]');
       
       const closedTrades = allTrades.filter(t => t.status === 'closed');
       const totalPnL = closedTrades.reduce((sum, t) => sum + (t.pnl || 0), 0);
@@ -58,9 +56,7 @@ const PhoenixDashboard = () => {
   useEffect(() => {
     if (chartRef.current && !chartInstanceRef.current) {
       // Generate equity curve from localStorage data
-      const journalTrades = JSON.parse(localStorage.getItem('phoenixJournalTrades') || '[]');
-      const tradesData = JSON.parse(localStorage.getItem('phoenixTradesData') || '[]');
-      const allTrades = [...journalTrades, ...tradesData].sort((a, b) => new Date(a.date) - new Date(b.date));
+      const allTrades = JSON.parse(localStorage.getItem('phoenixTrades') || '[]').sort((a, b) => new Date(a.date) - new Date(b.date));
       
       let currentEquity = 10000;
       const equityData = [10000];

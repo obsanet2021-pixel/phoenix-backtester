@@ -26,7 +26,7 @@ const PhoenixJournal = () => {
 
   // Load trades from localStorage
   useEffect(() => {
-    const savedTrades = localStorage.getItem('phoenixJournalTrades');
+    const savedTrades = localStorage.getItem('phoenixTrades');
     if (savedTrades) {
       setTrades(JSON.parse(savedTrades));
     }
@@ -34,9 +34,7 @@ const PhoenixJournal = () => {
 
   // Save trades to localStorage
   useEffect(() => {
-    if (trades.length > 0) {
-      localStorage.setItem('phoenixJournalTrades', JSON.stringify(trades));
-    }
+    localStorage.setItem('phoenixTrades', JSON.stringify(trades));
   }, [trades]);
 
   const addTrade = () => {
