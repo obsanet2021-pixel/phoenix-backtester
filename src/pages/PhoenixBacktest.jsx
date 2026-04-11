@@ -18,9 +18,7 @@ const PhoenixBacktest = ({ setActivePage }) => {
 
   // Save sessions to localStorage
   useEffect(() => {
-    if (sessions.length > 0) {
-      localStorage.setItem('phoenixBacktestSessions', JSON.stringify(sessions));
-    }
+    localStorage.setItem('phoenixBacktestSessions', JSON.stringify(sessions));
   }, [sessions]);
 
   const ORANGE = '#ff6b00'
@@ -105,6 +103,38 @@ const PhoenixBacktest = ({ setActivePage }) => {
   const NewSessionModal = () => {
     if (!showNewSession) return null
 
+    const [formData, setFormData] = useState({
+      name: selectedSession?.name || '',
+      pair: selectedSession?.pair || 'XAUUSD',
+      balance: selectedSession?.balance || '$10,000',
+      strategy: 'scalping',
+      timeframe: '1h'
+    })
+
+    const handleSave = () => {
+      const newSession = {
+        id: selectedSession?.id || Date.now(),
+        name: formData.name || 'New Session',
+        pair: formData.pair,
+        balance: formData.balance,
+        strategy: formData.strategy,
+        timeframe: formData.timeframe,
+        date: new Date().toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: 'numeric' }) + ', ' + new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }),
+        status: 'active'
+      }
+
+      if (selectedSession) {
+        setSessions(sessions.map(s => s.id === selectedSession.id ? newSession : s))
+      } else {
+        setSessions([...sessions, newSession])
+        // Navigate to backtester after creating new session
+        navigate('/phoenix-backtester')
+      }
+
+      setShowNewSession(false)
+      setSelectedSession(null)
+    }
+
     return (
       <div className="modal-overlay">
         <div className="modal-content">
@@ -125,13 +155,17 @@ const PhoenixBacktest = ({ setActivePage }) => {
               <label>Session Name</label>
               <input 
                 type="text" 
-                defaultValue={selectedSession?.name || ''}
+                value={formData.name}
+                onChange={(e) => setFormData({...formData, name: e.target.value})}
                 placeholder="Enter session name"
               />
             </div>
             <div className="form-group">
               <label>Currency Pair</label>
-              <select defaultValue={selectedSession?.pair || 'XAUUSD'}>
+              <select 
+                value={formData.pair}
+                onChange={(e) => setFormData({...formData, pair: e.target.value})}
+              >
                 <option value="XAUUSD">XAU/USD</option>
                 <option value="EURUSD">EUR/USD</option>
                 <option value="GBPUSD">GBP/USD</option>
@@ -144,13 +178,17 @@ const PhoenixBacktest = ({ setActivePage }) => {
               <label>Initial Balance</label>
               <input 
                 type="text" 
-                defaultValue={selectedSession?.balance || '$10,000'}
+                value={formData.balance}
+                onChange={(e) => setFormData({...formData, balance: e.target.value})}
                 placeholder="$10,000"
               />
             </div>
             <div className="form-group">
               <label>Strategy</label>
-              <select>
+              <select 
+                value={formData.strategy}
+                onChange={(e) => setFormData({...formData, strategy: e.target.value})}
+              >
                 <option value="scalping">Scalping</option>
                 <option value="swing">Swing Trading</option>
                 <option value="day">Day Trading</option>
@@ -159,7 +197,10 @@ const PhoenixBacktest = ({ setActivePage }) => {
             </div>
             <div className="form-group">
               <label>Timeframe</label>
-              <select>
+              <select 
+                value={formData.timeframe}
+                onChange={(e) => setFormData({...formData, timeframe: e.target.value})}
+              >
                 <option value="1m">1 Minute</option>
                 <option value="5m">5 Minutes</option>
                 <option value="15m">15 Minutes</option>
@@ -181,11 +222,7 @@ const PhoenixBacktest = ({ setActivePage }) => {
             </button>
             <button 
               className="btn-primary"
-              onClick={() => {
-                // Handle save logic here
-                setShowNewSession(false)
-                setSelectedSession(null)
-              }}
+              onClick={handleSave}
             >
               {selectedSession ? 'Update' : 'Create'} Session
             </button>

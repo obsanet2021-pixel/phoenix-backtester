@@ -407,7 +407,16 @@ const PhoenixReports = () => {
                     <option value="quarter">Last Quarter</option>
                     <option value="year">Last Year</option>
                   </select>
-                  <button className="btn-outline">Export CSV</button>
+                  <button className="btn-outline" onClick={() => {
+                    const trades = JSON.parse(localStorage.getItem('phoenixTrades') || '[]');
+                    const dataStr = JSON.stringify(trades, null, 2);
+                    const dataBlob = new Blob([dataStr], { type: 'application/json' });
+                    const url = URL.createObjectURL(dataBlob);
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.download = 'report-trades-export.json';
+                    link.click();
+                  }}>Export CSV</button>
                 </div>
               </div>
               <div style={{ overflowX: 'auto' }}>
@@ -555,8 +564,19 @@ const PhoenixReports = () => {
         </div>
         <div className="topbar-right">
           <div className="streak-badge">{'\ud83d\udcc8'} Live Data</div>
-          <button className="btn-outline">Generate PDF</button>
-          <button className="btn-outline">Share Report</button>
+          <button className="btn-outline" onClick={() => {
+            const dataStr = JSON.stringify(reportData, null, 2);
+            const dataBlob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(dataBlob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = 'report-export.json';
+            link.click();
+          }}>Generate PDF</button>
+          <button className="btn-outline" onClick={() => {
+            navigator.clipboard.writeText(JSON.stringify(reportData, null, 2));
+            alert('Report copied to clipboard!');
+          }}>Share Report</button>
         </div>
       </div>
 

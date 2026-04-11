@@ -436,7 +436,11 @@ const PhoenixTrades = () => {
             <div className="trades-header">
               <h3>Open Positions ({openTrades.length})</h3>
               <div className="trades-actions">
-                <button className="btn-outline">Close All</button>
+                <button className="btn-outline" onClick={() => {
+                  openTrades.forEach(trade => {
+                    closeTrade(trade.id);
+                  });
+                }}>Close All</button>
                 <button 
                   className="btn-new"
                   onClick={() => setShowNewTrade(true)}
@@ -472,13 +476,21 @@ const PhoenixTrades = () => {
             <div className="trades-header">
               <h3>Closed Trades ({closedTrades.length})</h3>
               <div className="trades-actions">
-                <select className="filter-select">
+                <select onChange={(e) => setFilter(e.target.value)} value={filter}>
                   <option value="all">All Time</option>
                   <option value="today">Today</option>
                   <option value="week">This Week</option>
                   <option value="month">This Month</option>
                 </select>
-                <button className="btn-outline">Export CSV</button>
+                <button className="btn-outline" onClick={() => {
+                  const dataStr = JSON.stringify(closedTrades, null, 2);
+                  const dataBlob = new Blob([dataStr], { type: 'application/json' });
+                  const url = URL.createObjectURL(dataBlob);
+                  const link = document.createElement('a');
+                  link.href = url;
+                  link.download = 'trades-export.json';
+                  link.click();
+                }}>Export CSV</button>
               </div>
             </div>
 

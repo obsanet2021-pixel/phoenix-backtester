@@ -152,8 +152,19 @@ const PhoenixDashboard = () => {
         </div>
         <div className="topbar-right">
           <div className="streak-badge">{'\ud83d\udd25'} 3 day streak</div>
-          <button className="btn-outline">Export Report</button>
-          <button className="btn-primary">+ New Trade</button>
+          <button className="btn-outline" onClick={() => {
+            const trades = JSON.parse(localStorage.getItem('phoenixTrades') || '[]');
+            const dataStr = JSON.stringify(trades, null, 2);
+            const dataBlob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(dataBlob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = 'trades-export.json';
+            link.click();
+          }}>Export Report</button>
+          <button className="btn-primary" onClick={() => {
+            window.location.href = '/journal';
+          }}>+ New Trade</button>
         </div>
       </div>
 

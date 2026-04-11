@@ -436,8 +436,23 @@ const PhoenixSimulator = () => {
             <div className="trades-header">
               <h3>Simulation History ({simulationHistory.length})</h3>
               <div className="trades-actions">
-                <button className="btn-outline">Clear History</button>
-                <button className="btn-outline">Export Data</button>
+                <button className="btn-outline" onClick={() => {
+                  setSimulationHistory([]);
+                  localStorage.setItem('phoenixSimulatorData', JSON.stringify({
+                    simulationData,
+                    simulationHistory: [],
+                    timestamp: new Date().toISOString()
+                  }));
+                }}>Clear History</button>
+                <button className="btn-outline" onClick={() => {
+                  const dataStr = JSON.stringify(simulationHistory, null, 2);
+                  const dataBlob = new Blob([dataStr], { type: 'application/json' });
+                  const url = URL.createObjectURL(dataBlob);
+                  const link = document.createElement('a');
+                  link.href = url;
+                  link.download = 'simulation-history.json';
+                  link.click();
+                }}>Export Data</button>
               </div>
             </div>
 

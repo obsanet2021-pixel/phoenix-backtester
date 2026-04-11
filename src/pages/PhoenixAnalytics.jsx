@@ -763,8 +763,19 @@ const PhoenixAnalytics = () => {
         </div>
         <div className="topbar-right">
           <div className="streak-badge">{'\ud83d\udd25'} 3 day streak</div>
-          <button className="btn-outline">Filter</button>
-          <button className="btn-outline">Export</button>
+          <button className="btn-outline" onClick={() => {
+            const trades = JSON.parse(localStorage.getItem('phoenixTrades') || '[]');
+            alert(`Filter options:\nTotal Trades: ${trades.length}\nWin Rate: ${analyticsData.winRate.toFixed(2)}%\nTotal P&L: $${analyticsData.totalPnL.toFixed(2)}`);
+          }}>Filter</button>
+          <button className="btn-outline" onClick={() => {
+            const dataStr = JSON.stringify(analyticsData, null, 2);
+            const dataBlob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(dataBlob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = 'analytics-export.json';
+            link.click();
+          }}>Export</button>
         </div>
       </div>
 

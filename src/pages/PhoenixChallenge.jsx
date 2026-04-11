@@ -607,7 +607,15 @@ const PhoenixChallenge = () => {
             <div className="trades-header">
               <h3>My Challenges ({userChallenges.length})</h3>
               <div className="trades-actions">
-                <button className="btn-outline">Export Data</button>
+                <button className="btn-outline" onClick={() => {
+                  const dataStr = JSON.stringify(userChallenges, null, 2);
+                  const dataBlob = new Blob([dataStr], { type: 'application/json' });
+                  const url = URL.createObjectURL(dataBlob);
+                  const link = document.createElement('a');
+                  link.href = url;
+                  link.download = 'challenges-export.json';
+                  link.click();
+                }}>Export Data</button>
                 <button 
                   className="btn-new"
                   onClick={() => setActiveTab('accounts')}
