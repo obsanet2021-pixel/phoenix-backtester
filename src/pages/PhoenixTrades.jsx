@@ -19,7 +19,12 @@ const PhoenixTrades = () => {
   useEffect(() => {
     const savedTrades = localStorage.getItem('phoenixTrades');
     if (savedTrades) {
-      setTrades(JSON.parse(savedTrades));
+      try {
+        const parsed = JSON.parse(savedTrades);
+        setTrades(Array.isArray(parsed) ? parsed : []);
+      } catch (e) {
+        setTrades([]);
+      }
     }
   }, []);
 
