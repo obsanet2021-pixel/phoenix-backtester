@@ -154,10 +154,11 @@
   gap: 12px;
 }
 
-.phoenix-logo {
-  height: 24px;
-  width: auto;
-  filter: brightness(0) invert(1) sepia(1) saturate(100) hue-rotate(15deg);
+.phoenix-icon {
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .app-title {

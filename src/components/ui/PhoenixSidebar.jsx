@@ -1,5 +1,4 @@
 import React from 'react'
-import phoenixLogo from '../assets/phoenix-logo.png'
 
 const PhoenixSidebar = ({ activePage, setActivePage }) => {
   const navItems = [
@@ -81,7 +80,7 @@ const PhoenixSidebar = ({ activePage, setActivePage }) => {
   return (
     <div className="sidebar">
       <div className="logo">
-        <img src={phoenixLogo} alt="Phoenix Logo" className="logo-image" />
+        <div className="logo-icon">{'\ud83d\udd25'}</div>
         <div>
           <div className="logo-text">Phoenix</div>
           <div className="logo-sub">Backtester</div>
