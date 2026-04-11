@@ -4,17 +4,24 @@ import { Chart } from 'chart.js/auto'
 
 const PhoenixBacktest = ({ setActivePage }) => {
   const navigate = useNavigate()
-  const [sessions, setSessions] = useState([
-    { id: 1, name: 'test2', pair: 'XAUUSD', balance: '$5190.92', date: '06/01/2026, 22:21', status: 'completed' },
-    { id: 2, name: 'scalp_bot', pair: 'EURUSD', balance: '$4850.45', date: '05/31/2026, 18:45', status: 'completed' },
-    { id: 3, name: 'swing_trader', pair: 'GBPUSD', balance: '$6220.80', date: '05/30/2026, 14:32', status: 'completed' },
-    { id: 4, name: 'algo_test', pair: 'USDJPY', balance: '$5680.15', date: '05/29/2026, 11:20', status: 'completed' },
-    { id: 5, name: 'breakout', pair: 'AUDUSD', balance: '$4320.60', date: '05/28/2026, 09:15', status: 'completed' },
-    { id: 6, name: 'mean_revert', pair: 'NZDUSD', balance: '$5950.30', date: '05/27/2026, 16:45', status: 'completed' }
-  ])
-
+  const [sessions, setSessions] = useState([])
   const [selectedSession, setSelectedSession] = useState(null)
   const [showNewSession, setShowNewSession] = useState(false)
+
+  // Load sessions from localStorage
+  useEffect(() => {
+    const savedSessions = localStorage.getItem('phoenixBacktestSessions');
+    if (savedSessions) {
+      setSessions(JSON.parse(savedSessions));
+    }
+  }, []);
+
+  // Save sessions to localStorage
+  useEffect(() => {
+    if (sessions.length > 0) {
+      localStorage.setItem('phoenixBacktestSessions', JSON.stringify(sessions));
+    }
+  }, [sessions]);
 
   const ORANGE = '#ff6b00'
   const TEAL = '#00c4b4'
