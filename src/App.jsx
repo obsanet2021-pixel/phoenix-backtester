@@ -9,8 +9,7 @@ import PhoenixReports from './pages/PhoenixReports'
 import PhoenixBacktest from './pages/PhoenixBacktest'
 import PhoenixTrades from './pages/PhoenixTrades'
 import PhoenixSimulator from './pages/PhoenixSimulator'
-import PhoenixChallengeFixed from './pages/PhoenixChallengeFixed'
-import PhoenixJournalFixed from './pages/PhoenixJournalFixed'
+import PhoenixChallenge from './pages/PhoenixChallenge'
 import PhoenixChart from './pages/PhoenixChart'
 import StandaloneReplayChart from './pages/StandaloneReplayChart'
 import StandaloneBacktester from './pages/StandaloneBacktester'
@@ -24,7 +23,7 @@ function App() {
       case 'journal':
         return (
           <ErrorBoundary>
-            <PhoenixJournalFixed />
+            <PhoenixJournal />
           </ErrorBoundary>
         )
       case 'dashboard':
@@ -60,7 +59,7 @@ function App() {
       case 'challenge':
         return (
           <ErrorBoundary>
-            <PhoenixChallengeFixed />
+            <PhoenixChallenge />
           </ErrorBoundary>
         )
       case 'chart':
