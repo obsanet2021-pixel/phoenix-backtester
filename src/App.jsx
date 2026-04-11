@@ -11,8 +11,6 @@ import PhoenixTrades from './pages/PhoenixTrades'
 import PhoenixSimulator from './pages/PhoenixSimulator'
 import PhoenixChallenge from './pages/PhoenixChallenge'
 import PhoenixChart from './pages/PhoenixChart'
-import StandaloneReplayChart from './pages/StandaloneReplayChart'
-import StandaloneBacktester from './pages/StandaloneBacktester'
 import PhoenixBacktester from './components/PhoenixBacktester'
 
 function App() {
@@ -85,9 +83,7 @@ function App() {
 
   return (
     <Routes>
-      {/* Standalone replay chart route */}
-      <Route path="/replay-chart" element={<StandaloneReplayChart />} />
-      <Route path="/backtester" element={<StandaloneBacktester />} />
+      {/* Phoenix Backtester standalone route */}
       <Route path="/phoenix-backtester" element={<PhoenixBacktester />} />
       
       {/* Main app with sidebar */}
