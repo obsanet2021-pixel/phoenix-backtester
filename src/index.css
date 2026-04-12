@@ -324,6 +324,41 @@ body {
   overflow-y: auto;
 }
 
+@keyframes marquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-marquee {
+  animation: marquee 25s linear infinite;
+  white-space: nowrap;
+  display: inline-block;
+  width: auto;
+}
+
+/* Custom scrollbar for the whole app */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #000;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #22c55e;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #16a34a;
+}
+
 /* SIDEBAR */
 .sidebar { width: 220px; min-width: 220px; background: #0f0f0f; border-right: 1px solid #1e1e1e; display: flex; flex-direction: column; padding: 0; }
 .logo { padding: 20px 20px 16px; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid #1e1e1e; }
