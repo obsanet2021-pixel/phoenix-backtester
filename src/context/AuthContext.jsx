@@ -49,6 +49,24 @@ export const AuthProvider = ({ children }) => {
     return { success: false, error: 'All fields are required' }
   }
 
+  const googleLogin = (googleUser) => {
+    // Handle Google authentication
+    if (googleUser) {
+      const userData = {
+        id: googleUser.sub,
+        email: googleUser.email,
+        name: googleUser.name,
+        picture: googleUser.picture,
+        createdAt: new Date().toISOString()
+      }
+      setUser(userData)
+      setIsAuthenticated(true)
+      localStorage.setItem('phoenixUser', JSON.stringify(userData))
+      return { success: true }
+    }
+    return { success: false, error: 'Google authentication failed' }
+  }
+
   const logout = () => {
     setUser(null)
     setIsAuthenticated(false)
@@ -56,7 +74,7 @@ export const AuthProvider = ({ children }) => {
   }
 
   return (
-    <AuthContext.Provider value={{ user, isAuthenticated, login, signup, logout }}>
+    <AuthContext.Provider value={{ user, isAuthenticated, login, signup, googleLogin, logout }}>
       {children}
     </AuthContext.Provider>
   )
