@@ -598,13 +598,50 @@ const PhoenixBacktesterNew = () => {
             </>
           ) : (
             <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
-              <div style={{ marginBottom: '20px' }}>
-                <span style={{ fontSize: '18px', fontWeight: '700', marginBottom: '5px', display: 'block' }}>
-                  Backtester Notes
-                </span>
-                <div style={{ fontSize: '12px', color: '#787b86' }}>
-                  Add your notes here - they will be saved to the journal
+              <div style={{ marginBottom: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div>
+                  <span style={{ fontSize: '18px', fontWeight: '700', marginBottom: '5px', display: 'block' }}>
+                    Backtester Notes
+                  </span>
+                  <div style={{ fontSize: '12px', color: '#787b86' }}>
+                    Add your notes here
+                  </div>
                 </div>
+                <button
+                  onClick={() => {
+                    const journalEntries = JSON.parse(localStorage.getItem('phoenixTrades') || '[]');
+                    const backtesterNote = {
+                      id: 'backtester-note-' + Date.now(),
+                      type: 'note',
+                      content: notes,
+                      date: new Date().toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: 'numeric' }),
+                      time: new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }),
+                      status: 'note'
+                    };
+                    journalEntries.push(backtesterNote);
+                    localStorage.setItem('phoenixTrades', JSON.stringify(journalEntries));
+                    alert('Notes saved to journal!');
+                  }}
+                  style={{
+                    padding: '8px 16px',
+                    background: '#ff6b00',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '6px',
+                    fontSize: '12px',
+                    fontWeight: '600',
+                    cursor: 'pointer',
+                    transition: 'all 0.2s'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.target.style.background = '#e55f00';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.target.style.background = '#ff6b00';
+                  }}
+                >
+                  Save to Journal
+                </button>
               </div>
               <textarea
                 value={notes}
