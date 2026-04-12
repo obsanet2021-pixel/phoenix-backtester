@@ -1,6 +1,10 @@
 import React, { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { useAuth } from '../../context/AuthContext'
 
 const PhoenixSidebar = ({ activePage, setActivePage }) => {
+  const navigate = useNavigate()
+  const { isAuthenticated, user, logout } = useAuth()
   const [isMobileOpen, setIsMobileOpen] = useState(false)
 
   const navItems = [
@@ -164,15 +168,58 @@ const PhoenixSidebar = ({ activePage, setActivePage }) => {
           ))}
         </div>
         <div className="sidebar-bottom">
-          <div className="account-badge">
-            <div className="acct-avatar">PX</div>
-            <div className="acct-info">
-              <div className="acct-name">Phoenix Challenge</div>
-              <div className="acct-status">
-                <div className="pulse"></div> Active · $10k Eval
+          {isAuthenticated ? (
+            <div className="account-badge">
+              <div className="acct-avatar">{user?.name?.substring(0, 2).toUpperCase() || 'PX'}</div>
+              <div className="acct-info">
+                <div className="acct-name">{user?.name || 'Phoenix Challenge'}</div>
+                <div className="acct-status">
+                  <div className="pulse"></div> Active
+                </div>
               </div>
             </div>
-          </div>
+          ) : (
+            <div className="account-badge">
+              <div className="acct-avatar">?</div>
+              <div className="acct-info">
+                <div className="acct-name">Not Logged In</div>
+                <div className="acct-status">
+                  <div className="pulse"></div> Guest Mode
+                </div>
+              </div>
+            </div>
+          )}
+        
+          {isAuthenticated && (
+            <button
+              onClick={() => {
+                logout()
+                navigate('/login')
+              }}
+              style={{
+                width: '100%',
+                padding: '12px',
+                marginTop: '16px',
+                background: 'transparent',
+                border: '1px solid rgba(255, 107, 0, 0.3)',
+                color: '#ff6b00',
+                borderRadius: '8px',
+                cursor: 'pointer',
+                fontSize: '13px',
+                fontWeight: 'bold',
+                transition: 'all 0.2s',
+                fontFamily: 'monospace'
+              }}
+              onMouseEnter={(e) => {
+                e.target.style.background = 'rgba(255, 107, 0, 0.1)'
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.background = 'transparent'
+              }}
+            >
+              LOGOUT
+            </button>
+          )}
         </div>
       </div>
     </>

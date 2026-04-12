@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
 export default function LandingPage() {
   const navigate = useNavigate();
+  const { isAuthenticated } = useAuth();
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [typedText, setTypedText] = useState('');
   const fullText = ">_ Backtest like a predator. Trade like a pro.";
@@ -95,7 +97,7 @@ export default function LandingPage() {
               [demo]
             </a>
             <button 
-              onClick={() => navigate('/dashboard')}
+              onClick={() => isAuthenticated ? navigate('/dashboard') : navigate('/login')}
               style={{
                 padding: '8px 16px',
                 background: '#ff6b00',
@@ -148,7 +150,7 @@ export default function LandingPage() {
             
             <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap' }} className="hero-buttons">
               <button 
-                onClick={() => navigate('/dashboard')}
+                onClick={() => isAuthenticated ? navigate('/dashboard') : navigate('/login')}
                 style={{
                   padding: '16px 32px',
                   background: '#ff6b00',
@@ -169,7 +171,7 @@ export default function LandingPage() {
                 INITIALIZE_SESSION →
               </button>
               <button 
-                onClick={() => navigate('/simulator')}
+                onClick={() => isAuthenticated ? navigate('/simulator') : navigate('/login')}
                 style={{
                   padding: '16px 32px',
                   background: 'transparent',
@@ -366,7 +368,7 @@ export default function LandingPage() {
                 Join 10,000+ traders who've upgraded to professional-grade backtesting.
               </p>
               <button 
-                onClick={() => navigate('/dashboard')}
+                onClick={() => isAuthenticated ? navigate('/dashboard') : navigate('/login')}
                 style={{
                   padding: '20px 48px',
                   background: '#ff6b00',

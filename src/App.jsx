@@ -13,8 +13,18 @@ import PhoenixChallenge from './pages/PhoenixChallenge'
 import PhoenixChart from './pages/PhoenixChart'
 import PhoenixBacktester from './components/PhoenixBacktesterNew'
 import Welcome from './pages/Welcome'
+import Login from './pages/Login'
+import { AuthProvider, useAuth } from './context/AuthContext'
 
-function App() {
+function ProtectedRoute({ children }) {
+  const { isAuthenticated } = useAuth()
+  if (!isAuthenticated) {
+    return <Navigate to="/login" />
+  }
+  return children
+}
+
+function AppContent() {
   const [activePage, setActivePage] = useState('dashboard')
 
   const renderPage = () => {
@@ -87,14 +97,19 @@ function App() {
       {/* Welcome landing page */}
       <Route path="/" element={<Welcome />} />
       
+      {/* Login page */}
+      <Route path="/login" element={<Login />} />
+      
       {/* Dashboard route (for Enter App button) */}
       <Route path="/dashboard" element={
-        <div className="app">
-          <PhoenixSidebar activePage={activePage} setActivePage={setActivePage} />
-          <div className="main">
-            {renderPage()}
+        <ProtectedRoute>
+          <div className="app">
+            <PhoenixSidebar activePage={activePage} setActivePage={setActivePage} />
+            <div className="main">
+              {renderPage()}
+            </div>
           </div>
-        </div>
+        </ProtectedRoute>
       } />
       
       {/* Phoenix Backtester standalone route */}
@@ -102,14 +117,24 @@ function App() {
       
       {/* Main app with sidebar */}
       <Route path="/*" element={
-        <div className="app">
-          <PhoenixSidebar activePage={activePage} setActivePage={setActivePage} />
-          <div className="main">
-            {renderPage()}
+        <ProtectedRoute>
+          <div className="app">
+            <PhoenixSidebar activePage={activePage} setActivePage={setActivePage} />
+            <div className="main">
+              {renderPage()}
+            </div>
           </div>
-        </div>
+        </ProtectedRoute>
       } />
     </Routes>
+  )
+}
+
+function App() {
+  return (
+    <AuthProvider>
+      <AppContent />
+    </AuthProvider>
   )
 }
 
