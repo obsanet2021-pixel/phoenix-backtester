@@ -38,8 +38,8 @@ export default function LandingPage() {
           inset: 0,
           opacity: '0.2',
           backgroundImage: `
-            linear-gradient(rgba(0, 255, 0, 0.1) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(0, 255, 0, 0.1) 1px, transparent 1px)
+            linear-gradient(rgba(255, 107, 0, 0.1) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(255, 107, 0, 0.1) 1px, transparent 1px)
           `,
           backgroundSize: '50px 50px',
           transform: `translate(${mousePosition.x * 0.02}px, ${mousePosition.y * 0.02}px)`,
@@ -54,7 +54,7 @@ export default function LandingPage() {
           left: '80px',
           width: '384px',
           height: '384px',
-          background: '#22c55e',
+          background: '#ff6b00',
           borderRadius: '50%',
           filter: 'blur(100px)',
           opacity: '0.2',
@@ -69,7 +69,7 @@ export default function LandingPage() {
           right: '80px',
           width: '384px',
           height: '384px',
-          background: '#3b82f6',
+          background: '#ff8c3a',
           borderRadius: '50%',
           filter: 'blur(100px)',
           opacity: '0.2',
@@ -79,12 +79,12 @@ export default function LandingPage() {
       />
 
       {/* Navigation - Minimal, aggressive */}
-      <nav style={{ position: 'relative', zIndex: 10, borderBottom: '1px solid rgba(34, 197, 94, 0.2)', background: 'rgba(0, 0, 0, 0.8)', backdropFilter: 'blur(10px)' }}>
+      <nav style={{ position: 'relative', zIndex: 10, borderBottom: '1px solid rgba(255, 107, 0, 0.2)', background: 'rgba(0, 0, 0, 0.8)', backdropFilter: 'blur(10px)' }}>
         <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '16px 24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <div style={{ width: '32px', height: '32px', background: '#22c55e', borderRadius: '4px', animation: 'pulse 2s infinite' }} />
+            <div style={{ width: '32px', height: '32px', background: '#ff6b00', borderRadius: '4px', animation: 'pulse 2s infinite' }} />
             <span style={{ fontFamily: 'monospace', fontWeight: 'bold', fontSize: '20px', letterSpacing: '-0.05em' }}>
-              PHOENIX<span style={{ color: '#22c55e' }}>_BT</span>
+              PHOENIX<span style={{ color: '#ff6b00' }}>_BT</span>
             </span>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '32px' }}>
@@ -98,7 +98,7 @@ export default function LandingPage() {
               onClick={() => navigate('/dashboard')}
               style={{
                 padding: '8px 16px',
-                background: '#22c55e',
+                background: '#ff6b00',
                 color: '#000',
                 fontFamily: 'monospace',
                 fontSize: '14px',
@@ -107,8 +107,8 @@ export default function LandingPage() {
                 cursor: 'pointer',
                 transition: 'all 0.2s'
               }}
-              onMouseEnter={(e) => { e.target.style.background = '#4ade80'; e.target.style.transform = 'scale(1.05)'; }}
-              onMouseLeave={(e) => { e.target.style.background = '#22c55e'; e.target.style.transform = 'scale(1)'; }}
+              onMouseEnter={(e) => { e.target.style.background = '#ff8c3a'; e.target.style.transform = 'scale(1.05)'; }}
+              onMouseLeave={(e) => { e.target.style.background = '#ff6b00'; e.target.style.transform = 'scale(1)'; }}
             >
               ENTER_TERMINAL →
             </button>
@@ -121,29 +121,29 @@ export default function LandingPage() {
         <div style={{ maxWidth: '960px', margin: '0 auto' }}>
           
           {/* Terminal Header */}
-          <div style={{ background: 'rgba(0, 0, 0, 0.8)', border: '1px solid rgba(34, 197, 94, 0.3)', borderTopLeftRadius: '8px', borderTopRightRadius: '8px', padding: '12px', fontFamily: 'monospace', fontSize: '12px', color: '#22c55e' }}>
+          <div style={{ background: 'rgba(0, 0, 0, 0.8)', border: '1px solid rgba(255, 107, 0, 0.3)', borderTopLeftRadius: '8px', borderTopRightRadius: '8px', padding: '12px', fontFamily: 'monospace', fontSize: '12px', color: '#ff6b00' }}>
             <div style={{ display: 'flex', gap: '8px' }}>
               <div style={{ width: '12px', height: '12px', borderRadius: '50%', background: '#ef4444' }} />
               <div style={{ width: '12px', height: '12px', borderRadius: '50%', background: '#eab308' }} />
-              <div style={{ width: '12px', height: '12px', borderRadius: '50%', background: '#22c55e' }} />
+              <div style={{ width: '12px', height: '12px', borderRadius: '50%', background: '#ff6b00' }} />
               <span style={{ marginLeft: '16px' }}>root@phoenix:~/backtester</span>
             </div>
           </div>
           
           {/* Terminal Content */}
-          <div style={{ background: 'rgba(0, 0, 0, 0.9)', border: '1px solid rgba(34, 197, 94, 0.3)', borderTop: 'none', borderBottomLeftRadius: '8px', borderBottomRightRadius: '8px', padding: '32px', fontFamily: 'monospace' }} className="terminal-content">
+          <div style={{ background: 'rgba(0, 0, 0, 0.9)', border: '1px solid rgba(255, 107, 0, 0.3)', borderTop: 'none', borderBottomLeftRadius: '8px', borderBottomRightRadius: '8px', padding: '32px', fontFamily: 'monospace' }} className="terminal-content">
             <div style={{ marginBottom: '24px' }}>
-              <span style={{ color: '#22c55e' }}>$</span>
+              <span style={{ color: '#ff6b00' }}>$</span>
               <span style={{ color: '#9ca3af', marginLeft: '8px' }}>./deploy --strategy=aggressive</span>
             </div>
             
             <h1 style={{ fontSize: '48px', fontWeight: 'bold', marginBottom: '24px', letterSpacing: '-0.05em', lineHeight: 1.1 }} className="hero-title">
               <span style={{ color: '#fff' }}>{typedText}</span>
-              <span style={{ animation: 'pulse 1s infinite', color: '#22c55e' }}>_</span>
+              <span style={{ animation: 'pulse 1s infinite', color: '#ff6b00' }}>_</span>
             </h1>
             
             <p style={{ color: '#9ca3af', fontSize: '18px', marginBottom: '32px', maxWidth: '600px', fontFamily: 'monospace', lineHeight: 1.6 }} className="hero-desc">
-              {">"} Professional backtesting with prop firm challenges, real-time analytics, and execution-grade data. <span style={{ color: '#22c55e' }}>No more guessing.</span>
+              {">"} Professional backtesting with prop firm challenges, real-time analytics, and execution-grade data. <span style={{ color: '#ff6b00' }}>No more guessing.</span>
             </p>
             
             <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap' }} className="hero-buttons">
@@ -151,7 +151,7 @@ export default function LandingPage() {
                 onClick={() => navigate('/dashboard')}
                 style={{
                   padding: '16px 32px',
-                  background: '#22c55e',
+                  background: '#ff6b00',
                   color: '#000',
                   fontFamily: 'monospace',
                   fontSize: '18px',
@@ -163,8 +163,8 @@ export default function LandingPage() {
                   alignItems: 'center',
                   gap: '8px'
                 }}
-                onMouseEnter={(e) => { e.target.style.background = '#4ade80'; e.target.style.transform = 'scale(1.05)'; }}
-                onMouseLeave={(e) => { e.target.style.background = '#22c55e'; e.target.style.transform = 'scale(1)'; }}
+                onMouseEnter={(e) => { e.target.style.background = '#ff8c3a'; e.target.style.transform = 'scale(1.05)'; }}
+                onMouseLeave={(e) => { e.target.style.background = '#ff6b00'; e.target.style.transform = 'scale(1)'; }}
               >
                 INITIALIZE_SESSION →
               </button>
@@ -173,15 +173,15 @@ export default function LandingPage() {
                 style={{
                   padding: '16px 32px',
                   background: 'transparent',
-                  color: '#22c55e',
+                  color: '#ff6b00',
                   fontFamily: 'monospace',
                   fontSize: '18px',
                   fontWeight: 'bold',
-                  border: '1px solid #22c55e',
+                  border: '1px solid #ff6b00',
                   cursor: 'pointer',
                   transition: 'all 0.2s'
                 }}
-                onMouseEnter={(e) => e.target.style.background = 'rgba(34, 197, 94, 0.1)'}
+                onMouseEnter={(e) => e.target.style.background = 'rgba(255, 107, 0, 0.1)'}
                 onMouseLeave={(e) => e.target.style.background = 'transparent'}
               >
                 [TRY_DEMO]
@@ -189,51 +189,51 @@ export default function LandingPage() {
             </div>
             
             {/* Stats Bar */}
-            <div style={{ marginTop: '48px', paddingTop: '32px', borderTop: '1px solid rgba(34, 197, 94, 0.2)', display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '24px' }} className="stats-bar">
+            <div style={{ marginTop: '48px', paddingTop: '32px', borderTop: '1px solid rgba(255, 107, 0, 0.2)', display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '24px' }} className="stats-bar">
               <div>
                 <div style={{ color: '#6b7280', fontSize: '12px' }}>ACTIVE_TRADERS</div>
                 <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#fff' }}>10,428</div>
-                <div style={{ color: '#22c55e', fontSize: '12px' }}>↑ +23% this month</div>
+                <div style={{ color: '#ff6b00', fontSize: '12px' }}>↑ +23% this month</div>
               </div>
               <div>
                 <div style={{ color: '#6b7280', fontSize: '12px' }}>AVG_WIN_RATE</div>
                 <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#fff' }}>68.7%</div>
-                <div style={{ color: '#22c55e', fontSize: '12px' }}>↑ +12% improvement</div>
+                <div style={{ color: '#ff6b00', fontSize: '12px' }}>↑ +12% improvement</div>
               </div>
               <div>
                 <div style={{ color: '#6b7280', fontSize: '12px' }}>BACKTEST_HOURS</div>
                 <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#fff' }}>247,891</div>
-                <div style={{ color: '#22c55e', fontSize: '12px' }}>executed this week</div>
+                <div style={{ color: '#ff6b00', fontSize: '12px' }}>executed this week</div>
               </div>
               <div>
                 <div style={{ color: '#6b7280', fontSize: '12px' }}>PROP_CHALLENGES</div>
                 <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#fff' }}>3,247</div>
-                <div style={{ color: '#22c55e', fontSize: '12px' }}>completed successfully</div>
+                <div style={{ color: '#ff6b00', fontSize: '12px' }}>completed successfully</div>
               </div>
             </div>
           </div>
         </div>
 
         {/* Live Market Ticker */}
-        <div style={{ marginTop: '80px', overflow: 'hidden', borderTop: '1px solid rgba(34, 197, 94, 0.2)', borderBottom: '1px solid rgba(34, 197, 94, 0.2)', background: 'rgba(0, 0, 0, 0.5)', padding: '8px 0' }}>
+        <div style={{ marginTop: '80px', overflow: 'hidden', borderTop: '1px solid rgba(255, 107, 0, 0.2)', borderBottom: '1px solid rgba(255, 107, 0, 0.2)', background: 'rgba(0, 0, 0, 0.5)', padding: '8px 0' }}>
           <div className="animate-marquee" style={{ whiteSpace: 'nowrap', fontFamily: 'monospace', fontSize: '14px' }}>
-            <span style={{ color: '#22c55e' }}>XAU/USD</span> <span style={{ color: '#fff' }}>$2,342.80</span> <span style={{ color: '#22c55e' }}>↑ +0.34%</span>
+            <span style={{ color: '#ff6b00' }}>XAU/USD</span> <span style={{ color: '#fff' }}>$2,342.80</span> <span style={{ color: '#22c55e' }}>↑ +0.34%</span>
             <span style={{ margin: '0 32px', color: '#4b5563' }}>||</span>
-            <span style={{ color: '#22c55e' }}>EUR/USD</span> <span style={{ color: '#fff' }}>1.0892</span> <span style={{ color: '#ef4444' }}>↓ -0.12%</span>
+            <span style={{ color: '#ff6b00' }}>EUR/USD</span> <span style={{ color: '#fff' }}>1.0892</span> <span style={{ color: '#ef4444' }}>↓ -0.12%</span>
             <span style={{ margin: '0 32px', color: '#4b5563' }}>||</span>
-            <span style={{ color: '#22c55e' }}>BTC/USD</span> <span style={{ color: '#fff' }}>$52,340</span> <span style={{ color: '#22c55e' }}>↑ +2.15%</span>
+            <span style={{ color: '#ff6b00' }}>BTC/USD</span> <span style={{ color: '#fff' }}>$52,340</span> <span style={{ color: '#22c55e' }}>↑ +2.15%</span>
             <span style={{ margin: '0 32px', color: '#4b5563' }}>||</span>
-            <span style={{ color: '#22c55e' }}>SPX</span> <span style={{ color: '#fff' }}>5,234.56</span> <span style={{ color: '#22c55e' }}>↑ +0.67%</span>
+            <span style={{ color: '#ff6b00' }}>SPX</span> <span style={{ color: '#fff' }}>5,234.56</span> <span style={{ color: '#22c55e' }}>↑ +0.67%</span>
             <span style={{ margin: '0 32px', color: '#4b5563' }}>||</span>
-            <span style={{ color: '#22c55e' }}>OIL</span> <span style={{ color: '#fff' }}>$78.34</span> <span style={{ color: '#ef4444' }}>↓ -0.45%</span>
+            <span style={{ color: '#ff6b00' }}>OIL</span> <span style={{ color: '#fff' }}>$78.34</span> <span style={{ color: '#ef4444' }}>↓ -0.45%</span>
           </div>
         </div>
 
         {/* Features - Matrix Style */}
         <div id="features" style={{ marginTop: '128px' }}>
           <div style={{ textAlign: 'center', marginBottom: '64px' }} className="features-header">
-            <div style={{ fontFamily: 'monospace', color: '#22c55e', fontSize: '14px', marginBottom: '16px' }}>[ SYSTEM_CAPABILITIES ]</div>
-            <h2 style={{ fontSize: '36px', fontWeight: 'bold', fontFamily: 'monospace' }}>We don't guess. <span style={{ color: '#22c55e' }}>We execute.</span></h2>
+            <div style={{ fontFamily: 'monospace', color: '#ff6b00', fontSize: '14px', marginBottom: '16px' }}>[ SYSTEM_CAPABILITIES ]</div>
+            <h2 style={{ fontSize: '36px', fontWeight: 'bold', fontFamily: 'monospace' }}>We don't guess. <span style={{ color: '#ff6b00' }}>We execute.</span></h2>
           </div>
           
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '24px' }} className="features-grid">
@@ -260,11 +260,11 @@ export default function LandingPage() {
                 metricLabel: "analytics metrics"
               }
             ].map((feature, i) => (
-              <div key={i} style={{ background: 'rgba(0, 0, 0, 0.6)', border: '1px solid rgba(34, 197, 94, 0.2)', padding: '24px', transition: 'all 0.2s' }} onMouseEnter={(e) => e.target.style.borderColor = 'rgba(34, 197, 94, 0.5)'} onMouseLeave={(e) => e.target.style.borderColor = 'rgba(34, 197, 94, 0.2)'}>
+              <div key={i} style={{ background: 'rgba(0, 0, 0, 0.6)', border: '1px solid rgba(255, 107, 0, 0.2)', padding: '24px', transition: 'all 0.2s' }} onMouseEnter={(e) => e.target.style.borderColor = 'rgba(255, 107, 0, 0.5)'} onMouseLeave={(e) => e.target.style.borderColor = 'rgba(255, 107, 0, 0.2)'}>
                 <div style={{ fontSize: '36px', marginBottom: '16px' }}>{feature.icon}</div>
-                <div style={{ fontFamily: 'monospace', color: '#22c55e', fontSize: '14px', marginBottom: '8px' }}>{feature.title}</div>
+                <div style={{ fontFamily: 'monospace', color: '#ff6b00', fontSize: '14px', marginBottom: '8px' }}>{feature.title}</div>
                 <p style={{ color: '#9ca3af', marginBottom: '16px', lineHeight: 1.6 }}>{feature.description}</p>
-                <div style={{ paddingTop: '16px', borderTop: '1px solid rgba(34, 197, 94, 0.2)' }}>
+                <div style={{ paddingTop: '16px', borderTop: '1px solid rgba(255, 107, 0, 0.2)' }}>
                   <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#fff' }}>{feature.metric}</div>
                   <div style={{ fontSize: '12px', color: '#6b7280', fontFamily: 'monospace' }}>{feature.metricLabel}</div>
                 </div>
@@ -276,17 +276,17 @@ export default function LandingPage() {
         {/* Live Demo Preview - In-Place Dashboard */}
         <div id="demo" style={{ marginTop: '128px' }}>
           <div style={{ textAlign: 'center', marginBottom: '32px' }} className="demo-header">
-            <div style={{ fontFamily: 'monospace', color: '#22c55e', fontSize: '14px', marginBottom: '8px' }}>[ LIVE_PREVIEW ]</div>
+            <div style={{ fontFamily: 'monospace', color: '#ff6b00', fontSize: '14px', marginBottom: '8px' }}>[ LIVE_PREVIEW ]</div>
             <h2 style={{ fontSize: '28px', fontWeight: 'bold', fontFamily: 'monospace' }}>See the matrix in action</h2>
           </div>
           
-          <div style={{ background: 'rgba(0, 0, 0, 0.8)', border: '1px solid rgba(34, 197, 94, 0.3)', borderRadius: '8px', overflow: 'hidden' }} className="demo-container">
+          <div style={{ background: 'rgba(0, 0, 0, 0.8)', border: '1px solid rgba(255, 107, 0, 0.3)', borderRadius: '8px', overflow: 'hidden' }} className="demo-container">
             {/* Dashboard Preview Header */}
-            <div style={{ background: 'rgba(34, 197, 94, 0.1)', padding: '16px', borderBottom: '1px solid rgba(34, 197, 94, 0.3)' }}>
+            <div style={{ background: 'rgba(255, 107, 0, 0.1)', padding: '16px', borderBottom: '1px solid rgba(255, 107, 0, 0.3)' }}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-                  <div style={{ width: '8px', height: '8px', background: '#22c55e', borderRadius: '50%', animation: 'pulse 2s infinite' }} />
-                  <span style={{ fontFamily: 'monospace', fontSize: '14px', color: '#22c55e' }}>LIVE_DATA_STREAM</span>
+                  <div style={{ width: '8px', height: '8px', background: '#ff6b00', borderRadius: '50%', animation: 'pulse 2s infinite' }} />
+                  <span style={{ fontFamily: 'monospace', fontSize: '14px', color: '#ff6b00' }}>LIVE_DATA_STREAM</span>
                 </div>
                 <div style={{ fontFamily: 'monospace', fontSize: '12px', color: '#6b7280' }}>refresh: 1.2ms</div>
               </div>
@@ -303,7 +303,7 @@ export default function LandingPage() {
                     { label: "PROFIT_FACTOR", value: "1.85", change: "+0.23", positive: true },
                     { label: "SHARPE_RATIO", value: "1.92", change: "excellent", positive: true }
                   ].map((kpi, i) => (
-                    <div key={i} style={{ background: 'rgba(34, 197, 94, 0.05)', padding: '16px', borderRadius: '8px', border: '1px solid rgba(34, 197, 94, 0.2)' }}>
+                    <div key={i} style={{ background: 'rgba(255, 107, 0, 0.05)', padding: '16px', borderRadius: '8px', border: '1px solid rgba(255, 107, 0, 0.2)' }}>
                       <div style={{ fontFamily: 'monospace', fontSize: '12px', color: '#6b7280' }}>{kpi.label}</div>
                       <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#fff', marginTop: '4px' }}>{kpi.value}</div>
                       <div style={{ fontSize: '12px', fontFamily: 'monospace', marginTop: '4px', color: kpi.positive ? '#22c55e' : '#ef4444' }}>
@@ -314,7 +314,7 @@ export default function LandingPage() {
                 </div>
                 
                 {/* Trade Feed */}
-                <div style={{ gridColumn: '1 / 3', background: 'rgba(34, 197, 94, 0.05)', borderRadius: '8px', padding: '16px', border: '1px solid rgba(34, 197, 94, 0.2)' }} className="trade-feed">
+                <div style={{ gridColumn: '1 / 3', background: 'rgba(255, 107, 0, 0.05)', borderRadius: '8px', padding: '16px', border: '1px solid rgba(255, 107, 0, 0.2)' }} className="trade-feed">
                   <div style={{ fontFamily: 'monospace', fontSize: '12px', color: '#6b7280', marginBottom: '12px' }}>[ RECENT_EXECUTIONS ]</div>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                     {[
@@ -338,11 +338,11 @@ export default function LandingPage() {
                 </div>
                 
                 {/* Equity Curve Mini */}
-                <div style={{ background: 'rgba(34, 197, 94, 0.05)', borderRadius: '8px', padding: '16px', border: '1px solid rgba(34, 197, 94, 0.2)' }} className="equity-curve">
+                <div style={{ background: 'rgba(255, 107, 0, 0.05)', borderRadius: '8px', padding: '16px', border: '1px solid rgba(255, 107, 0, 0.2)' }} className="equity-curve">
                   <div style={{ fontFamily: 'monospace', fontSize: '12px', color: '#6b7280', marginBottom: '12px' }}>[ EQUITY_CURVE ]</div>
                   <div style={{ height: '128px', display: 'flex', alignItems: 'flex-end', gap: '4px' }}>
                     {[65, 72, 68, 75, 82, 78, 85, 90, 88, 92, 95, 100].map((height, i) => (
-                      <div key={i} style={{ flex: 1, background: 'rgba(34, 197, 94, 0.3)', transition: 'all 0.2s', height: `${height}%` }} onMouseEnter={(e) => e.target.style.background = '#22c55e'} onMouseLeave={(e) => e.target.style.background = 'rgba(34, 197, 94, 0.3)'} />
+                      <div key={i} style={{ flex: 1, background: 'rgba(255, 107, 0, 0.3)', transition: 'all 0.2s', height: `${height}%` }} onMouseEnter={(e) => e.target.style.background = '#ff6b00'} onMouseLeave={(e) => e.target.style.background = 'rgba(255, 107, 0, 0.3)'} />
                     ))}
                   </div>
                   <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', color: '#6b7280', marginTop: '8px' }}>
@@ -358,9 +358,9 @@ export default function LandingPage() {
 
         {/* Final CTA - Aggressive */}
         <div style={{ marginTop: '128px', marginBottom: '80px' }}>
-          <div style={{ background: 'linear-gradient(90deg, rgba(34, 197, 94, 0.1), transparent, rgba(34, 197, 94, 0.1))', borderTop: '1px solid rgba(34, 197, 94, 0.3)', borderBottom: '1px solid rgba(34, 197, 94, 0.3)', padding: '64px 24px' }} className="cta-section">
+          <div style={{ background: 'linear-gradient(90deg, rgba(255, 107, 0, 0.1), transparent, rgba(255, 107, 0, 0.1))', borderTop: '1px solid rgba(255, 107, 0, 0.3)', borderBottom: '1px solid rgba(255, 107, 0, 0.3)', padding: '64px 24px' }} className="cta-section">
             <div style={{ textAlign: 'center' }}>
-              <div style={{ fontFamily: 'monospace', color: '#22c55e', fontSize: '14px', marginBottom: '16px' }}>[ READY_FOR_DEPLOYMENT ]</div>
+              <div style={{ fontFamily: 'monospace', color: '#ff6b00', fontSize: '14px', marginBottom: '16px' }}>[ READY_FOR_DEPLOYMENT ]</div>
               <h2 style={{ fontSize: '36px', fontWeight: 'bold', fontFamily: 'monospace', marginBottom: '24px' }} className="cta-title">Stop backtesting in spreadsheets.</h2>
               <p style={{ color: '#9ca3af', fontSize: '18px', marginBottom: '32px', maxWidth: '600px', margin: '0 auto 32px' }} className="cta-desc">
                 Join 10,000+ traders who've upgraded to professional-grade backtesting.
@@ -369,7 +369,7 @@ export default function LandingPage() {
                 onClick={() => navigate('/dashboard')}
                 style={{
                   padding: '20px 48px',
-                  background: '#22c55e',
+                  background: '#ff6b00',
                   color: '#000',
                   fontFamily: 'monospace',
                   fontSize: '20px',
@@ -381,8 +381,8 @@ export default function LandingPage() {
                   alignItems: 'center',
                   gap: '12px'
                 }}
-                onMouseEnter={(e) => { e.target.style.background = '#4ade80'; e.target.style.transform = 'scale(1.05)'; }}
-                onMouseLeave={(e) => { e.target.style.background = '#22c55e'; e.target.style.transform = 'scale(1)'; }}
+                onMouseEnter={(e) => { e.target.style.background = '#ff8c3a'; e.target.style.transform = 'scale(1.05)'; }}
+                onMouseLeave={(e) => { e.target.style.background = '#ff6b00'; e.target.style.transform = 'scale(1)'; }}
               >
                 DEPLOY_STRATEGY →
               </button>
