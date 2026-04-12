@@ -333,6 +333,15 @@ body {
   }
 }
 
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
 .animate-marquee {
   animation: marquee 25s linear infinite;
   white-space: nowrap;

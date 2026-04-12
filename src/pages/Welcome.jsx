@@ -29,12 +29,14 @@ export default function LandingPage() {
   }, []);
 
   return (
-    <div className="relative min-h-screen bg-black overflow-hidden">
+    <div style={{ position: 'relative', minHeight: '100vh', background: '#000', overflow: 'hidden', fontFamily: 'monospace' }}>
       
       {/* Animated Grid Background */}
       <div 
-        className="absolute inset-0 opacity-20"
         style={{
+          position: 'absolute',
+          inset: 0,
+          opacity: '0.2',
           backgroundImage: `
             linear-gradient(rgba(0, 255, 0, 0.1) 1px, transparent 1px),
             linear-gradient(90deg, rgba(0, 255, 0, 0.1) 1px, transparent 1px)
@@ -46,33 +48,67 @@ export default function LandingPage() {
       
       {/* Glowing Orbs */}
       <div 
-        className="absolute top-20 left-20 w-96 h-96 bg-green-500 rounded-full blur-[100px] opacity-20 animate-pulse"
-        style={{ transform: `translate(${mousePosition.x * 0.01}px, ${mousePosition.y * 0.01}px)` }}
+        style={{
+          position: 'absolute',
+          top: '80px',
+          left: '80px',
+          width: '384px',
+          height: '384px',
+          background: '#22c55e',
+          borderRadius: '50%',
+          filter: 'blur(100px)',
+          opacity: '0.2',
+          animation: 'pulse 2s infinite',
+          transform: `translate(${mousePosition.x * 0.01}px, ${mousePosition.y * 0.01}px)`
+        }}
       />
       <div 
-        className="absolute bottom-20 right-20 w-96 h-96 bg-blue-500 rounded-full blur-[100px] opacity-20 animate-pulse delay-1000"
-        style={{ transform: `translate(${-mousePosition.x * 0.01}px, ${-mousePosition.y * 0.01}px)` }}
+        style={{
+          position: 'absolute',
+          bottom: '80px',
+          right: '80px',
+          width: '384px',
+          height: '384px',
+          background: '#3b82f6',
+          borderRadius: '50%',
+          filter: 'blur(100px)',
+          opacity: '0.2',
+          animation: 'pulse 2s infinite 1s',
+          transform: `translate(${-mousePosition.x * 0.01}px, ${-mousePosition.y * 0.01}px)`
+        }}
       />
 
       {/* Navigation - Minimal, aggressive */}
-      <nav className="relative z-10 border-b border-green-500/20 bg-black/80 backdrop-blur-sm">
-        <div className="container mx-auto px-6 py-4 flex justify-between items-center">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-green-500 rounded-sm animate-pulse" />
-            <span className="font-mono font-bold text-xl tracking-tighter">
-              PHOENIX<span className="text-green-500">_BT</span>
+      <nav style={{ position: 'relative', zIndex: 10, borderBottom: '1px solid rgba(34, 197, 94, 0.2)', background: 'rgba(0, 0, 0, 0.8)', backdropFilter: 'blur(10px)' }}>
+        <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '16px 24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <div style={{ width: '32px', height: '32px', background: '#22c55e', borderRadius: '4px', animation: 'pulse 2s infinite' }} />
+            <span style={{ fontFamily: 'monospace', fontWeight: 'bold', fontSize: '20px', letterSpacing: '-0.05em' }}>
+              PHOENIX<span style={{ color: '#22c55e' }}>_BT</span>
             </span>
           </div>
-          <div className="hidden md:flex items-center gap-8">
-            <a href="#features" className="font-mono text-sm text-gray-400 hover:text-green-500 transition-colors">
+          <div style={{ display: 'none', alignItems: 'center', gap: '32px' }}>
+            <a href="#features" style={{ fontFamily: 'monospace', fontSize: '14px', color: '#9ca3af', textDecoration: 'none' }}>
               [features]
             </a>
-            <a href="#demo" className="font-mono text-sm text-gray-400 hover:text-green-500 transition-colors">
+            <a href="#demo" style={{ fontFamily: 'monospace', fontSize: '14px', color: '#9ca3af', textDecoration: 'none' }}>
               [demo]
             </a>
             <button 
               onClick={() => navigate('/dashboard')}
-              className="px-4 py-2 bg-green-500 text-black font-mono text-sm font-bold hover:bg-green-400 transition-all transform hover:scale-105"
+              style={{
+                padding: '8px 16px',
+                background: '#22c55e',
+                color: '#000',
+                fontFamily: 'monospace',
+                fontSize: '14px',
+                fontWeight: 'bold',
+                border: 'none',
+                cursor: 'pointer',
+                transition: 'all 0.2s'
+              }}
+              onMouseEnter={(e) => { e.target.style.background = '#4ade80'; e.target.style.transform = 'scale(1.05)'; }}
+              onMouseLeave={(e) => { e.target.style.background = '#22c55e'; e.target.style.transform = 'scale(1)'; }}
             >
               ENTER_TERMINAL →
             </button>
@@ -81,99 +117,126 @@ export default function LandingPage() {
       </nav>
 
       {/* Hero Section - Terminal Style */}
-      <div className="relative z-10 container mx-auto px-6 py-20">
-        <div className="max-w-5xl mx-auto">
+      <div style={{ position: 'relative', zIndex: 10, maxWidth: '1200px', margin: '0 auto', padding: '80px 24px' }}>
+        <div style={{ maxWidth: '960px', margin: '0 auto' }}>
           
           {/* Terminal Header */}
-          <div className="bg-black/80 border border-green-500/30 rounded-t-lg p-3 font-mono text-xs text-green-500">
-            <div className="flex gap-2">
-              <div className="w-3 h-3 rounded-full bg-red-500" />
-              <div className="w-3 h-3 rounded-full bg-yellow-500" />
-              <div className="w-3 h-3 rounded-full bg-green-500" />
-              <span className="ml-4">root@phoenix:~/backtester</span>
+          <div style={{ background: 'rgba(0, 0, 0, 0.8)', border: '1px solid rgba(34, 197, 94, 0.3)', borderTopLeftRadius: '8px', borderTopRightRadius: '8px', padding: '12px', fontFamily: 'monospace', fontSize: '12px', color: '#22c55e' }}>
+            <div style={{ display: 'flex', gap: '8px' }}>
+              <div style={{ width: '12px', height: '12px', borderRadius: '50%', background: '#ef4444' }} />
+              <div style={{ width: '12px', height: '12px', borderRadius: '50%', background: '#eab308' }} />
+              <div style={{ width: '12px', height: '12px', borderRadius: '50%', background: '#22c55e' }} />
+              <span style={{ marginLeft: '16px' }}>root@phoenix:~/backtester</span>
             </div>
           </div>
           
           {/* Terminal Content */}
-          <div className="bg-black/90 border border-t-0 border-green-500/30 rounded-b-lg p-8 font-mono">
-            <div className="mb-6">
-              <span className="text-green-500">$</span>
-              <span className="text-gray-400 ml-2">./deploy --strategy=aggressive</span>
+          <div style={{ background: 'rgba(0, 0, 0, 0.9)', border: '1px solid rgba(34, 197, 94, 0.3)', borderTop: 'none', borderBottomLeftRadius: '8px', borderBottomRightRadius: '8px', padding: '32px', fontFamily: 'monospace' }}>
+            <div style={{ marginBottom: '24px' }}>
+              <span style={{ color: '#22c55e' }}>$</span>
+              <span style={{ color: '#9ca3af', marginLeft: '8px' }}>./deploy --strategy=aggressive</span>
             </div>
             
-            <h1 className="text-5xl md:text-7xl font-bold mb-6 tracking-tighter">
-              <span className="text-white">{typedText}</span>
-              <span className="animate-pulse text-green-500">_</span>
+            <h1 style={{ fontSize: '48px', fontWeight: 'bold', marginBottom: '24px', letterSpacing: '-0.05em', lineHeight: 1.1 }}>
+              <span style={{ color: '#fff' }}>{typedText}</span>
+              <span style={{ animation: 'pulse 1s infinite', color: '#22c55e' }}>_</span>
             </h1>
             
-            <p className="text-gray-400 text-lg mb-8 max-w-2xl font-mono leading-relaxed">
-              {">"} Professional backtesting with prop firm challenges, real-time analytics, and execution-grade data. <span className="text-green-500">No more guessing.</span>
+            <p style={{ color: '#9ca3af', fontSize: '18px', marginBottom: '32px', maxWidth: '600px', fontFamily: 'monospace', lineHeight: 1.6 }}>
+              {">"} Professional backtesting with prop firm challenges, real-time analytics, and execution-grade data. <span style={{ color: '#22c55e' }}>No more guessing.</span>
             </p>
             
-            <div className="flex gap-4 flex-wrap">
+            <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap' }}>
               <button 
                 onClick={() => navigate('/dashboard')}
-                className="px-8 py-4 bg-green-500 text-black font-mono font-bold text-lg hover:bg-green-400 transition-all transform hover:scale-105 flex items-center gap-2"
+                style={{
+                  padding: '16px 32px',
+                  background: '#22c55e',
+                  color: '#000',
+                  fontFamily: 'monospace',
+                  fontSize: '18px',
+                  fontWeight: 'bold',
+                  border: 'none',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px'
+                }}
+                onMouseEnter={(e) => { e.target.style.background = '#4ade80'; e.target.style.transform = 'scale(1.05)'; }}
+                onMouseLeave={(e) => { e.target.style.background = '#22c55e'; e.target.style.transform = 'scale(1)'; }}
               >
                 INITIALIZE_SESSION →
               </button>
               <button 
                 onClick={() => navigate('/simulator')}
-                className="px-8 py-4 border border-green-500 text-green-500 font-mono font-bold text-lg hover:bg-green-500/10 transition-all"
+                style={{
+                  padding: '16px 32px',
+                  background: 'transparent',
+                  color: '#22c55e',
+                  fontFamily: 'monospace',
+                  fontSize: '18px',
+                  fontWeight: 'bold',
+                  border: '1px solid #22c55e',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s'
+                }}
+                onMouseEnter={(e) => e.target.style.background = 'rgba(34, 197, 94, 0.1)'}
+                onMouseLeave={(e) => e.target.style.background = 'transparent'}
               >
                 [TRY_DEMO]
               </button>
             </div>
             
             {/* Stats Bar */}
-            <div className="mt-12 pt-8 border-t border-green-500/20 grid grid-cols-2 md:grid-cols-4 gap-6">
+            <div style={{ marginTop: '48px', paddingTop: '32px', borderTop: '1px solid rgba(34, 197, 94, 0.2)', display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '24px' }}>
               <div>
-                <div className="text-gray-500 text-xs">ACTIVE_TRADERS</div>
-                <div className="text-2xl font-bold text-white">10,428</div>
-                <div className="text-green-500 text-xs">↑ +23% this month</div>
+                <div style={{ color: '#6b7280', fontSize: '12px' }}>ACTIVE_TRADERS</div>
+                <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#fff' }}>10,428</div>
+                <div style={{ color: '#22c55e', fontSize: '12px' }}>↑ +23% this month</div>
               </div>
               <div>
-                <div className="text-gray-500 text-xs">AVG_WIN_RATE</div>
-                <div className="text-2xl font-bold text-white">68.7%</div>
-                <div className="text-green-500 text-xs">↑ +12% improvement</div>
+                <div style={{ color: '#6b7280', fontSize: '12px' }}>AVG_WIN_RATE</div>
+                <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#fff' }}>68.7%</div>
+                <div style={{ color: '#22c55e', fontSize: '12px' }}>↑ +12% improvement</div>
               </div>
               <div>
-                <div className="text-gray-500 text-xs">BACKTEST_HOURS</div>
-                <div className="text-2xl font-bold text-white">247,891</div>
-                <div className="text-green-500 text-xs">executed this week</div>
+                <div style={{ color: '#6b7280', fontSize: '12px' }}>BACKTEST_HOURS</div>
+                <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#fff' }}>247,891</div>
+                <div style={{ color: '#22c55e', fontSize: '12px' }}>executed this week</div>
               </div>
               <div>
-                <div className="text-gray-500 text-xs">PROP_CHALLENGES</div>
-                <div className="text-2xl font-bold text-white">3,247</div>
-                <div className="text-green-500 text-xs">completed successfully</div>
+                <div style={{ color: '#6b7280', fontSize: '12px' }}>PROP_CHALLENGES</div>
+                <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#fff' }}>3,247</div>
+                <div style={{ color: '#22c55e', fontSize: '12px' }}>completed successfully</div>
               </div>
             </div>
           </div>
         </div>
 
         {/* Live Market Ticker */}
-        <div className="mt-20 overflow-hidden border-t border-b border-green-500/20 bg-black/50 py-2">
-          <div className="animate-marquee whitespace-nowrap font-mono text-sm">
-            <span className="text-green-500">XAU/USD</span> <span className="text-white">$2,342.80</span> <span className="text-green-500">↑ +0.34%</span>
-            <span className="mx-8 text-gray-600">||</span>
-            <span className="text-green-500">EUR/USD</span> <span className="text-white">1.0892</span> <span className="text-red-500">↓ -0.12%</span>
-            <span className="mx-8 text-gray-600">||</span>
-            <span className="text-green-500">BTC/USD</span> <span className="text-white">$52,340</span> <span className="text-green-500">↑ +2.15%</span>
-            <span className="mx-8 text-gray-600">||</span>
-            <span className="text-green-500">SPX</span> <span className="text-white">5,234.56</span> <span className="text-green-500">↑ +0.67%</span>
-            <span className="mx-8 text-gray-600">||</span>
-            <span className="text-green-500">OIL</span> <span className="text-white">$78.34</span> <span className="text-red-500">↓ -0.45%</span>
+        <div style={{ marginTop: '80px', overflow: 'hidden', borderTop: '1px solid rgba(34, 197, 94, 0.2)', borderBottom: '1px solid rgba(34, 197, 94, 0.2)', background: 'rgba(0, 0, 0, 0.5)', padding: '8px 0' }}>
+          <div className="animate-marquee" style={{ whiteSpace: 'nowrap', fontFamily: 'monospace', fontSize: '14px' }}>
+            <span style={{ color: '#22c55e' }}>XAU/USD</span> <span style={{ color: '#fff' }}>$2,342.80</span> <span style={{ color: '#22c55e' }}>↑ +0.34%</span>
+            <span style={{ margin: '0 32px', color: '#4b5563' }}>||</span>
+            <span style={{ color: '#22c55e' }}>EUR/USD</span> <span style={{ color: '#fff' }}>1.0892</span> <span style={{ color: '#ef4444' }}>↓ -0.12%</span>
+            <span style={{ margin: '0 32px', color: '#4b5563' }}>||</span>
+            <span style={{ color: '#22c55e' }}>BTC/USD</span> <span style={{ color: '#fff' }}>$52,340</span> <span style={{ color: '#22c55e' }}>↑ +2.15%</span>
+            <span style={{ margin: '0 32px', color: '#4b5563' }}>||</span>
+            <span style={{ color: '#22c55e' }}>SPX</span> <span style={{ color: '#fff' }}>5,234.56</span> <span style={{ color: '#22c55e' }}>↑ +0.67%</span>
+            <span style={{ margin: '0 32px', color: '#4b5563' }}>||</span>
+            <span style={{ color: '#22c55e' }}>OIL</span> <span style={{ color: '#fff' }}>$78.34</span> <span style={{ color: '#ef4444' }}>↓ -0.45%</span>
           </div>
         </div>
 
         {/* Features - Matrix Style */}
-        <div id="features" className="mt-32">
-          <div className="text-center mb-16">
-            <div className="font-mono text-green-500 text-sm mb-4">[ SYSTEM_CAPABILITIES ]</div>
-            <h2 className="text-4xl md:text-5xl font-bold font-mono">We don't guess. <span className="text-green-500">We execute.</span></h2>
+        <div id="features" style={{ marginTop: '128px' }}>
+          <div style={{ textAlign: 'center', marginBottom: '64px' }}>
+            <div style={{ fontFamily: 'monospace', color: '#22c55e', fontSize: '14px', marginBottom: '16px' }}>[ SYSTEM_CAPABILITIES ]</div>
+            <h2 style={{ fontSize: '36px', fontWeight: 'bold', fontFamily: 'monospace' }}>We don't guess. <span style={{ color: '#22c55e' }}>We execute.</span></h2>
           </div>
           
-          <div className="grid md:grid-cols-3 gap-6">
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '24px' }}>
             {[
               {
                 icon: "⚡",
@@ -197,13 +260,13 @@ export default function LandingPage() {
                 metricLabel: "analytics metrics"
               }
             ].map((feature, i) => (
-              <div key={i} className="group bg-black/60 border border-green-500/20 hover:border-green-500/50 transition-all p-6">
-                <div className="text-4xl mb-4">{feature.icon}</div>
-                <div className="font-mono text-green-500 text-sm mb-2">{feature.title}</div>
-                <p className="text-gray-400 mb-4 leading-relaxed">{feature.description}</p>
-                <div className="pt-4 border-t border-green-500/20">
-                  <div className="text-2xl font-bold text-white">{feature.metric}</div>
-                  <div className="text-xs text-gray-500 font-mono">{feature.metricLabel}</div>
+              <div key={i} style={{ background: 'rgba(0, 0, 0, 0.6)', border: '1px solid rgba(34, 197, 94, 0.2)', padding: '24px', transition: 'all 0.2s' }} onMouseEnter={(e) => e.target.style.borderColor = 'rgba(34, 197, 94, 0.5)'} onMouseLeave={(e) => e.target.style.borderColor = 'rgba(34, 197, 94, 0.2)'}>
+                <div style={{ fontSize: '36px', marginBottom: '16px' }}>{feature.icon}</div>
+                <div style={{ fontFamily: 'monospace', color: '#22c55e', fontSize: '14px', marginBottom: '8px' }}>{feature.title}</div>
+                <p style={{ color: '#9ca3af', marginBottom: '16px', lineHeight: 1.6 }}>{feature.description}</p>
+                <div style={{ paddingTop: '16px', borderTop: '1px solid rgba(34, 197, 94, 0.2)' }}>
+                  <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#fff' }}>{feature.metric}</div>
+                  <div style={{ fontSize: '12px', color: '#6b7280', fontFamily: 'monospace' }}>{feature.metricLabel}</div>
                 </div>
               </div>
             ))}
@@ -211,39 +274,39 @@ export default function LandingPage() {
         </div>
 
         {/* Live Demo Preview - In-Place Dashboard */}
-        <div id="demo" className="mt-32">
-          <div className="text-center mb-8">
-            <div className="font-mono text-green-500 text-sm mb-2">[ LIVE_PREVIEW ]</div>
-            <h2 className="text-3xl md:text-4xl font-bold font-mono">See the matrix in action</h2>
+        <div id="demo" style={{ marginTop: '128px' }}>
+          <div style={{ textAlign: 'center', marginBottom: '32px' }}>
+            <div style={{ fontFamily: 'monospace', color: '#22c55e', fontSize: '14px', marginBottom: '8px' }}>[ LIVE_PREVIEW ]</div>
+            <h2 style={{ fontSize: '28px', fontWeight: 'bold', fontFamily: 'monospace' }}>See the matrix in action</h2>
           </div>
           
-          <div className="bg-black/80 border border-green-500/30 rounded-lg overflow-hidden">
+          <div style={{ background: 'rgba(0, 0, 0, 0.8)', border: '1px solid rgba(34, 197, 94, 0.3)', borderRadius: '8px', overflow: 'hidden' }}>
             {/* Dashboard Preview Header */}
-            <div className="bg-green-500/10 p-4 border-b border-green-500/30">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-4">
-                  <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
-                  <span className="font-mono text-sm text-green-500">LIVE_DATA_STREAM</span>
+            <div style={{ background: 'rgba(34, 197, 94, 0.1)', padding: '16px', borderBottom: '1px solid rgba(34, 197, 94, 0.3)' }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+                  <div style={{ width: '8px', height: '8px', background: '#22c55e', borderRadius: '50%', animation: 'pulse 2s infinite' }} />
+                  <span style={{ fontFamily: 'monospace', fontSize: '14px', color: '#22c55e' }}>LIVE_DATA_STREAM</span>
                 </div>
-                <div className="font-mono text-xs text-gray-500">refresh: 1.2ms</div>
+                <div style={{ fontFamily: 'monospace', fontSize: '12px', color: '#6b7280' }}>refresh: 1.2ms</div>
               </div>
             </div>
             
             {/* Dashboard Content */}
-            <div className="p-6">
-              <div className="grid lg:grid-cols-3 gap-6">
+            <div style={{ padding: '24px' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '24px' }}>
                 {/* Real-time KPIs */}
-                <div className="lg:col-span-3 grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div style={{ gridColumn: '1 / -1', display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '16px' }}>
                   {[
                     { label: "TOTAL_PNL", value: "+$3,048", change: "+3.05%", positive: true },
                     { label: "WIN_RATE", value: "66.7%", change: "+12.3%", positive: true },
                     { label: "PROFIT_FACTOR", value: "1.85", change: "+0.23", positive: true },
                     { label: "SHARPE_RATIO", value: "1.92", change: "excellent", positive: true }
                   ].map((kpi, i) => (
-                    <div key={i} className="bg-green-500/5 p-4 rounded border border-green-500/20">
-                      <div className="font-mono text-xs text-gray-500">{kpi.label}</div>
-                      <div className="text-2xl font-bold text-white mt-1">{kpi.value}</div>
-                      <div className={`text-xs font-mono mt-1 ${kpi.positive ? 'text-green-500' : 'text-red-500'}`}>
+                    <div key={i} style={{ background: 'rgba(34, 197, 94, 0.05)', padding: '16px', borderRadius: '8px', border: '1px solid rgba(34, 197, 94, 0.2)' }}>
+                      <div style={{ fontFamily: 'monospace', fontSize: '12px', color: '#6b7280' }}>{kpi.label}</div>
+                      <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#fff', marginTop: '4px' }}>{kpi.value}</div>
+                      <div style={{ fontSize: '12px', fontFamily: 'monospace', marginTop: '4px', color: kpi.positive ? '#22c55e' : '#ef4444' }}>
                         {kpi.change}
                       </div>
                     </div>
@@ -251,22 +314,22 @@ export default function LandingPage() {
                 </div>
                 
                 {/* Trade Feed */}
-                <div className="lg:col-span-2 bg-green-500/5 rounded p-4 border border-green-500/20">
-                  <div className="font-mono text-xs text-gray-500 mb-3">[ RECENT_EXECUTIONS ]</div>
-                  <div className="space-y-2">
+                <div style={{ gridColumn: '1 / 3', background: 'rgba(34, 197, 94, 0.05)', borderRadius: '8px', padding: '16px', border: '1px solid rgba(34, 197, 94, 0.2)' }}>
+                  <div style={{ fontFamily: 'monospace', fontSize: '12px', color: '#6b7280', marginBottom: '12px' }}>[ RECENT_EXECUTIONS ]</div>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                     {[
                       { pair: "XAU/USD", action: "BUY", size: "2.5", price: "2342.80", pnl: "+$2,024", time: "09:34:22" },
                       { pair: "XAU/USD", action: "SELL", size: "1.0", price: "2345.20", pnl: "-$500", time: "10:15:47" },
                       { pair: "EUR/USD", action: "BUY", size: "5.0", price: "1.0892", pnl: "+$1,524", time: "11:02:13" }
                     ].map((trade, i) => (
-                      <div key={i} className="flex justify-between items-center p-2 bg-black/50 rounded font-mono text-sm">
-                        <div className="flex items-center gap-4">
-                          <span className={trade.action === 'BUY' ? 'text-green-500' : 'text-red-500'}>{trade.action}</span>
-                          <span className="text-white">{trade.pair}</span>
-                          <span className="text-gray-500">{trade.size}</span>
-                          <span className="text-gray-500">{trade.price}</span>
+                      <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px', background: 'rgba(0, 0, 0, 0.5)', borderRadius: '8px', fontFamily: 'monospace', fontSize: '14px' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+                          <span style={{ color: trade.action === 'BUY' ? '#22c55e' : '#ef4444' }}>{trade.action}</span>
+                          <span style={{ color: '#fff' }}>{trade.pair}</span>
+                          <span style={{ color: '#6b7280' }}>{trade.size}</span>
+                          <span style={{ color: '#6b7280' }}>{trade.price}</span>
                         </div>
-                        <div className={trade.pnl.includes('+') ? 'text-green-500' : 'text-red-500'}>
+                        <div style={{ color: trade.pnl.includes('+') ? '#22c55e' : '#ef4444' }}>
                           {trade.pnl}
                         </div>
                       </div>
@@ -275,14 +338,14 @@ export default function LandingPage() {
                 </div>
                 
                 {/* Equity Curve Mini */}
-                <div className="bg-green-500/5 rounded p-4 border border-green-500/20">
-                  <div className="font-mono text-xs text-gray-500 mb-3">[ EQUITY_CURVE ]</div>
-                  <div className="h-32 flex items-end gap-1">
+                <div style={{ background: 'rgba(34, 197, 94, 0.05)', borderRadius: '8px', padding: '16px', border: '1px solid rgba(34, 197, 94, 0.2)' }}>
+                  <div style={{ fontFamily: 'monospace', fontSize: '12px', color: '#6b7280', marginBottom: '12px' }}>[ EQUITY_CURVE ]</div>
+                  <div style={{ height: '128px', display: 'flex', alignItems: 'flex-end', gap: '4px' }}>
                     {[65, 72, 68, 75, 82, 78, 85, 90, 88, 92, 95, 100].map((height, i) => (
-                      <div key={i} className="flex-1 bg-green-500/30 hover:bg-green-500 transition-all" style={{ height: `${height}%` }} />
+                      <div key={i} style={{ flex: 1, background: 'rgba(34, 197, 94, 0.3)', transition: 'all 0.2s', height: `${height}%` }} onMouseEnter={(e) => e.target.style.background = '#22c55e'} onMouseLeave={(e) => e.target.style.background = 'rgba(34, 197, 94, 0.3)'} />
                     ))}
                   </div>
-                  <div className="flex justify-between text-xs text-gray-500 mt-2">
+                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', color: '#6b7280', marginTop: '8px' }}>
                     <span>04:00</span>
                     <span>12:00</span>
                     <span>20:00</span>
@@ -294,21 +357,36 @@ export default function LandingPage() {
         </div>
 
         {/* Final CTA - Aggressive */}
-        <div className="mt-32 mb-20">
-          <div className="bg-gradient-to-r from-green-500/10 via-transparent to-green-500/10 border-t border-b border-green-500/30 py-16">
-            <div className="text-center">
-              <div className="font-mono text-green-500 text-sm mb-4">[ READY_FOR_DEPLOYMENT ]</div>
-              <h2 className="text-4xl md:text-6xl font-bold font-mono mb-6">Stop backtesting in spreadsheets.</h2>
-              <p className="text-gray-400 text-lg mb-8 max-w-2xl mx-auto">
+        <div style={{ marginTop: '128px', marginBottom: '80px' }}>
+          <div style={{ background: 'linear-gradient(90deg, rgba(34, 197, 94, 0.1), transparent, rgba(34, 197, 94, 0.1))', borderTop: '1px solid rgba(34, 197, 94, 0.3)', borderBottom: '1px solid rgba(34, 197, 94, 0.3)', padding: '64px 24px' }}>
+            <div style={{ textAlign: 'center' }}>
+              <div style={{ fontFamily: 'monospace', color: '#22c55e', fontSize: '14px', marginBottom: '16px' }}>[ READY_FOR_DEPLOYMENT ]</div>
+              <h2 style={{ fontSize: '36px', fontWeight: 'bold', fontFamily: 'monospace', marginBottom: '24px' }}>Stop backtesting in spreadsheets.</h2>
+              <p style={{ color: '#9ca3af', fontSize: '18px', marginBottom: '32px', maxWidth: '600px', margin: '0 auto 32px' }}>
                 Join 10,000+ traders who've upgraded to professional-grade backtesting.
               </p>
               <button 
                 onClick={() => navigate('/dashboard')}
-                className="px-12 py-5 bg-green-500 text-black font-mono font-bold text-xl hover:bg-green-400 transition-all transform hover:scale-105 inline-flex items-center gap-3"
+                style={{
+                  padding: '20px 48px',
+                  background: '#22c55e',
+                  color: '#000',
+                  fontFamily: 'monospace',
+                  fontSize: '20px',
+                  fontWeight: 'bold',
+                  border: 'none',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '12px'
+                }}
+                onMouseEnter={(e) => { e.target.style.background = '#4ade80'; e.target.style.transform = 'scale(1.05)'; }}
+                onMouseLeave={(e) => { e.target.style.background = '#22c55e'; e.target.style.transform = 'scale(1)'; }}
               >
                 DEPLOY_STRATEGY →
               </button>
-              <div className="mt-6 font-mono text-xs text-gray-500">
+              <div style={{ marginTop: '24px', fontFamily: 'monospace', fontSize: '12px', color: '#6b7280' }}>
                 &gt;_ No credit card required. Cancel anytime.
               </div>
             </div>
