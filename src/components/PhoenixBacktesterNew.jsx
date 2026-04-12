@@ -13,6 +13,8 @@ const PhoenixBacktesterNew = () => {
   const [activeCurrency, setActiveCurrency] = useState('USD')
   const [selectedImpact, setSelectedImpact] = useState([])
   const [notes, setNotes] = useState('')
+  const [currentDate, setCurrentDate] = useState(new Date())
+  const [newsEvents, setNewsEvents] = useState([])
   
   const [tradeData, setTradeData] = useState({
     entryPrice: '4483.415',
@@ -101,6 +103,49 @@ const PhoenixBacktesterNew = () => {
     
     localStorage.setItem('phoenixTrades', JSON.stringify(journalEntries));
   }, [notes]);
+
+  // Sample economic calendar data (simulating Forex Factory data)
+  const sampleEconomicEvents = [
+    { id: 1, event: 'Non-Farm Payrolls', currency: 'USD', date: '2024-01-05', time: '13:30', impact: 'High', actual: '216K', forecast: '170K', previous: '216K' },
+    { id: 2, event: 'CPI m/m', currency: 'USD', date: '2024-01-11', time: '13:30', impact: 'High', actual: '0.3%', forecast: '0.2%', previous: '0.1%' },
+    { id: 3, event: 'Retail Sales m/m', currency: 'USD', date: '2024-01-17', time: '13:30', impact: 'High', actual: '0.4%', forecast: '0.2%', previous: '0.3%' },
+    { id: 4, event: 'FOMC Meeting Minutes', currency: 'USD', date: '2024-01-03', time: '19:00', impact: 'High', actual: '-', forecast: '-', previous: '-' },
+    { id: 5, event: 'GDP q/q', currency: 'USD', date: '2024-01-25', time: '13:30', impact: 'High', actual: '3.3%', forecast: '2.0%', previous: '4.9%' },
+    { id: 6, event: 'Unemployment Rate', currency: 'USD', date: '2024-02-02', time: '13:30', impact: 'High', actual: '3.7%', forecast: '3.8%', previous: '3.7%' },
+    { id: 7, event: 'CPI y/y', currency: 'EUR', date: '2024-02-01', time: '10:00', impact: 'High', actual: '2.8%', forecast: '2.7%', previous: '2.9%' },
+    { id: 8, event: 'Interest Rate Decision', currency: 'GBP', date: '2024-02-01', time: '12:00', impact: 'High', actual: '5.25%', forecast: '5.25%', previous: '5.25%' },
+    { id: 9, event: 'Trade Balance', currency: 'USD', date: '2024-02-07', time: '13:30', impact: 'Medium', actual: '-$62.2B', forecast: '-$61.5B', previous: '-$61.5B' },
+    { id: 10, event: 'Consumer Confidence', currency: 'USD', date: '2024-02-27', time: '10:00', impact: 'Medium', actual: '106.7', forecast: '115.0', previous: '114.8' },
+    { id: 11, event: 'PPI m/m', currency: 'USD', date: '2024-02-14', time: '13:30', impact: 'Medium', actual: '0.3%', forecast: '0.1%', previous: '-0.2%' },
+    { id: 12, event: 'Manufacturing PMI', currency: 'USD', date: '2024-02-01', time: '09:45', impact: 'Medium', actual: '50.3', forecast: '50.9', previous: '50.7' },
+    { id: 13, event: 'Building Permits m/m', currency: 'USD', date: '2024-02-16', time: '13:30', impact: 'Low', actual: '1.5M', forecast: '1.48M', previous: '1.49M' },
+    { id: 14, event: 'Initial Jobless Claims', currency: 'USD', date: '2024-02-08', time: '13:30', impact: 'Medium', actual: '218K', forecast: '220K', previous: '227K' },
+    { id: 15, event: 'CB Consumer Confidence', currency: 'EUR', date: '2024-02-27', time: '10:00', impact: 'Low', actual: '-15.5', forecast: '-14.5', previous: '-15.1' },
+  ]
+
+  // Filter news events based on current date and selected filters
+  const getFilteredNewsEvents = () => {
+    const dateStr = currentDate.toISOString().split('T')[0] // YYYY-MM-DD format
+    return sampleEconomicEvents.filter(event => {
+      // Filter by date (show events within 7 days of current date)
+      const eventDate = new Date(event.date)
+      const daysDiff = Math.abs((eventDate - currentDate) / (1000 * 60 * 60 * 24))
+      const dateMatch = daysDiff <= 7
+
+      // Filter by currency
+      const currencyMatch = activeCurrency === 'USD' || event.currency === activeCurrency
+
+      // Filter by impact
+      const impactMatch = selectedImpact.length === 0 || selectedImpact.includes(event.impact)
+
+      return dateMatch && currencyMatch && impactMatch
+    })
+  }
+
+  // Update news events when filters change
+  useEffect(() => {
+    setNewsEvents(getFilteredNewsEvents())
+  }, [currentDate, activeCurrency, selectedImpact])
 
   const handleExport = () => {
     const trades = JSON.parse(localStorage.getItem('phoenixTrades') || '[]')
@@ -388,20 +433,54 @@ const PhoenixBacktesterNew = () => {
             <>
               <div style={{ marginBottom: '20px' }}>
                 <span style={{ fontSize: '18px', fontWeight: '700', marginBottom: '5px', display: 'block' }}>
-                  News (+/- 7 days)
+                  Economic Calendar
                 </span>
-                <button style={{
-                  float: 'right',
-                  background: 'none',
-                  border: 'none',
-                  color: '#787b86',
-                  cursor: 'pointer',
-                  fontSize: '14px'
-                }}>
-                  Refresh
-                </button>
-                <div style={{ fontSize: '12px', color: '#787b86' }}>
-                  Times are shown in Europe/London.
+                <div style={{ fontSize: '12px', color: '#787b86', marginBottom: '10px' }}>
+                  Current Date: {currentDate.toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' })}
+                </div>
+                <div style={{ display: 'flex', gap: '10px', marginBottom: '10px' }}>
+                  <button
+                    onClick={() => setCurrentDate(new Date(currentDate.setDate(currentDate.getDate() - 7)))}
+                    style={{
+                      padding: '6px 12px',
+                      background: '#2a2e39',
+                      border: 'none',
+                      borderRadius: '4px',
+                      color: '#d1d4dc',
+                      fontSize: '12px',
+                      cursor: 'pointer'
+                    }}
+                  >
+                    ← Prev Week
+                  </button>
+                  <button
+                    onClick={() => setCurrentDate(new Date())}
+                    style={{
+                      padding: '6px 12px',
+                      background: '#ff6b00',
+                      border: 'none',
+                      borderRadius: '4px',
+                      color: 'white',
+                      fontSize: '12px',
+                      cursor: 'pointer'
+                    }}
+                  >
+                    Today
+                  </button>
+                  <button
+                    onClick={() => setCurrentDate(new Date(currentDate.setDate(currentDate.getDate() + 7)))}
+                    style={{
+                      padding: '6px 12px',
+                      background: '#2a2e39',
+                      border: 'none',
+                      borderRadius: '4px',
+                      color: '#d1d4dc',
+                      fontSize: '12px',
+                      cursor: 'pointer'
+                    }}
+                  >
+                    Next Week →
+                  </button>
                 </div>
               </div>
 
@@ -463,27 +542,58 @@ const PhoenixBacktesterNew = () => {
               </div>
 
               <div style={{ marginBottom: '15px' }}>
-                {['Today', 'Next week', 'Last week'].map(period => (
-                  <div
-                    key={period}
-                    style={{
-                      padding: '12px',
-                      background: '#2a2e39',
-                      borderRadius: '4px',
-                      marginBottom: '10px',
-                      cursor: 'pointer',
-                      display: 'flex',
-                      justifyContent: 'space-between',
-                      alignItems: 'center'
-                    }}
-                  >
-                    <span>{period}</span>
-                    <span>▼</span>
-                  </div>
-                ))}
-                <div style={{ padding: '20px', textAlign: 'center', color: '#787b86', fontSize: '13px' }}>
-                  No events for this period.
+                <div style={{ fontSize: '13px', fontWeight: '700', marginBottom: '10px' }}>
+                  EVENTS ({newsEvents.length})
                 </div>
+                {newsEvents.length === 0 ? (
+                  <div style={{ padding: '20px', textAlign: 'center', color: '#787b86', fontSize: '13px' }}>
+                    No events for this period with current filters.
+                  </div>
+                ) : (
+                  newsEvents.map(event => (
+                    <div
+                      key={event.id}
+                      style={{
+                        padding: '12px',
+                        background: '#2a2e39',
+                        borderRadius: '4px',
+                        marginBottom: '10px',
+                        cursor: 'pointer',
+                        borderLeft: event.impact === 'High' ? '3px solid #ff4444' : 
+                                   event.impact === 'Medium' ? '3px solid #ffaa00' : 
+                                   event.impact === 'Low' ? '3px solid #44ff44' : '3px solid #888'
+                      }}
+                    >
+                      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px' }}>
+                        <span style={{ fontSize: '12px', fontWeight: '600', color: '#d1d4dc' }}>
+                          {event.event}
+                        </span>
+                        <span style={{ 
+                          fontSize: '10px', 
+                          fontWeight: '600', 
+                          padding: '2px 6px', 
+                          borderRadius: '3px',
+                          background: event.impact === 'High' ? 'rgba(255, 68, 68, 0.2)' : 
+                                     event.impact === 'Medium' ? 'rgba(255, 170, 0, 0.2)' : 
+                                     event.impact === 'Low' ? 'rgba(68, 255, 68, 0.2)' : 'rgba(136, 136, 136, 0.2)',
+                          color: event.impact === 'High' ? '#ff4444' : 
+                                 event.impact === 'Medium' ? '#ffaa00' : 
+                                 event.impact === 'Low' ? '#44ff44' : '#888'
+                        }}>
+                          {event.impact}
+                        </span>
+                      </div>
+                      <div style={{ fontSize: '11px', color: '#787b86', marginBottom: '4px' }}>
+                        {event.currency} · {new Date(event.date).toLocaleDateString('en-US', { month: 'short', day: '2-digit' })} · {event.time}
+                      </div>
+                      <div style={{ fontSize: '11px', color: '#d1d4dc' }}>
+                        <span style={{ color: '#787b86' }}>Actual:</span> {event.actual} · 
+                        <span style={{ color: '#787b86' }}>Forecast:</span> {event.forecast} · 
+                        <span style={{ color: '#787b86' }}>Previous:</span> {event.previous}
+                      </div>
+                    </div>
+                  ))
+                )}
               </div>
             </>
           ) : (
