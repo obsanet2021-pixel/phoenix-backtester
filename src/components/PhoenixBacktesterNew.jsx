@@ -69,16 +69,9 @@ const PhoenixBacktesterNew = () => {
           "show_popup_button": true,
           "popup_width": "1000",
           "popup_height": "650",
-          "drawing_tools": true,
+          "drawing_toolbar": true,
           "toolbar_bg": "#1e222d",
-          "replay": true,
-          "replay_config": {
-            "speed": 1,
-            "date_range": {
-              "from": new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString(),
-              "to": new Date().toISOString()
-            }
-          }
+          "replay": true
         })
       }
     }
