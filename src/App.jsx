@@ -12,6 +12,7 @@ import PhoenixSimulator from './pages/PhoenixSimulator'
 import PhoenixChallenge from './pages/PhoenixChallenge'
 import PhoenixChart from './pages/PhoenixChart'
 import PhoenixBacktester from './components/PhoenixBacktesterNew'
+import Welcome from './pages/Welcome'
 
 function App() {
   const [activePage, setActivePage] = useState('dashboard')
@@ -83,6 +84,19 @@ function App() {
 
   return (
     <Routes>
+      {/* Welcome landing page */}
+      <Route path="/" element={<Welcome />} />
+      
+      {/* Dashboard route (for Enter App button) */}
+      <Route path="/dashboard" element={
+        <div className="app">
+          <PhoenixSidebar activePage={activePage} setActivePage={setActivePage} />
+          <div className="main">
+            {renderPage()}
+          </div>
+        </div>
+      } />
+      
       {/* Phoenix Backtester standalone route */}
       <Route path="/phoenix-backtester" element={<PhoenixBacktester />} />
       
