@@ -15,6 +15,16 @@ const PhoenixBacktesterNew = () => {
   const [notes, setNotes] = useState('')
   const [currentDate, setCurrentDate] = useState(new Date())
   const [newsEvents, setNewsEvents] = useState([])
+  const [showMessageCard, setShowMessageCard] = useState(false)
+  const [messageCard, setMessageCard] = useState({
+    title: 'Phoenix Backtester · System Message',
+    subtitle: 'secure | low latency | execution core',
+    message: '✨ Phoenix Core ready. All systems operational. Use journal to store notes.',
+    type: 'info',
+    showAction: false,
+    actionText: 'View Logs',
+    onAction: null
+  })
   
   const [tradeData, setTradeData] = useState({
     entryPrice: '4483.415',
@@ -146,6 +156,20 @@ const PhoenixBacktesterNew = () => {
   useEffect(() => {
     setNewsEvents(getFilteredNewsEvents())
   }, [currentDate, activeCurrency, selectedImpact])
+
+  // Helper function to show Phoenix message card
+  const showPhoenixMessage = (message, type = 'info', title = 'Phoenix Backtester · System Message', subtitle = 'secure | low latency | execution core') => {
+    setMessageCard({
+      title,
+      subtitle,
+      message,
+      type,
+      showAction: false,
+      actionText: 'View Logs',
+      onAction: null
+    })
+    setShowMessageCard(true)
+  }
 
   const handleExport = () => {
     const trades = JSON.parse(localStorage.getItem('phoenixTrades') || '[]')
@@ -620,7 +644,7 @@ const PhoenixBacktesterNew = () => {
                     };
                     journalEntries.push(backtesterNote);
                     localStorage.setItem('phoenixTrades', JSON.stringify(journalEntries));
-                    alert('Notes saved to journal!');
+                    showPhoenixMessage(`📓 Notes saved to journal! "${notes.substring(0, 60)}${notes.length > 60 ? '…' : ''}"`, 'success');
                   }}
                   style={{
                     padding: '8px 16px',
@@ -664,6 +688,151 @@ const PhoenixBacktesterNew = () => {
           )}
         </div>
       </div>
+
+      {/* Phoenix Message Card */}
+      {showMessageCard && (
+        <div style={{
+          position: 'fixed',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          zIndex: 2000,
+          animation: 'fadeIn 0.2s ease'
+        }}>
+          <div style={{
+            background: '#0f1625',
+            borderRadius: '24px',
+            border: '1px solid rgba(245, 160, 35, 0.3)',
+            boxShadow: '0 12px 28px -8px rgba(0,0,0,0.6), 0 0 0 1px rgba(245, 166, 35, 0.1) inset',
+            backdropFilter: 'blur(2px)',
+            transition: 'all 0.2s ease',
+            overflow: 'hidden',
+            minWidth: '320px',
+            maxWidth: '420px'
+          }}>
+            <div style={{
+              background: 'linear-gradient(90deg, #0f1727, #0b1120)',
+              padding: '14px 18px',
+              borderBottom: '1px solid #2a3a48',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '12px'
+            }}>
+              <div style={{
+                background: '#f5a62320',
+                width: '36px',
+                height: '36px',
+                borderRadius: '12px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontSize: '1.8rem',
+                fontWeight: 'bold',
+                color: '#f5b042',
+                border: '1px solid #f5a62340'
+              }}>
+                🐦‍🔥
+              </div>
+              <div>
+                <div style={{
+                  fontSize: '1rem',
+                  fontWeight: '600',
+                  color: '#eef4ff',
+                  letterSpacing: '-0.2px'
+                }}>
+                  {messageCard.title}
+                </div>
+                <div style={{
+                  fontSize: '0.7rem',
+                  color: '#8aa0bc'
+                }}>
+                  {messageCard.subtitle}
+                </div>
+              </div>
+            </div>
+            <div style={{
+              padding: '18px',
+              background: '#0a101c'
+            }}>
+              <div style={{
+                background: '#080e18',
+                padding: '16px',
+                borderRadius: '18px',
+                fontFamily: 'monospace',
+                fontSize: '0.9rem',
+                color: '#ccdeee',
+                borderLeft: `3px solid ${messageCard.type === 'success' ? '#7ae9b3' : messageCard.type === 'warning' ? '#f5a623' : '#f5b042'}`,
+                wordBreak: 'break-word',
+                lineHeight: '1.4'
+              }}>
+                {messageCard.message}
+              </div>
+            </div>
+            <div style={{
+              padding: '12px 18px 16px',
+              display: 'flex',
+              justifyContent: 'flex-end',
+              gap: '12px',
+              background: '#0b111e',
+              borderTop: '1px solid #1f2c38'
+            }}>
+              <button
+                onClick={() => setShowMessageCard(false)}
+                style={{
+                  background: '#1e2a3a',
+                  border: 'none',
+                  padding: '8px 20px',
+                  borderRadius: '40px',
+                  fontWeight: '500',
+                  fontSize: '0.75rem',
+                  color: '#dce6f0',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s',
+                  fontFamily: 'inherit',
+                  border: '0.5px solid #31485e'
+                }}
+                onMouseEnter={(e) => {
+                  e.target.style.background = '#2a3b4e';
+                }}
+                onMouseLeave={(e) => {
+                  e.target.style.background = '#1e2a3a';
+                }}
+              >
+                Dismiss
+              </button>
+              <button
+                onClick={() => {
+                  setShowMessageCard(false);
+                  if (messageCard.onAction) messageCard.onAction();
+                }}
+                style={{
+                  background: '#f5a623',
+                  color: '#0a0f18',
+                  border: 'none',
+                  padding: '8px 20px',
+                  borderRadius: '40px',
+                  fontWeight: '500',
+                  fontSize: '0.75rem',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s',
+                  fontFamily: 'inherit',
+                  boxShadow: '0 2px 6px rgba(245,166,35,0.2)'
+                }}
+                onMouseEnter={(e) => {
+                  e.target.style.background = '#e0920f';
+                  e.target.style.transform = 'scale(0.97)';
+                }}
+                onMouseLeave={(e) => {
+                  e.target.style.background = '#f5a623';
+                  e.target.style.transform = 'scale(1)';
+                }}
+              >
+                {messageCard.actionText}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Trade Modal */}
       {showTradeModal && (
