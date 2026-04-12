@@ -60,6 +60,27 @@ const Login = () => {
     }
   }
 
+  const handleSubmit = (e) => {
+    e.preventDefault()
+    setError('')
+
+    if (isSignup) {
+      const result = login(email, password)
+      if (result.success) {
+        navigate('/dashboard')
+      } else {
+        setError(result.error)
+      }
+    } else {
+      const result = login(email, password)
+      if (result.success) {
+        navigate('/dashboard')
+      } else {
+        setError(result.error)
+      }
+    }
+  }
+
   return (
     <div style={{ 
       minHeight: '100vh', 
