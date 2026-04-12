@@ -49,7 +49,7 @@ const Login = () => {
     const mockGoogleUser = {
       sub: '123456789',
       email: email || 'user@gmail.com',
-      name: name || 'Google User',
+      name: name || (email ? email.split('@')[0] : 'Google User'),
       picture: 'https://lh3.googleusercontent.com/a/default-user=s96-c'
     }
     const result = googleLogin(mockGoogleUser)
