@@ -87,11 +87,11 @@ export default function LandingPage() {
               PHOENIX<span style={{ color: '#22c55e' }}>_BT</span>
             </span>
           </div>
-          <div style={{ display: 'none', alignItems: 'center', gap: '32px' }}>
-            <a href="#features" style={{ fontFamily: 'monospace', fontSize: '14px', color: '#9ca3af', textDecoration: 'none' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '32px' }}>
+            <a href="#features" style={{ fontFamily: 'monospace', fontSize: '14px', color: '#9ca3af', textDecoration: 'none', display: 'none' }} className="desktop-nav">
               [features]
             </a>
-            <a href="#demo" style={{ fontFamily: 'monospace', fontSize: '14px', color: '#9ca3af', textDecoration: 'none' }}>
+            <a href="#demo" style={{ fontFamily: 'monospace', fontSize: '14px', color: '#9ca3af', textDecoration: 'none', display: 'none' }} className="desktop-nav">
               [demo]
             </a>
             <button 
@@ -131,22 +131,22 @@ export default function LandingPage() {
           </div>
           
           {/* Terminal Content */}
-          <div style={{ background: 'rgba(0, 0, 0, 0.9)', border: '1px solid rgba(34, 197, 94, 0.3)', borderTop: 'none', borderBottomLeftRadius: '8px', borderBottomRightRadius: '8px', padding: '32px', fontFamily: 'monospace' }}>
+          <div style={{ background: 'rgba(0, 0, 0, 0.9)', border: '1px solid rgba(34, 197, 94, 0.3)', borderTop: 'none', borderBottomLeftRadius: '8px', borderBottomRightRadius: '8px', padding: '32px', fontFamily: 'monospace' }} className="terminal-content">
             <div style={{ marginBottom: '24px' }}>
               <span style={{ color: '#22c55e' }}>$</span>
               <span style={{ color: '#9ca3af', marginLeft: '8px' }}>./deploy --strategy=aggressive</span>
             </div>
             
-            <h1 style={{ fontSize: '48px', fontWeight: 'bold', marginBottom: '24px', letterSpacing: '-0.05em', lineHeight: 1.1 }}>
+            <h1 style={{ fontSize: '48px', fontWeight: 'bold', marginBottom: '24px', letterSpacing: '-0.05em', lineHeight: 1.1 }} className="hero-title">
               <span style={{ color: '#fff' }}>{typedText}</span>
               <span style={{ animation: 'pulse 1s infinite', color: '#22c55e' }}>_</span>
             </h1>
             
-            <p style={{ color: '#9ca3af', fontSize: '18px', marginBottom: '32px', maxWidth: '600px', fontFamily: 'monospace', lineHeight: 1.6 }}>
+            <p style={{ color: '#9ca3af', fontSize: '18px', marginBottom: '32px', maxWidth: '600px', fontFamily: 'monospace', lineHeight: 1.6 }} className="hero-desc">
               {">"} Professional backtesting with prop firm challenges, real-time analytics, and execution-grade data. <span style={{ color: '#22c55e' }}>No more guessing.</span>
             </p>
             
-            <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap' }}>
+            <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap' }} className="hero-buttons">
               <button 
                 onClick={() => navigate('/dashboard')}
                 style={{
@@ -189,7 +189,7 @@ export default function LandingPage() {
             </div>
             
             {/* Stats Bar */}
-            <div style={{ marginTop: '48px', paddingTop: '32px', borderTop: '1px solid rgba(34, 197, 94, 0.2)', display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '24px' }}>
+            <div style={{ marginTop: '48px', paddingTop: '32px', borderTop: '1px solid rgba(34, 197, 94, 0.2)', display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '24px' }} className="stats-bar">
               <div>
                 <div style={{ color: '#6b7280', fontSize: '12px' }}>ACTIVE_TRADERS</div>
                 <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#fff' }}>10,428</div>
@@ -231,12 +231,12 @@ export default function LandingPage() {
 
         {/* Features - Matrix Style */}
         <div id="features" style={{ marginTop: '128px' }}>
-          <div style={{ textAlign: 'center', marginBottom: '64px' }}>
+          <div style={{ textAlign: 'center', marginBottom: '64px' }} className="features-header">
             <div style={{ fontFamily: 'monospace', color: '#22c55e', fontSize: '14px', marginBottom: '16px' }}>[ SYSTEM_CAPABILITIES ]</div>
             <h2 style={{ fontSize: '36px', fontWeight: 'bold', fontFamily: 'monospace' }}>We don't guess. <span style={{ color: '#22c55e' }}>We execute.</span></h2>
           </div>
           
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '24px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '24px' }} className="features-grid">
             {[
               {
                 icon: "⚡",
@@ -275,12 +275,12 @@ export default function LandingPage() {
 
         {/* Live Demo Preview - In-Place Dashboard */}
         <div id="demo" style={{ marginTop: '128px' }}>
-          <div style={{ textAlign: 'center', marginBottom: '32px' }}>
+          <div style={{ textAlign: 'center', marginBottom: '32px' }} className="demo-header">
             <div style={{ fontFamily: 'monospace', color: '#22c55e', fontSize: '14px', marginBottom: '8px' }}>[ LIVE_PREVIEW ]</div>
             <h2 style={{ fontSize: '28px', fontWeight: 'bold', fontFamily: 'monospace' }}>See the matrix in action</h2>
           </div>
           
-          <div style={{ background: 'rgba(0, 0, 0, 0.8)', border: '1px solid rgba(34, 197, 94, 0.3)', borderRadius: '8px', overflow: 'hidden' }}>
+          <div style={{ background: 'rgba(0, 0, 0, 0.8)', border: '1px solid rgba(34, 197, 94, 0.3)', borderRadius: '8px', overflow: 'hidden' }} className="demo-container">
             {/* Dashboard Preview Header */}
             <div style={{ background: 'rgba(34, 197, 94, 0.1)', padding: '16px', borderBottom: '1px solid rgba(34, 197, 94, 0.3)' }}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
@@ -293,10 +293,10 @@ export default function LandingPage() {
             </div>
             
             {/* Dashboard Content */}
-            <div style={{ padding: '24px' }}>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '24px' }}>
+            <div style={{ padding: '24px' }} className="demo-content">
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '24px' }} className="demo-grid">
                 {/* Real-time KPIs */}
-                <div style={{ gridColumn: '1 / -1', display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '16px' }}>
+                <div style={{ gridColumn: '1 / -1', display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '16px' }} className="kpi-grid">
                   {[
                     { label: "TOTAL_PNL", value: "+$3,048", change: "+3.05%", positive: true },
                     { label: "WIN_RATE", value: "66.7%", change: "+12.3%", positive: true },
@@ -314,7 +314,7 @@ export default function LandingPage() {
                 </div>
                 
                 {/* Trade Feed */}
-                <div style={{ gridColumn: '1 / 3', background: 'rgba(34, 197, 94, 0.05)', borderRadius: '8px', padding: '16px', border: '1px solid rgba(34, 197, 94, 0.2)' }}>
+                <div style={{ gridColumn: '1 / 3', background: 'rgba(34, 197, 94, 0.05)', borderRadius: '8px', padding: '16px', border: '1px solid rgba(34, 197, 94, 0.2)' }} className="trade-feed">
                   <div style={{ fontFamily: 'monospace', fontSize: '12px', color: '#6b7280', marginBottom: '12px' }}>[ RECENT_EXECUTIONS ]</div>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                     {[
@@ -338,7 +338,7 @@ export default function LandingPage() {
                 </div>
                 
                 {/* Equity Curve Mini */}
-                <div style={{ background: 'rgba(34, 197, 94, 0.05)', borderRadius: '8px', padding: '16px', border: '1px solid rgba(34, 197, 94, 0.2)' }}>
+                <div style={{ background: 'rgba(34, 197, 94, 0.05)', borderRadius: '8px', padding: '16px', border: '1px solid rgba(34, 197, 94, 0.2)' }} className="equity-curve">
                   <div style={{ fontFamily: 'monospace', fontSize: '12px', color: '#6b7280', marginBottom: '12px' }}>[ EQUITY_CURVE ]</div>
                   <div style={{ height: '128px', display: 'flex', alignItems: 'flex-end', gap: '4px' }}>
                     {[65, 72, 68, 75, 82, 78, 85, 90, 88, 92, 95, 100].map((height, i) => (
@@ -358,11 +358,11 @@ export default function LandingPage() {
 
         {/* Final CTA - Aggressive */}
         <div style={{ marginTop: '128px', marginBottom: '80px' }}>
-          <div style={{ background: 'linear-gradient(90deg, rgba(34, 197, 94, 0.1), transparent, rgba(34, 197, 94, 0.1))', borderTop: '1px solid rgba(34, 197, 94, 0.3)', borderBottom: '1px solid rgba(34, 197, 94, 0.3)', padding: '64px 24px' }}>
+          <div style={{ background: 'linear-gradient(90deg, rgba(34, 197, 94, 0.1), transparent, rgba(34, 197, 94, 0.1))', borderTop: '1px solid rgba(34, 197, 94, 0.3)', borderBottom: '1px solid rgba(34, 197, 94, 0.3)', padding: '64px 24px' }} className="cta-section">
             <div style={{ textAlign: 'center' }}>
               <div style={{ fontFamily: 'monospace', color: '#22c55e', fontSize: '14px', marginBottom: '16px' }}>[ READY_FOR_DEPLOYMENT ]</div>
-              <h2 style={{ fontSize: '36px', fontWeight: 'bold', fontFamily: 'monospace', marginBottom: '24px' }}>Stop backtesting in spreadsheets.</h2>
-              <p style={{ color: '#9ca3af', fontSize: '18px', marginBottom: '32px', maxWidth: '600px', margin: '0 auto 32px' }}>
+              <h2 style={{ fontSize: '36px', fontWeight: 'bold', fontFamily: 'monospace', marginBottom: '24px' }} className="cta-title">Stop backtesting in spreadsheets.</h2>
+              <p style={{ color: '#9ca3af', fontSize: '18px', marginBottom: '32px', maxWidth: '600px', margin: '0 auto 32px' }} className="cta-desc">
                 Join 10,000+ traders who've upgraded to professional-grade backtesting.
               </p>
               <button 

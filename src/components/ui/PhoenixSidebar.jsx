@@ -1,6 +1,8 @@
-import React from 'react'
+import React, { useState } from 'react'
 
 const PhoenixSidebar = ({ activePage, setActivePage }) => {
+  const [isMobileOpen, setIsMobileOpen] = useState(false)
+
   const navItems = [
     { id: 'dashboard', label: 'Dashboard', section: 'Main', icon: 'grid' },
     { id: 'analytics', label: 'Analytics', section: 'Main', icon: 'chart' },
@@ -77,45 +79,103 @@ const PhoenixSidebar = ({ activePage, setActivePage }) => {
     return acc
   }, {})
 
+  const handleNavClick = (itemId) => {
+    setActivePage(itemId)
+    setIsMobileOpen(false)
+  }
+
   return (
-    <div className="sidebar">
-      <div className="logo">
-        <img src="/phoenix-logo.png" alt="Phoenix Logo" className="logo-image" />
-        <div>
-          <div className="logo-text">Phoenix</div>
-          <div className="logo-sub">Backtester</div>
+    <>
+      {/* Mobile Hamburger Button */}
+      <button
+        onClick={() => setIsMobileOpen(!isMobileOpen)}
+        style={{
+          position: 'fixed',
+          top: '16px',
+          left: '16px',
+          zIndex: 1000,
+          display: 'none',
+          background: '#ff6b00',
+          border: 'none',
+          borderRadius: '8px',
+          padding: '12px',
+          cursor: 'pointer',
+          color: '#fff'
+        }}
+        className="mobile-menu-btn"
+      >
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+          {isMobileOpen ? (
+            <path d="M18 6L6 18M6 6l12 12" />
+          ) : (
+            <>
+              <path d="M3 12h18M3 6h18M3 18h18" />
+            </>
+          )}
+        </svg>
+      </button>
+
+      {/* Mobile Overlay */}
+      {isMobileOpen && (
+        <div
+          onClick={() => setIsMobileOpen(false)}
+          style={{
+            position: 'fixed',
+            inset: 0,
+            background: 'rgba(0, 0, 0, 0.5)',
+            zIndex: 999,
+            display: 'none'
+          }}
+          className="mobile-overlay"
+        />
+      )}
+
+      {/* Sidebar */}
+      <div 
+        className={`sidebar ${isMobileOpen ? 'mobile-open' : ''}`}
+        style={{
+          position: isMobileOpen ? 'fixed' : 'relative',
+          zIndex: isMobileOpen ? 1000 : 1
+        }}
+      >
+        <div className="logo">
+          <img src="/phoenix-logo.png" alt="Phoenix Logo" className="logo-image" />
+          <div>
+            <div className="logo-text">Phoenix</div>
+            <div className="logo-sub">Backtester</div>
+          </div>
         </div>
-      </div>
-      <div className="nav">
-        {Object.entries(groupedItems).map(([section, items]) => (
-          <React.Fragment key={section}>
-            <div className="nav-section">{section}</div>
-            {items.map(item => (
-              <div
-                key={item.id}
-                className={`nav-item ${activePage === item.id ? 'active' : ''}`}
-                onClick={() => setActivePage(item.id)}
-              >
-                {getIcon(item.icon)}
-                {item.label}
-                {activePage === item.id && <div className="dot"></div>}
+        <div className="nav">
+          {Object.entries(groupedItems).map(([section, items]) => (
+            <React.Fragment key={section}>
+              <div className="nav-section">{section}</div>
+              {items.map(item => (
+                <div
+                  key={item.id}
+                  className={`nav-item ${activePage === item.id ? 'active' : ''}`}
+                  onClick={() => handleNavClick(item.id)}
+                >
+                  {getIcon(item.icon)}
+                  {item.label}
+                  {activePage === item.id && <div className="dot"></div>}
+                </div>
+              ))}
+            </React.Fragment>
+          ))}
+        </div>
+        <div className="sidebar-bottom">
+          <div className="account-badge">
+            <div className="acct-avatar">PX</div>
+            <div className="acct-info">
+              <div className="acct-name">Phoenix Challenge</div>
+              <div className="acct-status">
+                <div className="pulse"></div> Active · $10k Eval
               </div>
-            ))}
-          </React.Fragment>
-        ))}
-      </div>
-      <div className="sidebar-bottom">
-        <div className="account-badge">
-          <div className="acct-avatar">PX</div>
-          <div className="acct-info">
-            <div className="acct-name">Phoenix Challenge</div>
-            <div className="acct-status">
-              <div className="pulse"></div> Active · $10k Eval
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </>
   )
 }
 
