@@ -68,10 +68,7 @@ const PhoenixBacktesterNew = () => {
           "studies": [],
           "show_popup_button": true,
           "popup_width": "1000",
-          "popup_height": "650",
-          "drawing_toolbar": true,
-          "toolbar_bg": "#1e222d",
-          "replay": true
+          "popup_height": "650"
         })
       }
     }
