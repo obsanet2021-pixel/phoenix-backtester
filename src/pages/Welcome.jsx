@@ -397,7 +397,7 @@ export default function LandingPage() {
               <img 
                 src="https://cdn.prod.website-files.com/667eb56e859feb725a6a82a1/66a87765de26441ae13d3cbf_tt-light.svg" 
                 alt="TradingView" 
-                style={{ width: '80px', height: '80px', objectFit: 'contain' }}
+                style={{ width: '240px', height: '240px', objectFit: 'contain' }}
               />
               <div style={{ fontFamily: 'monospace', fontSize: '18px', fontWeight: 'bold', color: '#fff' }}>
                 TradingView
@@ -424,13 +424,8 @@ export default function LandingPage() {
                 alt="Yunix Official" 
                 style={{ width: '80px', height: '80px', objectFit: 'contain' }}
               />
-              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px' }}>
-                <div style={{ fontFamily: 'monospace', fontSize: '18px', fontWeight: 'bold', color: '#fff' }}>
-                  Yunix
-                </div>
-                <div style={{ fontFamily: 'monospace', fontSize: '12px', color: '#ff6b00' }}>
-                  yunixofficial.com
-                </div>
+              <div style={{ fontFamily: 'monospace', fontSize: '18px', fontWeight: 'bold', color: '#fff' }}>
+                Yunix
               </div>
             </div>
           </div>
