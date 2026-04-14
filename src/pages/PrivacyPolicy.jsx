@@ -160,7 +160,7 @@ const PrivacyPolicy = () => {
             <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', color: '#9ca3af', lineHeight: 1.6 }}>
               <p>If you have questions about this privacy policy or your personal data, please contact us:</p>
               <ul style={{ marginLeft: '24px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                <li><strong style={{ color: '#fff' }}>Email:</strong> support@phoenix-backtester.com</li>
+                <li><strong style={{ color: '#fff' }}>Email:</strong> support@phoenixbacktest.xyz</li>
                 <li><strong style={{ color: '#fff' }}>Website:</strong> https://phoenixbacktest.xyz</li>
               </ul>
             </div>

@@ -33,8 +33,8 @@ const Contact = () => {
               <p>For general questions, feedback, or partnership opportunities:</p>
               <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                 <span style={{ color: '#6b7280' }}>Email:</span>
-                <a href="mailto:support@phoenix-backtester.com" style={{ color: '#ff6b00', textDecoration: 'none' }}>
-                  support@phoenix-backtester.com
+                <a href="mailto:support@phoenixbacktest.xyz" style={{ color: '#ff6b00', textDecoration: 'none' }}>
+                  support@phoenixbacktest.xyz
                 </a>
               </div>
             </div>
@@ -53,8 +53,8 @@ const Contact = () => {
               <p>For technical issues, bugs, or platform assistance:</p>
               <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                 <span style={{ color: '#6b7280' }}>Email:</span>
-                <a href="mailto:tech@phoenix-backtester.com" style={{ color: '#ff6b00', textDecoration: 'none' }}>
-                  tech@phoenix-backtester.com
+                <a href="mailto:tech@phoenixbacktest.xyz" style={{ color: '#ff6b00', textDecoration: 'none' }}>
+                  tech@phoenixbacktest.xyz
                 </a>
               </div>
             </div>
@@ -73,8 +73,8 @@ const Contact = () => {
               <p>For enterprise solutions, API access, or business partnerships:</p>
               <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                 <span style={{ color: '#6b7280' }}>Email:</span>
-                <a href="mailto:business@phoenix-backtester.com" style={{ color: '#ff6b00', textDecoration: 'none' }}>
-                  business@phoenix-backtester.com
+                <a href="mailto:business@phoenixbacktest.xyz" style={{ color: '#ff6b00', textDecoration: 'none' }}>
+                  business@phoenixbacktest.xyz
                 </a>
               </div>
             </div>
