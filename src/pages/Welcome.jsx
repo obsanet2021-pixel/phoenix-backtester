@@ -443,23 +443,24 @@ export default function LandingPage() {
               <button 
                 onClick={() => isAuthenticated ? navigate('/dashboard') : navigate('/login')}
                 style={{
-                  padding: '20px 48px',
-                  background: '#ff6b00',
-                  color: '#000',
+                  padding: '16px 32px',
+                  background: 'rgb(255, 107, 0)',
+                  color: 'rgb(0, 0, 0)',
                   fontFamily: 'monospace',
-                  fontSize: '20px',
+                  fontSize: '18px',
                   fontWeight: 'bold',
                   border: 'none',
                   cursor: 'pointer',
-                  transition: 'all 0.2s',
-                  display: 'inline-flex',
+                  transition: '0.2s',
+                  display: 'flex',
                   alignItems: 'center',
-                  gap: '12px'
+                  gap: '8px',
+                  transform: 'scale(1)'
                 }}
                 onMouseEnter={(e) => { e.target.style.background = '#ff8c3a'; e.target.style.transform = 'scale(1.05)'; }}
-                onMouseLeave={(e) => { e.target.style.background = '#ff6b00'; e.target.style.transform = 'scale(1)'; }}
+                onMouseLeave={(e) => { e.target.style.background = 'rgb(255, 107, 0)'; e.target.style.transform = 'scale(1)'; }}
               >
-                DEPLOY_STRATEGY →
+                START THE JOURNEY →
               </button>
               <div style={{ marginTop: '24px', fontFamily: 'monospace', fontSize: '12px', color: '#6b7280' }}>
                 No credit card required. Cancel anytime.
