@@ -377,32 +377,27 @@ export default function LandingPage() {
             flexWrap: 'wrap',
             padding: '48px',
             background: 'rgba(0, 0, 0, 0.5)',
-            border: '1px solid rgba(255, 107, 0, 0.2)',
             borderRadius: '12px'
           }}>
             {/* TradingView Logo */}
             <div style={{ 
               display: 'flex', 
-              alignItems: 'center', 
+              flexDirection: 'column',
+              alignItems: 'center',
               gap: '12px',
               padding: '20px 32px',
-              background: 'rgba(0, 0, 0, 0.8)',
-              border: '1px solid rgba(255, 107, 0, 0.3)',
-              borderRadius: '8px',
               transition: 'all 0.3s'
             }}
             onMouseEnter={(e) => {
-              e.target.style.borderColor = 'rgba(255, 107, 0, 0.6)'
               e.target.style.transform = 'scale(1.05)'
             }}
             onMouseLeave={(e) => {
-              e.target.style.borderColor = 'rgba(255, 107, 0, 0.3)'
               e.target.style.transform = 'scale(1)'
             }}>
               <img 
                 src="https://cdn.prod.website-files.com/667eb56e859feb725a6a82a1/66a87765de26441ae13d3cbf_tt-light.svg" 
                 alt="TradingView" 
-                style={{ width: '40px', height: '40px', objectFit: 'contain' }}
+                style={{ width: '80px', height: '80px', objectFit: 'contain' }}
               />
               <div style={{ fontFamily: 'monospace', fontSize: '18px', fontWeight: 'bold', color: '#fff' }}>
                 TradingView
@@ -412,28 +407,24 @@ export default function LandingPage() {
             {/* Yunix Official Logo */}
             <div style={{ 
               display: 'flex', 
-              alignItems: 'center', 
+              flexDirection: 'column',
+              alignItems: 'center',
               gap: '12px',
               padding: '20px 32px',
-              background: 'rgba(0, 0, 0, 0.8)',
-              border: '1px solid rgba(255, 107, 0, 0.3)',
-              borderRadius: '8px',
               transition: 'all 0.3s'
             }}
             onMouseEnter={(e) => {
-              e.target.style.borderColor = 'rgba(255, 107, 0, 0.6)'
               e.target.style.transform = 'scale(1.05)'
             }}
             onMouseLeave={(e) => {
-              e.target.style.borderColor = 'rgba(255, 107, 0, 0.3)'
               e.target.style.transform = 'scale(1)'
             }}>
               <img 
                 src="/yunix logo.png" 
                 alt="Yunix Official" 
-                style={{ width: '40px', height: '40px', objectFit: 'contain' }}
+                style={{ width: '80px', height: '80px', objectFit: 'contain' }}
               />
-              <div>
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px' }}>
                 <div style={{ fontFamily: 'monospace', fontSize: '18px', fontWeight: 'bold', color: '#fff' }}>
                   Yunix
                 </div>
