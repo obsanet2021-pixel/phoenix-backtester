@@ -14,6 +14,10 @@ import PhoenixChart from './pages/PhoenixChart'
 import PhoenixBacktester from './components/PhoenixBacktesterNew'
 import Welcome from './pages/Welcome'
 import Login from './pages/Login'
+import PrivacyPolicy from './pages/PrivacyPolicy'
+import TermsOfService from './pages/TermsOfService'
+import RiskDisclaimer from './pages/RiskDisclaimer'
+import Contact from './pages/Contact'
 import { AuthProvider, useAuth } from './context/AuthContext'
 
 function ProtectedRoute({ children }) {
@@ -99,6 +103,18 @@ function AppContent() {
       
       {/* Login page */}
       <Route path="/login" element={<Login />} />
+      
+      {/* Privacy Policy */}
+      <Route path="/privacy" element={<PrivacyPolicy />} />
+      
+      {/* Terms of Service */}
+      <Route path="/terms" element={<TermsOfService />} />
+      
+      {/* Risk Disclaimer */}
+      <Route path="/disclaimer" element={<RiskDisclaimer />} />
+      
+      {/* Contact */}
+      <Route path="/contact" element={<Contact />} />
       
       {/* Dashboard route (for Enter App button) */}
       <Route path="/dashboard" element={

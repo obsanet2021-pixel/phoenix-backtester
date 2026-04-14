@@ -282,8 +282,9 @@ export default function LandingPage() {
         {/* Live Demo Preview - In-Place Dashboard */}
         <div id="demo" style={{ marginTop: '128px' }}>
           <div style={{ textAlign: 'center', marginBottom: '32px' }} className="demo-header">
-            <div style={{ fontFamily: 'monospace', color: '#ff6b00', fontSize: '14px', marginBottom: '8px' }}>[ LIVE_PREVIEW ]</div>
+            <div style={{ fontFamily: 'monospace', color: '#ff6b00', fontSize: '14px', marginBottom: '8px' }}>[ SIMULATED_DEMO ]</div>
             <h2 style={{ fontSize: '28px', fontWeight: 'bold', fontFamily: 'monospace' }}>See the matrix in action</h2>
+            <p style={{ color: '#6b7280', fontSize: '14px', marginTop: '8px' }}>Interactive demo with simulated data for illustration purposes</p>
           </div>
           
           <div style={{ background: 'rgba(0, 0, 0, 0.8)', border: '1px solid rgba(255, 107, 0, 0.3)', borderRadius: '8px', overflow: 'hidden' }} className="demo-container">
@@ -452,7 +453,7 @@ export default function LandingPage() {
               <div style={{ fontFamily: 'monospace', color: '#ff6b00', fontSize: '14px', marginBottom: '16px' }}>[ READY_FOR_DEPLOYMENT ]</div>
               <h2 style={{ fontSize: '36px', fontWeight: 'bold', fontFamily: 'monospace', marginBottom: '24px' }} className="cta-title">Stop backtesting in spreadsheets.</h2>
               <p style={{ color: '#9ca3af', fontSize: '18px', marginBottom: '32px', maxWidth: '600px', margin: '0 auto 32px' }} className="cta-desc">
-                Join 10,000+ traders who've upgraded to professional-grade backtesting.
+                Professional-grade backtesting with real-time analytics and execution-grade data.
               </p>
               <button 
                 onClick={() => isAuthenticated ? navigate('/dashboard') : navigate('/login')}
@@ -477,6 +478,40 @@ export default function LandingPage() {
               </button>
               <div style={{ marginTop: '24px', fontFamily: 'monospace', fontSize: '12px', color: '#6b7280' }}>
                 &gt;_ No credit card required. Cancel anytime.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Footer */}
+        <div style={{ 
+          borderTop: '1px solid rgba(255, 107, 0, 0.2)', 
+          padding: '48px 24px', 
+          background: 'rgba(0, 0, 0, 0.8)' 
+        }}>
+          <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
+            <div style={{ 
+              display: 'flex', 
+              flexDirection: 'column', 
+              alignItems: 'center', 
+              gap: '24px' 
+            }}>
+              <div style={{ display: 'flex', gap: '32px', flexWrap: 'wrap', justifyContent: 'center' }}>
+                <a href="/privacy" style={{ color: '#6b7280', textDecoration: 'none', fontSize: '14px', fontFamily: 'monospace' }}>
+                  Privacy Policy
+                </a>
+                <a href="/terms" style={{ color: '#6b7280', textDecoration: 'none', fontSize: '14px', fontFamily: 'monospace' }}>
+                  Terms of Service
+                </a>
+                <a href="/disclaimer" style={{ color: '#6b7280', textDecoration: 'none', fontSize: '14px', fontFamily: 'monospace' }}>
+                  Risk Disclaimer
+                </a>
+                <a href="/contact" style={{ color: '#6b7280', textDecoration: 'none', fontSize: '14px', fontFamily: 'monospace' }}>
+                  Contact
+                </a>
+              </div>
+              <div style={{ color: '#4b5563', fontSize: '12px', fontFamily: 'monospace', textAlign: 'center' }}>
+                © 2024 Phoenix Backtester. All rights reserved.
               </div>
             </div>
           </div>
