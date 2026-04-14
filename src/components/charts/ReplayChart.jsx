@@ -368,7 +368,7 @@ const ReplayChart = ({ pair = 'EURUSD', timeframe = '1h', years = 3 }) => {
           position: 'relative',
           marginRight: `${sidebarWidth}px`
         }}>
-          {/* Movable Controls Panel */}
+          {/* Professional Replay Bar */}
           <div
             ref={controlsRef}
             className="replay-controls"
@@ -377,139 +377,220 @@ const ReplayChart = ({ pair = 'EURUSD', timeframe = '1h', years = 3 }) => {
               left: `${controlsPosition.x}px`,
               top: `${controlsPosition.y}px`,
               background: 'rgba(20, 20, 20, 0.95)',
-              border: '1px solid #ff6b00',
+              border: '1px solid #333',
               borderRadius: '8px',
-              padding: '12px',
+              padding: '8px 12px',
               cursor: isDragging ? 'grabbing' : 'grab',
               zIndex: 1000,
-              boxShadow: '0 4px 20px rgba(255, 107, 0, 0.3)',
+              boxShadow: '0 4px 20px rgba(0, 0, 0, 0.5)',
               backdropFilter: 'blur(10px)',
-              minWidth: '400px'
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px',
+              height: '48px'
             }}
             onMouseDown={handleMouseDown}
           >
-            <div style={{ 
-              display: 'flex', 
-              alignItems: 'center', 
-              gap: '8px', 
-              marginBottom: '8px',
-              fontSize: '12px',
-              color: '#ff6b00',
-              fontWeight: 'bold'
+            {/* Drag Handle */}
+            <div style={{
+              width: '24px',
+              height: '24px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              cursor: 'grab',
+              color: '#888',
+              fontSize: '12px'
             }}>
-              {'🎮'} Replay Controls (drag to move)
-            </div>
-            
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
-              <button 
-                onClick={handleStepBackward} 
-                disabled={currentIndex === 0}
-                style={{
-                  background: currentIndex === 0 ? '#333' : '#ff6b00',
-                  color: '#fff',
-                  border: 'none',
-                  borderRadius: '4px',
-                  padding: '4px 8px',
-                  cursor: currentIndex === 0 ? 'not-allowed' : 'pointer'
-                }}
-              >
-                {'<<'}
-              </button>
-              <button 
-                onClick={handlePlayPause}
-                style={{
-                  background: isPlaying ? '#ef4444' : '#22c55e',
-                  color: '#fff',
-                  border: 'none',
-                  borderRadius: '4px',
-                  padding: '4px 12px',
-                  cursor: 'pointer'
-                }}
-              >
-                {isPlaying ? 'Pause' : 'Play'}
-              </button>
-              <button 
-                onClick={handleStepForward} 
-                disabled={currentIndex >= historicalData.length - 1}
-                style={{
-                  background: currentIndex >= historicalData.length - 1 ? '#333' : '#ff6b00',
-                  color: '#fff',
-                  border: 'none',
-                  borderRadius: '4px',
-                  padding: '4px 8px',
-                  cursor: currentIndex >= historicalData.length - 1 ? 'not-allowed' : 'pointer'
-                }}
-              >
-                {'>>'}
-              </button>
-              <button 
-                onClick={handleReset}
-                style={{
-                  background: '#6b7280',
-                  color: '#fff',
-                  border: 'none',
-                  borderRadius: '4px',
-                  padding: '4px 8px',
-                  cursor: 'pointer'
-                }}
-              >
-                Reset
-              </button>
+              ⋮⋮
             </div>
 
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
+            {/* Replay Button */}
+            <button
+              onClick={handleReset}
+              style={{
+                background: 'transparent',
+                border: 'none',
+                color: '#888',
+                cursor: 'pointer',
+                padding: '4px',
+                borderRadius: '4px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontSize: '14px'
+              }}
+              title="Reset to start"
+            >
+              ↺
+            </button>
+
+            {/* Skip Back */}
+            <button
+              onClick={handleStepBackward}
+              disabled={currentIndex === 0}
+              style={{
+                background: currentIndex === 0 ? '#333' : 'transparent',
+                border: 'none',
+                color: currentIndex === 0 ? '#555' : '#888',
+                cursor: currentIndex === 0 ? 'not-allowed' : 'pointer',
+                padding: '4px',
+                borderRadius: '4px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontSize: '14px'
+              }}
+              title="Step back"
+            >
+              ⏮
+            </button>
+
+            {/* Play/Pause */}
+            <button
+              onClick={handlePlayPause}
+              style={{
+                background: isPlaying ? '#ef4444' : '#22c55e',
+                border: 'none',
+                color: '#fff',
+                cursor: 'pointer',
+                padding: '8px 16px',
+                borderRadius: '4px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontSize: '14px',
+                fontWeight: 'bold',
+                minWidth: '60px'
+              }}
+              title={isPlaying ? 'Pause' : 'Play'}
+            >
+              {isPlaying ? '⏸' : '▶'}
+            </button>
+
+            {/* Skip Forward */}
+            <button
+              onClick={handleStepForward}
+              disabled={currentIndex >= historicalData.length - 1}
+              style={{
+                background: currentIndex >= historicalData.length - 1 ? '#333' : 'transparent',
+                border: 'none',
+                color: currentIndex >= historicalData.length - 1 ? '#555' : '#888',
+                cursor: currentIndex >= historicalData.length - 1 ? 'not-allowed' : 'pointer',
+                padding: '4px',
+                borderRadius: '4px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontSize: '14px'
+              }}
+              title="Step forward"
+            >
+              ⏭
+            </button>
+
+            {/* Speed Slider */}
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px',
+              width: '120px'
+            }}>
               <input
                 type="range"
-                min="0"
-                max={Math.max(historicalData.length - 1, 0)}
-                value={currentIndex}
-                onChange={(e) => handleSeek(parseInt(e.target.value))}
-                style={{ flex: 1 }}
+                min="1"
+                max="16"
+                step="0.5"
+                value={playbackSpeed}
+                onChange={(e) => setPlaybackSpeed(parseFloat(e.target.value))}
+                style={{
+                  flex: 1,
+                  cursor: 'pointer'
+                }}
+                title={`Speed: ${playbackSpeed}x`}
               />
-              <span style={{ color: '#888', fontSize: '11px', minWidth: '80px' }}>
-                {currentIndex + 1} / {historicalData.length}
+              <span style={{
+                color: '#888',
+                fontSize: '10px',
+                minWidth: '40px',
+                textAlign: 'center'
+              }}>
+                {playbackSpeed}x
               </span>
             </div>
 
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <span style={{ color: '#888', fontSize: '11px' }}>{currentDate}</span>
-              <select 
-                value={playbackSpeed} 
-                onChange={(e) => setPlaybackSpeed(parseInt(e.target.value))}
-                style={{
-                  background: '#333',
-                  color: '#fff',
-                  border: '1px solid #555',
-                  borderRadius: '4px',
-                  padding: '2px 4px',
-                  fontSize: '11px'
-                }}
-              >
-                <option value="1">1x</option>
-                <option value="2">2x</option>
-                <option value="5">5x</option>
-                <option value="10">10x</option>
-              </select>
-            </div>
-            
-            {/* Real-time PnL Display */}
-            <div style={{ 
-              marginTop: '8px', 
-              paddingTop: '8px', 
-              borderTop: '1px solid #333',
-              fontSize: '11px'
+            {/* Timeframe Dropdown */}
+            <select
+              value={timeframe}
+              onChange={(e) => setTimeframe(e.target.value)}
+              style={{
+                background: '#333',
+                color: '#fff',
+                border: '1px solid #444',
+                borderRadius: '4px',
+                padding: '4px 8px',
+                fontSize: '12px',
+                cursor: 'pointer',
+                minWidth: '60px'
+              }}
+            >
+              <option value="1m">1m</option>
+              <option value="5m">5m</option>
+              <option value="15m">15m</option>
+              <option value="1h">1h</option>
+              <option value="4h">4h</option>
+              <option value="1D">1D</option>
+            </select>
+
+            {/* Toggle for Auto-play */}
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '4px'
             }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px' }}>
-                <span style={{ color: '#888' }}>Total P&L:</span>
-                <span style={{ color: totalPnL >= 0 ? '#22c55e' : '#ef4444', fontWeight: 'bold' }}>
-                  ${totalPnL.toFixed(2)}
-                </span>
+              <label style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px',
+                cursor: 'pointer',
+                fontSize: '11px',
+                color: '#888'
+              }}>
+                <input
+                  type="checkbox"
+                  checked={isPlaying}
+                  onChange={handlePlayPause}
+                  style={{
+                    width: '36px',
+                    height: '20px',
+                    cursor: 'pointer'
+                  }}
+                />
+                Auto
+              </label>
+            </div>
+
+            {/* Progress Indicator */}
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px',
+              marginLeft: '8px',
+              paddingLeft: '8px',
+              borderLeft: '1px solid #333'
+            }}>
+              <div style={{
+                color: '#888',
+                fontSize: '10px',
+                minWidth: '80px'
+              }}>
+                {currentIndex + 1} / {historicalData.length}
               </div>
-              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <span style={{ color: '#888' }}>Unrealized:</span>
-                <span style={{ color: unrealizedPnL >= 0 ? '#22c55e' : '#ef4444' }}>
-                  ${unrealizedPnL.toFixed(2)}
-                </span>
+              <div style={{
+                color: '#888',
+                fontSize: '10px'
+              }}>
+                {currentDate}
               </div>
             </div>
           </div>
