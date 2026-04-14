@@ -25,6 +25,13 @@ const PhoenixBacktesterNew = () => {
     actionText: 'View Logs',
     onAction: null
   })
+
+  // Replay state
+  const [isReplaying, setIsReplaying] = useState(false)
+  const [replaySpeed, setReplaySpeed] = useState(1)
+  const [replayPosition, setReplayPosition] = useState({ x: 20, y: 80 })
+  const [isDraggingReplay, setIsDraggingReplay] = useState(false)
+  const replayRef = useRef(null)
   
   const [tradeData, setTradeData] = useState({
     entryPrice: '4483.415',
@@ -156,6 +163,30 @@ const PhoenixBacktesterNew = () => {
   useEffect(() => {
     setNewsEvents(getFilteredNewsEvents())
   }, [currentDate, activeCurrency, selectedImpact])
+
+  // Drag handlers for replay bar
+  useEffect(() => {
+    const handleMouseMove = (e) => {
+      if (!isDraggingReplay) return
+      setReplayPosition({
+        x: e.clientX - 20,
+        y: e.clientY - 24
+      })
+    }
+
+    const handleMouseUp = () => {
+      setIsDraggingReplay(false)
+    }
+
+    if (isDraggingReplay) {
+      window.addEventListener('mousemove', handleMouseMove)
+      window.addEventListener('mouseup', handleMouseUp)
+      return () => {
+        window.removeEventListener('mousemove', handleMouseMove)
+        window.removeEventListener('mouseup', handleMouseUp)
+      }
+    }
+  }, [isDraggingReplay])
 
   // Helper function to show Phoenix message card
   const showPhoenixMessage = (message, type = 'info', title = 'Phoenix Backtester · System Message', subtitle = 'secure | low latency | execution core') => {
@@ -340,6 +371,221 @@ const PhoenixBacktesterNew = () => {
               minHeight: '500px'
             }}
           />
+
+          {/* Professional Replay Bar */}
+          <div
+            ref={replayRef}
+            style={{
+              position: 'absolute',
+              left: `${replayPosition.x}px`,
+              top: `${replayPosition.y}px`,
+              background: 'rgba(20, 20, 20, 0.95)',
+              border: '1px solid #333',
+              borderRadius: '8px',
+              padding: '8px 12px',
+              cursor: isDraggingReplay ? 'grabbing' : 'grab',
+              zIndex: 1000,
+              boxShadow: '0 4px 20px rgba(0, 0, 0, 0.5)',
+              backdropFilter: 'blur(10px)',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px',
+              height: '48px'
+            }}
+            onMouseDown={(e) => {
+              setIsDraggingReplay(true)
+              setReplayPosition({ x: e.clientX - 20, y: e.clientY - 24 })
+            }}
+          >
+            {/* Drag Handle */}
+            <div style={{
+              width: '24px',
+              height: '24px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              cursor: 'grab',
+              color: '#888',
+              fontSize: '12px'
+            }}>
+              ⋮⋮
+            </div>
+
+            {/* Replay Button */}
+            <button
+              style={{
+                background: 'transparent',
+                border: 'none',
+                color: '#888',
+                cursor: 'pointer',
+                padding: '4px',
+                borderRadius: '4px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontSize: '14px'
+              }}
+              title="Reset replay"
+            >
+              ↺
+            </button>
+
+            {/* Skip Back */}
+            <button
+              style={{
+                background: 'transparent',
+                border: 'none',
+                color: '#888',
+                cursor: 'pointer',
+                padding: '4px',
+                borderRadius: '4px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontSize: '14px'
+              }}
+              title="Step back"
+            >
+              ⏮
+            </button>
+
+            {/* Play/Pause */}
+            <button
+              onClick={() => setIsReplaying(!isReplaying)}
+              style={{
+                background: isReplaying ? '#ef4444' : '#22c55e',
+                border: 'none',
+                color: '#fff',
+                cursor: 'pointer',
+                padding: '8px 16px',
+                borderRadius: '4px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontSize: '14px',
+                fontWeight: 'bold',
+                minWidth: '60px'
+              }}
+              title={isReplaying ? 'Pause' : 'Play'}
+            >
+              {isReplaying ? '⏸' : '▶'}
+            </button>
+
+            {/* Skip Forward */}
+            <button
+              style={{
+                background: 'transparent',
+                border: 'none',
+                color: '#888',
+                cursor: 'pointer',
+                padding: '4px',
+                borderRadius: '4px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontSize: '14px'
+              }}
+              title="Step forward"
+            >
+              ⏭
+            </button>
+
+            {/* Speed Slider */}
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px',
+              width: '120px'
+            }}>
+              <input
+                type="range"
+                min="1"
+                max="16"
+                step="0.5"
+                value={replaySpeed}
+                onChange={(e) => setReplaySpeed(parseFloat(e.target.value))}
+                style={{
+                  flex: 1,
+                  cursor: 'pointer'
+                }}
+                title={`Speed: ${replaySpeed}x`}
+              />
+              <span style={{
+                color: '#888',
+                fontSize: '10px',
+                minWidth: '40px',
+                textAlign: 'center'
+              }}>
+                {replaySpeed}x
+              </span>
+            </div>
+
+            {/* Timeframe Selector */}
+            <select
+              style={{
+                background: '#333',
+                color: '#fff',
+                border: '1px solid #444',
+                borderRadius: '4px',
+                padding: '4px 8px',
+                fontSize: '12px',
+                cursor: 'pointer',
+                minWidth: '60px'
+              }}
+            >
+              <option value="1">1m</option>
+              <option value="5">5m</option>
+              <option value="15" selected>15m</option>
+              <option value="60">1h</option>
+              <option value="240">4h</option>
+              <option value="D">1D</option>
+            </select>
+
+            {/* Auto-play Toggle */}
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '4px'
+            }}>
+              <label style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px',
+                cursor: 'pointer',
+                fontSize: '11px',
+                color: '#888'
+              }}>
+                <input
+                  type="checkbox"
+                  checked={isReplaying}
+                  onChange={() => setIsReplaying(!isReplaying)}
+                  style={{
+                    width: '36px',
+                    height: '20px',
+                    cursor: 'pointer'
+                  }}
+                />
+                Auto
+              </label>
+            </div>
+
+            {/* Status */}
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px',
+              marginLeft: '8px',
+              paddingLeft: '8px',
+              borderLeft: '1px solid #333'
+            }}>
+              <span style={{
+                color: isReplaying ? '#22c55e' : '#888',
+                fontSize: '10px'
+              }}>
+                {isReplaying ? '● Playing' : '○ Ready'}
+              </span>
+            </div>
+          </div>
         </div>
 
         {/* Bottom Bar */}
