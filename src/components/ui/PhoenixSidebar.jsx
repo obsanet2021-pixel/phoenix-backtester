@@ -1,11 +1,14 @@
 import React, { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext'
 
-const PhoenixSidebar = ({ activePage, setActivePage }) => {
+const PhoenixSidebar = () => {
   const navigate = useNavigate()
+  const location = useLocation()
   const { isAuthenticated, user, logout } = useAuth()
   const [isMobileOpen, setIsMobileOpen] = useState(false)
+
+  const activePage = location.pathname.replace('/', '') || 'dashboard'
 
   const navItems = [
     { id: 'dashboard', label: 'Dashboard', section: 'Main', icon: 'grid' },
@@ -84,7 +87,7 @@ const PhoenixSidebar = ({ activePage, setActivePage }) => {
   }, {})
 
   const handleNavClick = (itemId) => {
-    setActivePage(itemId)
+    navigate(`/${itemId}`)
     setIsMobileOpen(false)
   }
 

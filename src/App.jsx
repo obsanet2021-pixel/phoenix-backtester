@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import { Routes, Route, Navigate } from 'react-router-dom'
 import ErrorBoundary from './components/ErrorBoundary'
 import PhoenixSidebar from './components/ui/PhoenixSidebar'
@@ -29,73 +28,6 @@ function ProtectedRoute({ children }) {
 }
 
 function AppContent() {
-  const [activePage, setActivePage] = useState('dashboard')
-
-  const renderPage = () => {
-    switch (activePage) {
-      case 'journal':
-        return (
-          <ErrorBoundary>
-            <PhoenixJournal />
-          </ErrorBoundary>
-        )
-      case 'dashboard':
-        return (
-          <ErrorBoundary>
-            <PhoenixDashboard />
-          </ErrorBoundary>
-        )
-      case 'analytics':
-        return (
-          <ErrorBoundary>
-            <PhoenixAnalytics />
-          </ErrorBoundary>
-        )
-      case 'reports':
-        return (
-          <ErrorBoundary>
-            <PhoenixReports />
-          </ErrorBoundary>
-        )
-      case 'trades':
-        return (
-          <ErrorBoundary>
-            <PhoenixTrades />
-          </ErrorBoundary>
-        )
-      case 'simulator':
-        return (
-          <ErrorBoundary>
-            <PhoenixSimulator />
-          </ErrorBoundary>
-        )
-      case 'challenge':
-        return (
-          <ErrorBoundary>
-            <PhoenixChallenge />
-          </ErrorBoundary>
-        )
-      case 'chart':
-        return (
-          <ErrorBoundary>
-            <PhoenixChart />
-          </ErrorBoundary>
-        )
-      case 'backtest':
-        return (
-          <ErrorBoundary>
-            <PhoenixBacktest setActivePage={setActivePage} />
-          </ErrorBoundary>
-        )
-      default:
-        return (
-          <ErrorBoundary>
-            <PhoenixDashboard />
-          </ErrorBoundary>
-        )
-    }
-  }
-
   return (
     <Routes>
       {/* Welcome landing page */}
@@ -116,13 +48,119 @@ function AppContent() {
       {/* Contact */}
       <Route path="/contact" element={<Contact />} />
       
-      {/* Dashboard route (for Enter App button) */}
+      {/* Dashboard routes with sidebar */}
       <Route path="/dashboard" element={
         <ProtectedRoute>
           <div className="app">
-            <PhoenixSidebar activePage={activePage} setActivePage={setActivePage} />
+            <PhoenixSidebar />
             <div className="main">
-              {renderPage()}
+              <ErrorBoundary>
+                <PhoenixDashboard />
+              </ErrorBoundary>
+            </div>
+          </div>
+        </ProtectedRoute>
+      } />
+      
+      <Route path="/journal" element={
+        <ProtectedRoute>
+          <div className="app">
+            <PhoenixSidebar />
+            <div className="main">
+              <ErrorBoundary>
+                <PhoenixJournal />
+              </ErrorBoundary>
+            </div>
+          </div>
+        </ProtectedRoute>
+      } />
+      
+      <Route path="/analytics" element={
+        <ProtectedRoute>
+          <div className="app">
+            <PhoenixSidebar />
+            <div className="main">
+              <ErrorBoundary>
+                <PhoenixAnalytics />
+              </ErrorBoundary>
+            </div>
+          </div>
+        </ProtectedRoute>
+      } />
+      
+      <Route path="/reports" element={
+        <ProtectedRoute>
+          <div className="app">
+            <PhoenixSidebar />
+            <div className="main">
+              <ErrorBoundary>
+                <PhoenixReports />
+              </ErrorBoundary>
+            </div>
+          </div>
+        </ProtectedRoute>
+      } />
+      
+      <Route path="/trades" element={
+        <ProtectedRoute>
+          <div className="app">
+            <PhoenixSidebar />
+            <div className="main">
+              <ErrorBoundary>
+                <PhoenixTrades />
+              </ErrorBoundary>
+            </div>
+          </div>
+        </ProtectedRoute>
+      } />
+      
+      <Route path="/backtest" element={
+        <ProtectedRoute>
+          <div className="app">
+            <PhoenixSidebar />
+            <div className="main">
+              <ErrorBoundary>
+                <PhoenixBacktest />
+              </ErrorBoundary>
+            </div>
+          </div>
+        </ProtectedRoute>
+      } />
+      
+      <Route path="/simulator" element={
+        <ProtectedRoute>
+          <div className="app">
+            <PhoenixSidebar />
+            <div className="main">
+              <ErrorBoundary>
+                <PhoenixSimulator />
+              </ErrorBoundary>
+            </div>
+          </div>
+        </ProtectedRoute>
+      } />
+      
+      <Route path="/challenge" element={
+        <ProtectedRoute>
+          <div className="app">
+            <PhoenixSidebar />
+            <div className="main">
+              <ErrorBoundary>
+                <PhoenixChallenge />
+              </ErrorBoundary>
+            </div>
+          </div>
+        </ProtectedRoute>
+      } />
+      
+      <Route path="/chart" element={
+        <ProtectedRoute>
+          <div className="app">
+            <PhoenixSidebar />
+            <div className="main">
+              <ErrorBoundary>
+                <PhoenixChart />
+              </ErrorBoundary>
             </div>
           </div>
         </ProtectedRoute>
@@ -130,18 +168,6 @@ function AppContent() {
       
       {/* Phoenix Backtester standalone route */}
       <Route path="/phoenix-backtester" element={<PhoenixBacktester />} />
-      
-      {/* Main app with sidebar */}
-      <Route path="/*" element={
-        <ProtectedRoute>
-          <div className="app">
-            <PhoenixSidebar activePage={activePage} setActivePage={setActivePage} />
-            <div className="main">
-              {renderPage()}
-            </div>
-          </div>
-        </ProtectedRoute>
-      } />
     </Routes>
   )
 }
