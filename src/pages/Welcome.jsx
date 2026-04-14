@@ -84,7 +84,11 @@ export default function LandingPage() {
       <nav style={{ position: 'relative', zIndex: 10, borderBottom: '1px solid rgba(255, 107, 0, 0.2)', background: 'rgba(0, 0, 0, 0.8)', backdropFilter: 'blur(10px)' }}>
         <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '16px 24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <div style={{ width: '32px', height: '32px', background: '#ff6b00', borderRadius: '4px', animation: 'pulse 2s infinite' }} />
+            <img 
+              src="/phoenix-logo.png" 
+              alt="Phoenix" 
+              style={{ width: '32px', height: '32px', objectFit: 'contain' }}
+            />
             <span style={{ fontFamily: 'monospace', fontWeight: 'bold', fontSize: '20px', letterSpacing: '-0.05em' }}>
               PHOENIX<span style={{ color: '#ff6b00' }}>_BT</span>
             </span>
@@ -395,10 +399,11 @@ export default function LandingPage() {
               e.target.style.borderColor = 'rgba(255, 107, 0, 0.3)'
               e.target.style.transform = 'scale(1)'
             }}>
-              <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
-                <path d="M20 0C8.954 0 0 8.954 0 20s8.954 20 20 20 20-8.954 20-20S31.046 0 20 0z" fill="#2962FF"/>
-                <path d="M20 4c-8.837 0-16 7.163-16 16s7.163 16 16 16 16-7.163 16-16-7.163-16-16-16zm-2 24l-8-8 2.828-2.828L18 22.344l10.172-10.172L31 14l-13 14z" fill="#fff"/>
-              </svg>
+              <img 
+                src="/Tradingview--Streamline-Simple-Icons.png" 
+                alt="TradingView" 
+                style={{ width: '40px', height: '40px', objectFit: 'contain' }}
+              />
               <div style={{ fontFamily: 'monospace', fontSize: '18px', fontWeight: 'bold', color: '#fff' }}>
                 TradingView
               </div>
@@ -423,21 +428,11 @@ export default function LandingPage() {
               e.target.style.borderColor = 'rgba(255, 107, 0, 0.3)'
               e.target.style.transform = 'scale(1)'
             }}>
-              <div style={{ 
-                width: '40px', 
-                height: '40px', 
-                background: 'linear-gradient(135deg, #ff6b00, #ff8c3a)',
-                borderRadius: '8px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                fontFamily: 'monospace',
-                fontSize: '20px',
-                fontWeight: 'bold',
-                color: '#000'
-              }}>
-                Y
-              </div>
+              <img 
+                src="/yunix logo.png" 
+                alt="Yunix Official" 
+                style={{ width: '40px', height: '40px', objectFit: 'contain' }}
+              />
               <div>
                 <div style={{ fontFamily: 'monospace', fontSize: '18px', fontWeight: 'bold', color: '#fff' }}>
                   Yunix
