@@ -358,6 +358,98 @@ export default function LandingPage() {
           </div>
         </div>
 
+        {/* Partner Logos */}
+        <div style={{ marginTop: '96px', marginBottom: '80px' }}>
+          <div style={{ textAlign: 'center', marginBottom: '48px' }}>
+            <div style={{ fontFamily: 'monospace', color: '#6b7280', fontSize: '12px', marginBottom: '16px' }}>[ POWERED_BY ]</div>
+            <h2 style={{ fontSize: '24px', fontWeight: 'bold', fontFamily: 'monospace', color: '#fff' }}>Trusted Partners</h2>
+          </div>
+          
+          <div style={{ 
+            display: 'flex', 
+            alignItems: 'center', 
+            justifyContent: 'center', 
+            gap: '64px',
+            flexWrap: 'wrap',
+            padding: '48px',
+            background: 'rgba(0, 0, 0, 0.5)',
+            border: '1px solid rgba(255, 107, 0, 0.2)',
+            borderRadius: '12px'
+          }}>
+            {/* TradingView Logo */}
+            <div style={{ 
+              display: 'flex', 
+              alignItems: 'center', 
+              gap: '12px',
+              padding: '20px 32px',
+              background: 'rgba(0, 0, 0, 0.8)',
+              border: '1px solid rgba(255, 107, 0, 0.3)',
+              borderRadius: '8px',
+              transition: 'all 0.3s'
+            }}
+            onMouseEnter={(e) => {
+              e.target.style.borderColor = 'rgba(255, 107, 0, 0.6)'
+              e.target.style.transform = 'scale(1.05)'
+            }}
+            onMouseLeave={(e) => {
+              e.target.style.borderColor = 'rgba(255, 107, 0, 0.3)'
+              e.target.style.transform = 'scale(1)'
+            }}>
+              <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+                <path d="M20 0C8.954 0 0 8.954 0 20s8.954 20 20 20 20-8.954 20-20S31.046 0 20 0z" fill="#2962FF"/>
+                <path d="M20 4c-8.837 0-16 7.163-16 16s7.163 16 16 16 16-7.163 16-16-7.163-16-16-16zm-2 24l-8-8 2.828-2.828L18 22.344l10.172-10.172L31 14l-13 14z" fill="#fff"/>
+              </svg>
+              <div style={{ fontFamily: 'monospace', fontSize: '18px', fontWeight: 'bold', color: '#fff' }}>
+                TradingView
+              </div>
+            </div>
+
+            {/* Yunix Official Logo */}
+            <div style={{ 
+              display: 'flex', 
+              alignItems: 'center', 
+              gap: '12px',
+              padding: '20px 32px',
+              background: 'rgba(0, 0, 0, 0.8)',
+              border: '1px solid rgba(255, 107, 0, 0.3)',
+              borderRadius: '8px',
+              transition: 'all 0.3s'
+            }}
+            onMouseEnter={(e) => {
+              e.target.style.borderColor = 'rgba(255, 107, 0, 0.6)'
+              e.target.style.transform = 'scale(1.05)'
+            }}
+            onMouseLeave={(e) => {
+              e.target.style.borderColor = 'rgba(255, 107, 0, 0.3)'
+              e.target.style.transform = 'scale(1)'
+            }}>
+              <div style={{ 
+                width: '40px', 
+                height: '40px', 
+                background: 'linear-gradient(135deg, #ff6b00, #ff8c3a)',
+                borderRadius: '8px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontFamily: 'monospace',
+                fontSize: '20px',
+                fontWeight: 'bold',
+                color: '#000'
+              }}>
+                Y
+              </div>
+              <div>
+                <div style={{ fontFamily: 'monospace', fontSize: '18px', fontWeight: 'bold', color: '#fff' }}>
+                  Yunix
+                </div>
+                <div style={{ fontFamily: 'monospace', fontSize: '12px', color: '#ff6b00' }}>
+                  official.com
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
         {/* Final CTA - Aggressive */}
         <div style={{ marginTop: '128px', marginBottom: '80px' }}>
           <div style={{ background: 'linear-gradient(90deg, rgba(255, 107, 0, 0.1), transparent, rgba(255, 107, 0, 0.1))', borderTop: '1px solid rgba(255, 107, 0, 0.3)', borderBottom: '1px solid rgba(255, 107, 0, 0.3)', padding: '64px 24px' }} className="cta-section">
