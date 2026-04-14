@@ -139,8 +139,7 @@ export default function LandingPage() {
           {/* Terminal Content */}
           <div style={{ background: 'rgba(0, 0, 0, 0.9)', border: '1px solid rgba(255, 107, 0, 0.3)', borderTop: 'none', borderBottomLeftRadius: '8px', borderBottomRightRadius: '8px', padding: '32px', fontFamily: 'monospace' }} className="terminal-content">
             <div style={{ marginBottom: '24px' }}>
-              <span style={{ color: '#ff6b00' }}>$</span>
-              <span style={{ color: '#9ca3af', marginLeft: '8px' }}>./deploy --strategy=aggressive</span>
+              <span style={{ color: '#9ca3af' }}>./deploy --strategy=aggressive</span>
             </div>
             
             <h1 style={{ fontSize: '48px', fontWeight: 'bold', marginBottom: '24px', letterSpacing: '-0.05em', lineHeight: 1.1 }} className="hero-title">
@@ -381,35 +380,6 @@ export default function LandingPage() {
             border: '1px solid rgba(255, 107, 0, 0.2)',
             borderRadius: '12px'
           }}>
-            {/* TradingView Logo */}
-            <div style={{ 
-              display: 'flex', 
-              alignItems: 'center', 
-              gap: '12px',
-              padding: '20px 32px',
-              background: 'rgba(0, 0, 0, 0.8)',
-              border: '1px solid rgba(255, 107, 0, 0.3)',
-              borderRadius: '8px',
-              transition: 'all 0.3s'
-            }}
-            onMouseEnter={(e) => {
-              e.target.style.borderColor = 'rgba(255, 107, 0, 0.6)'
-              e.target.style.transform = 'scale(1.05)'
-            }}
-            onMouseLeave={(e) => {
-              e.target.style.borderColor = 'rgba(255, 107, 0, 0.3)'
-              e.target.style.transform = 'scale(1)'
-            }}>
-              <img 
-                src="/Tradingview--Streamline-Simple-Icons.png" 
-                alt="TradingView" 
-                style={{ width: '40px', height: '40px', objectFit: 'contain' }}
-              />
-              <div style={{ fontFamily: 'monospace', fontSize: '18px', fontWeight: 'bold', color: '#fff' }}>
-                TradingView
-              </div>
-            </div>
-
             {/* Yunix Official Logo */}
             <div style={{ 
               display: 'flex', 
@@ -439,7 +409,7 @@ export default function LandingPage() {
                   Yunix
                 </div>
                 <div style={{ fontFamily: 'monospace', fontSize: '12px', color: '#ff6b00' }}>
-                  official.com
+                  yunixofficial.com
                 </div>
               </div>
             </div>
@@ -477,7 +447,7 @@ export default function LandingPage() {
                 DEPLOY_STRATEGY →
               </button>
               <div style={{ marginTop: '24px', fontFamily: 'monospace', fontSize: '12px', color: '#6b7280' }}>
-                &gt;_ No credit card required. Cancel anytime.
+                No credit card required. Cancel anytime.
               </div>
             </div>
           </div>
