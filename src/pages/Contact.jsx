@@ -118,8 +118,8 @@ const Contact = () => {
               </div>
               <div>
                 <strong style={{ color: '#fff' }}>Website:</strong>
-                <a href="https://phoenix-backtester.vercel.app" style={{ color: '#ff6b00', textDecoration: 'none', marginLeft: '8px' }}>
-                  https://phoenix-backtester.vercel.app
+                <a href="https://phoenixbacktest.xyz" style={{ color: '#ff6b00', textDecoration: 'none', marginLeft: '8px' }}>
+                  https://phoenixbacktest.xyz
                 </a>
               </div>
               <div>
@@ -128,7 +128,7 @@ const Contact = () => {
               </div>
               <div>
                 <strong style={{ color: '#fff' }}>Founded:</strong>
-                <span> 2024</span>
+                <span> 2026</span>
               </div>
               <div>
                 <strong style={{ color: '#fff' }}>Mission:</strong>

@@ -511,7 +511,7 @@ export default function LandingPage() {
                 </a>
               </div>
               <div style={{ color: '#4b5563', fontSize: '12px', fontFamily: 'monospace', textAlign: 'center' }}>
-                © 2024 Phoenix Backtester. All rights reserved.
+                © 2026 Phoenix Backtester. All rights reserved.
               </div>
             </div>
           </div>
