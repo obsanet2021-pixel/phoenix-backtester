@@ -384,8 +384,8 @@ export default function LandingPage() {
               display: 'flex', 
               flexDirection: 'column',
               alignItems: 'center',
-              gap: '12px',
-              padding: '20px 32px',
+              gap: '24px',
+              padding: '40px 32px',
               transition: 'all 0.3s'
             }}
             onMouseEnter={(e) => {
