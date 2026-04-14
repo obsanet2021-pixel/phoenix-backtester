@@ -397,7 +397,7 @@ export default function LandingPage() {
               <img 
                 src="https://cdn.prod.website-files.com/667eb56e859feb725a6a82a1/66a87765de26441ae13d3cbf_tt-light.svg" 
                 alt="TradingView" 
-                style={{ width: '240px', height: '240px', objectFit: 'contain' }}
+                style={{ width: '240px', height: '89px', objectFit: 'contain' }}
               />
               <div style={{ fontFamily: 'monospace', fontSize: '18px', fontWeight: 'bold', color: '#fff' }}>
                 TradingView
