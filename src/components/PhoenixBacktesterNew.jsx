@@ -10,6 +10,7 @@ const PhoenixBacktesterNew = () => {
   const [orderType, setOrderType] = useState('Market')
   const [balanceTab, setBalanceTab] = useState('Initial Balance')
   const [sidebarTab, setSidebarTab] = useState('News')
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false)
   const [activeCurrency, setActiveCurrency] = useState('USD')
   const [selectedImpact, setSelectedImpact] = useState([])
   const [notes, setNotes] = useState('')
@@ -252,14 +253,17 @@ const PhoenixBacktesterNew = () => {
       height: '100vh',
       fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif',
       background: '#131722',
-      color: '#d1d4dc'
+      color: '#d1d4dc',
+      overflow: 'hidden'
     }}>
       {/* Main Area */}
       <div style={{
         flex: 1,
         display: 'flex',
         flexDirection: 'column',
-        position: 'relative'
+        position: 'relative',
+        overflow: 'hidden',
+        minWidth: 0
       }}>
         {/* TradingView Chart with buttons */}
         <div style={{
@@ -666,36 +670,61 @@ const PhoenixBacktesterNew = () => {
 
       {/* Sidebar */}
       <div style={{
-        width: '380px',
+        width: isSidebarCollapsed ? '0px' : '380px',
         background: '#1e222d',
         borderLeft: '1px solid #2a2e39',
         display: 'flex',
-        flexDirection: 'column'
+        flexDirection: 'column',
+        transition: 'width 0.3s ease',
+        overflow: 'hidden'
       }}>
         <div style={{
           display: 'flex',
           background: '#131722',
-          borderBottom: '1px solid #2a2e39'
+          borderBottom: '1px solid #2a2e39',
+          alignItems: 'center'
         }}>
-          {['News', 'Notes'].map(tab => (
-            <button
-              key={tab}
-              style={{
-                flex: 1,
-                padding: '15px',
-                textAlign: 'center',
-                fontWeight: '600',
-                cursor: 'pointer',
-                border: 'none',
-                background: sidebarTab === tab ? '#ff6b00' : 'transparent',
-                color: sidebarTab === tab ? 'white' : '#787b86',
-                transition: 'all 0.2s'
-              }}
-              onClick={() => setSidebarTab(tab)}
-            >
-              {tab}
-            </button>
-          ))}
+          {!isSidebarCollapsed && (
+            <>
+              {['News', 'Notes'].map(tab => (
+                <button
+                  key={tab}
+                  style={{
+                    flex: 1,
+                    padding: '15px',
+                    textAlign: 'center',
+                    fontWeight: '600',
+                    cursor: 'pointer',
+                    border: 'none',
+                    background: sidebarTab === tab ? '#ff6b00' : 'transparent',
+                    color: sidebarTab === tab ? 'white' : '#787b86',
+                    transition: 'all 0.2s'
+                  }}
+                  onClick={() => setSidebarTab(tab)}
+                >
+                  {tab}
+                </button>
+              ))}
+            </>
+          )}
+          <button
+            onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
+            style={{
+              padding: '15px 20px',
+              background: 'transparent',
+              border: 'none',
+              color: '#ff6b00',
+              cursor: 'pointer',
+              fontSize: '18px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              transition: 'all 0.2s'
+            }}
+            title={isSidebarCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+          >
+            {isSidebarCollapsed ? '→' : '←'}
+          </button>
         </div>
 
         <div style={{ padding: '20px', overflowY: 'auto', flex: 1 }}>
