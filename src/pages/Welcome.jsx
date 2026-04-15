@@ -455,7 +455,8 @@ export default function LandingPage() {
                   display: 'flex',
                   alignItems: 'center',
                   gap: '8px',
-                  transform: 'scale(1)'
+                  transform: 'scale(1)',
+                  margin: '0 auto'
                 }}
                 onMouseEnter={(e) => { e.target.style.background = '#ff8c3a'; e.target.style.transform = 'scale(1.05)'; }}
                 onMouseLeave={(e) => { e.target.style.background = 'rgb(255, 107, 0)'; e.target.style.transform = 'scale(1)'; }}
