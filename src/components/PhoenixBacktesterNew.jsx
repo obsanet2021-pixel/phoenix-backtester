@@ -83,7 +83,7 @@ const PhoenixBacktesterNew = () => {
           "show_popup_button": true,
           "popup_width": "1000",
           "popup_height": "650",
-          "datafeed": new window.Datafeeds.UDFCompatibleDatafeed('http://localhost:3001'),
+          "datafeed": new window.Datafeeds.UDFCompatibleDatafeed('https://phoenix-backtester.onrender.com'),
           "library_path": "/charting_library/",
           "charts_storage_url": "https://saveload.tradingview.com",
           "charts_storage_api_version": "1.1",
