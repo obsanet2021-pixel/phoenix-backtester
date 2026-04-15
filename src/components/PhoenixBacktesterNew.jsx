@@ -138,29 +138,12 @@ const PhoenixBacktesterNew = () => {
     localStorage.setItem('phoenixTrades', JSON.stringify(journalEntries));
   }, [notes]);
 
-  // Sample economic calendar data (simulating Forex Factory data)
-  const sampleEconomicEvents = [
-    { id: 1, event: 'Non-Farm Payrolls', currency: 'USD', date: '2024-01-05', time: '13:30', impact: 'High', actual: '216K', forecast: '170K', previous: '216K' },
-    { id: 2, event: 'CPI m/m', currency: 'USD', date: '2024-01-11', time: '13:30', impact: 'High', actual: '0.3%', forecast: '0.2%', previous: '0.1%' },
-    { id: 3, event: 'Retail Sales m/m', currency: 'USD', date: '2024-01-17', time: '13:30', impact: 'High', actual: '0.4%', forecast: '0.2%', previous: '0.3%' },
-    { id: 4, event: 'FOMC Meeting Minutes', currency: 'USD', date: '2024-01-03', time: '19:00', impact: 'High', actual: '-', forecast: '-', previous: '-' },
-    { id: 5, event: 'GDP q/q', currency: 'USD', date: '2024-01-25', time: '13:30', impact: 'High', actual: '3.3%', forecast: '2.0%', previous: '4.9%' },
-    { id: 6, event: 'Unemployment Rate', currency: 'USD', date: '2024-02-02', time: '13:30', impact: 'High', actual: '3.7%', forecast: '3.8%', previous: '3.7%' },
-    { id: 7, event: 'CPI y/y', currency: 'EUR', date: '2024-02-01', time: '10:00', impact: 'High', actual: '2.8%', forecast: '2.7%', previous: '2.9%' },
-    { id: 8, event: 'Interest Rate Decision', currency: 'GBP', date: '2024-02-01', time: '12:00', impact: 'High', actual: '5.25%', forecast: '5.25%', previous: '5.25%' },
-    { id: 9, event: 'Trade Balance', currency: 'USD', date: '2024-02-07', time: '13:30', impact: 'Medium', actual: '-$62.2B', forecast: '-$61.5B', previous: '-$61.5B' },
-    { id: 10, event: 'Consumer Confidence', currency: 'USD', date: '2024-02-27', time: '10:00', impact: 'Medium', actual: '106.7', forecast: '115.0', previous: '114.8' },
-    { id: 11, event: 'PPI m/m', currency: 'USD', date: '2024-02-14', time: '13:30', impact: 'Medium', actual: '0.3%', forecast: '0.1%', previous: '-0.2%' },
-    { id: 12, event: 'Manufacturing PMI', currency: 'USD', date: '2024-02-01', time: '09:45', impact: 'Medium', actual: '50.3', forecast: '50.9', previous: '50.7' },
-    { id: 13, event: 'Building Permits m/m', currency: 'USD', date: '2024-02-16', time: '13:30', impact: 'Low', actual: '1.5M', forecast: '1.48M', previous: '1.49M' },
-    { id: 14, event: 'Initial Jobless Claims', currency: 'USD', date: '2024-02-08', time: '13:30', impact: 'Medium', actual: '218K', forecast: '220K', previous: '227K' },
-    { id: 15, event: 'CB Consumer Confidence', currency: 'EUR', date: '2024-02-27', time: '10:00', impact: 'Low', actual: '-15.5', forecast: '-14.5', previous: '-15.1' },
-  ]
+  // Economic calendar data - empty state (can be connected to real API later)
+  const [economicEvents, setEconomicEvents] = useState([])
 
   // Filter news events based on current date and selected filters
   const getFilteredNewsEvents = () => {
-    const dateStr = currentDate.toISOString().split('T')[0] // YYYY-MM-DD format
-    return sampleEconomicEvents.filter(event => {
+    return economicEvents.filter(event => {
       // Filter by date (show events within 7 days of current date)
       const eventDate = new Date(event.date)
       const daysDiff = Math.abs((eventDate - currentDate) / (1000 * 60 * 60 * 24))
@@ -179,7 +162,7 @@ const PhoenixBacktesterNew = () => {
   // Update news events when filters change
   useEffect(() => {
     setNewsEvents(getFilteredNewsEvents())
-  }, [currentDate, activeCurrency, selectedImpact])
+  }, [currentDate, activeCurrency, selectedImpact, economicEvents])
 
   // Drag handlers for replay bar
   useEffect(() => {

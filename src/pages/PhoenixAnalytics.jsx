@@ -392,12 +392,31 @@ const PhoenixAnalytics = () => {
   const calData2024 = ['2024', '6.12%', '4.49%', '8.79%', '14.57%', '2.26%', '2.49%', '14.41%', '5.32%', '7.08%', '5.77%', '7.93%', '12.49%', '91.72%']
   const calData2025 = ['2025', '5.96%', '8.26%', '4.77%', '8.75%', '8.00%', '11.73%', '1.22%', '---', '---', '---', '---', '---', '48.68%']
 
-  const sampleVals = {
-    '1-8': 1.2, '1-13': 2.3, '1-14': 0.7, '1-16': -0.1, '1-20': 0.9, '1-21': 2.1, '1-27': -0.5, '1-28': -0.2, '1-29': -0.3, '1-31': 1.3,
-    '2-3': -0.6, '2-4': 1, '2-5': 1.7, '2-6': -0.9, '2-10': 2.1, '2-11': 0.2, '2-12': 0, '2-17': 2.3, '2-18': -0.1, '2-19': -0.2, '2-25': 1.9, '2-26': -1, '2-27': 2.2, '2-28': -0.4,
-    '3-3': 1.2, '3-4': 2.4, '3-5': -0.8, '3-6': -1, '3-10': -0.4, '3-12': -0.1, '3-17': -0.5, '3-18': -0.2, '3-19': -0.9, '3-20': 0.4, '3-25': 0.8, '3-26': -0.2, '3-27': 1.7, '3-31': 2.2,
-    '4-1': 2.4, '4-2': -0.7, '4-3': 0.1, '4-7': 0.6, '4-8': -1, '4-9': 2, '4-10': 1, '4-14': 1.3, '4-15': -1, '4-16': 1.9, '4-22': 1.3, '4-23': -0.4, '4-24': -0.3, '4-28': -0.4, '4-29': -0.1, '4-30': 2
-  }
+  // Get real trade data from localStorage for calendar
+  const [tradeDataByDay, setTradeDataByDay] = useState({})
+
+  useEffect(() => {
+    const allTrades = JSON.parse(localStorage.getItem('phoenixTrades') || '[]');
+    const closedTrades = allTrades.filter(t => t.status === 'closed');
+    
+    // Group trades by date
+    const dataByDay = {};
+    closedTrades.forEach(trade => {
+      if (trade.date) {
+        const date = new Date(trade.date);
+        const month = date.getMonth() + 1;
+        const day = date.getDate();
+        const key = `${month}-${day}`;
+        
+        if (!dataByDay[key]) {
+          dataByDay[key] = 0;
+        }
+        dataByDay[key] += (trade.pnl || 0);
+      }
+    });
+    
+    setTradeDataByDay(dataByDay);
+  }, []);
 
   const miniMonths = [
     { name: 'Jan 2025', days: 31, offset: 2 },
@@ -417,7 +436,7 @@ const PhoenixAnalytics = () => {
     // Actual days
     for (let d = 1; d <= month.days; d++) {
       const key = (mi + 1) + '-' + d
-      const v = sampleVals[key]
+      const v = tradeDataByDay[key]
       
       days.push(
         <div
@@ -458,38 +477,31 @@ const PhoenixAnalytics = () => {
               <div className="ov-panel">
                 <div className="ov-header">
                   <div className="ov-title">Overview</div>
-                  <div className="ov-badge neutral">Sample Data</div>
                 </div>
-                <div className="ov-row"><div className="ov-key">Total Trades</div><div className="ov-val">258</div></div>
-                <div className="ov-row"><div className="ov-key">Missed Trades</div><div className="ov-val">17</div></div>
-                <div className="ov-row"><div className="ov-key">Average RR</div><div className="ov-val">1.55</div></div>
-                <div className="ov-row"><div className="ov-key">Avg Trade Duration</div><div className="ov-val">1h 6m</div></div>
-                <div className="ov-row"><div className="ov-key">Win Rate</div><div className="ov-val green">62.24%</div></div>
-                <div className="ov-row"><div className="ov-key">Average Profit/Loss</div><div className="ov-val green">$544.21</div></div>
+                <div className="ov-row"><div className="ov-key">Total Trades</div><div className="ov-val">{analyticsData.totalTrades}</div></div>
+                <div className="ov-row"><div className="ov-key">Win Rate</div><div className="ov-val">{analyticsData.winRate.toFixed(1)}%</div></div>
+                <div className="ov-row"><div className="ov-key">Total P&L</div><div className="ov-val">${analyticsData.totalPnL.toFixed(2)}</div></div>
+                <div className="ov-row"><div className="ov-key">Profit Factor</div><div className="ov-val">{analyticsData.profitFactor.toFixed(2)}</div></div>
+                <div className="ov-row"><div className="ov-key">Average Win</div><div className="ov-val green">${analyticsData.avgWin.toFixed(2)}</div></div>
+                <div className="ov-row"><div className="ov-key">Average Loss</div><div className="ov-val red">${analyticsData.avgLoss.toFixed(2)}</div></div>
               </div>
               <div className="ov-panel">
                 <div className="ov-header">
-                  <div className="ov-title">Winning Trades</div>
-                  <div className="ov-badge win">156 Wins</div>
+                  <div className="ov-title">Best/Worst Trades</div>
                 </div>
-                <div className="ov-row"><div className="ov-key">Total Winners</div><div className="ov-val green">156</div></div>
-                <div className="ov-row"><div className="ov-key">Avg Trade Duration</div><div className="ov-val">1h 26m</div></div>
-                <div className="ov-row"><div className="ov-key">Average Win Streak</div><div className="ov-val">2.78</div></div>
-                <div className="ov-row"><div className="ov-key">Max Win Streak</div><div className="ov-val green">13</div></div>
-                <div className="ov-row"><div className="ov-key">Average Win</div><div className="ov-val green">1.27%</div></div>
-                <div className="ov-row"><div className="ov-key">Best Win</div><div className="ov-val green">2.49%</div></div>
+                <div className="ov-row"><div className="ov-key">Best Trade</div><div className="ov-val green">${analyticsData.bestTrade.toFixed(2)}</div></div>
+                <div className="ov-row"><div className="ov-key">Worst Trade</div><div className="ov-val red">${analyticsData.worstTrade.toFixed(2)}</div></div>
               </div>
               <div className="ov-panel">
                 <div className="ov-header">
-                  <div className="ov-title">Losing Trades</div>
-                  <div className="ov-badge lose">102 Losses</div>
+                  <div className="ov-title">Trade Statistics</div>
                 </div>
-                <div className="ov-row"><div className="ov-key">Total Losers</div><div className="ov-val red">102</div></div>
-                <div className="ov-row"><div className="ov-key">Avg Trade Duration</div><div className="ov-val">34m</div></div>
-                <div className="ov-row"><div className="ov-key">Avg Loss Streak</div><div className="ov-val">1.65</div></div>
-                <div className="ov-row"><div className="ov-key">Max Loss Streak</div><div className="ov-val red">6</div></div>
-                <div className="ov-row"><div className="ov-key">Average Loss</div><div className="ov-val red">-0.57%</div></div>
-                <div className="ov-row"><div className="ov-key">Worst Loss</div><div className="ov-val red">-1.19%</div></div>
+                <div className="ov-row"><div className="ov-key">Total Losers</div><div className="ov-val red">{analyticsData.totalTrades - Math.round(analyticsData.totalTrades * (analyticsData.winRate / 100))}</div></div>
+                <div className="ov-row"><div className="ov-key">Avg Trade Duration</div><div className="ov-val">--</div></div>
+                <div className="ov-row"><div className="ov-key">Avg Loss Streak</div><div className="ov-val">--</div></div>
+                <div className="ov-row"><div className="ov-key">Max Loss Streak</div><div className="ov-val red">--</div></div>
+                <div className="ov-row"><div className="ov-key">Average Loss</div><div className="ov-val red">{analyticsData.avgLoss.toFixed(2)}%</div></div>
+                <div className="ov-row"><div className="ov-key">Worst Loss</div><div className="ov-val red">{analyticsData.worstTrade.toFixed(2)}%</div></div>
               </div>
             </div>
 
