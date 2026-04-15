@@ -48,7 +48,7 @@ const PhoenixBacktesterNew = () => {
     unrealizedPnL: 0.00
   })
 
-  // Load TradingView script
+  // Load TradingView advanced library script
   useEffect(() => {
     const script = document.createElement('script')
     script.src = 'https://s3.tradingview.com/tv.js'
@@ -57,12 +57,18 @@ const PhoenixBacktesterNew = () => {
 
     script.onload = () => {
       if (window.TradingView && chartRef.current) {
-        new window.TradingView.widget({
+        // Clean up existing widget if any
+        if (window.tvWidget) {
+          window.tvWidget.remove()
+        }
+
+        // Create new widget with UDF datafeed
+        window.tvWidget = new window.TradingView.widget({
           "width": "100%",
           "height": "100%",
-          "symbol": "XAUUSD",
-          "interval": "60",
-          "timezone": "Europe/London",
+          "symbol": "EUR/USD",
+          "interval": "15",
+          "timezone": "Etc/UTC",
           "theme": "dark",
           "style": "1",
           "locale": "en",
@@ -76,7 +82,17 @@ const PhoenixBacktesterNew = () => {
           "studies": [],
           "show_popup_button": true,
           "popup_width": "1000",
-          "popup_height": "650"
+          "popup_height": "650",
+          "datafeed": new window.Datafeeds.UDFCompatibleDatafeed('http://localhost:3001'),
+          "library_path": "/charting_library/",
+          "charts_storage_url": "https://saveload.tradingview.com",
+          "charts_storage_api_version": "1.1",
+          "client_id": "tradingview.com",
+          "user_id": "public_user_id",
+          "fullscreen": false,
+          "autosize": true,
+          "enabled_features": ["study_templates", "side_toolbar"],
+          "disabled_features": ["use_localstorage_for_settings"]
         })
       }
     }
