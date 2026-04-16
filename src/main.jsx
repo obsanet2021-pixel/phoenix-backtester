@@ -1,7 +1,7 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { BrowserRouter } from 'react-router-dom'
-import { onCLS, onFID, onFCP, onLCP, onTTFB } from 'web-vitals'
+import { onCLS, onINP, onFCP, onLCP, onTTFB } from 'web-vitals'
 import './index.css'
 import './styles/globals.css'
 import App from './App.jsx'
@@ -29,7 +29,7 @@ const logWebVitals = (metric) => {
 }
 
 onCLS(logWebVitals)
-onFID(logWebVitals)
+onINP(logWebVitals)
 onFCP(logWebVitals)
 onLCP(logWebVitals)
 onTTFB(logWebVitals)
