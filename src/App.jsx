@@ -1,4 +1,5 @@
 import { Routes, Route, Navigate } from 'react-router-dom'
+import { Analytics } from '@vercel/analytics/react'
 import ErrorBoundary from './components/ErrorBoundary'
 import PhoenixSidebar from './components/ui/PhoenixSidebar'
 import PhoenixJournal from './pages/PhoenixJournal'
@@ -176,6 +177,7 @@ function App() {
   return (
     <AuthProvider>
       <AppContent />
+      <Analytics />
     </AuthProvider>
   )
 }
