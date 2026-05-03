@@ -56,6 +56,17 @@ export const logInfo = (message, context = {}) => {
   console.log('[INFO]', infoData);
 };
 
+export const logEvent = (event, context = {}) => {
+  const eventData = {
+    timestamp: new Date().toISOString(),
+    event,
+    context,
+    environment: isDevelopment ? 'development' : 'production'
+  };
+
+  console.log('[EVENT]', eventData);
+};
+
 export const logPerformance = (metric, value, context = {}) => {
   const perfData = {
     timestamp: new Date().toISOString(),

@@ -1,90 +1,75 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { Chart } from 'chart.js/auto'
+import { useTrades } from '../context/TradesContext'
 
-const PhoenixDashboard = () => {
+export default function PhoenixDashboard() {
+  const { trades } = useTrades()
   const chartRef = useRef(null)
   const chartInstanceRef = useRef(null)
   const [chartTimeframe, setChartTimeframe] = useState('1W')
-  const [stats, setStats] = useState({
-    totalTrades: 0,
-    winRate: 0,
-    totalPnL: 0,
-    balance: 10000,
-    equity: 10000,
-    drawdown: 0
-  })
 
-  // Load data from localStorage and calculate stats
-  useEffect(() => {
-    const loadDashboardData = () => {
-      // Get trades from unified localStorage
-      const allTrades = JSON.parse(localStorage.getItem('phoenixTrades') || '[]');
-      
-      const closedTrades = allTrades.filter(t => t.status === 'closed');
-      const totalPnL = closedTrades.reduce((sum, t) => sum + (t.pnl || 0), 0);
-      const wins = closedTrades.filter(t => (t.pnl || 0) > 0).length;
-      const winRate = closedTrades.length > 0 ? (wins / closedTrades.length) * 100 : 0;
-      
-      // Calculate drawdown
-      let peak = 10000;
-      let maxDrawdown = 0;
-      let currentEquity = 10000;
-      
-      allTrades.forEach(trade => {
-        if (trade.pnl) {
-          currentEquity += trade.pnl;
-          if (currentEquity > peak) peak = currentEquity;
-          const drawdown = ((peak - currentEquity) / peak) * 100;
-          if (drawdown > maxDrawdown) maxDrawdown = drawdown;
-        }
-      });
+  const metrics = useMemo(() => {
+    const closedTrades = trades.filter((trade) => trade.status === 'closed')
+    const totalPnL = closedTrades.reduce((sum, trade) => sum + Number(trade.pnl || 0), 0)
+    const wins = closedTrades.filter((trade) => Number(trade.pnl || 0) > 0)
+    const losses = closedTrades.filter((trade) => Number(trade.pnl || 0) < 0)
+    const winRate = closedTrades.length ? (wins.length / closedTrades.length) * 100 : 0
+    const avgWin = wins.length ? wins.reduce((sum, trade) => sum + Number(trade.pnl || 0), 0) / wins.length : 0
+    const avgLoss = losses.length
+      ? Math.abs(losses.reduce((sum, trade) => sum + Number(trade.pnl || 0), 0) / losses.length)
+      : 0
 
-      setStats({
-        totalTrades: allTrades.length,
-        winRate,
-        totalPnL,
-        balance: 10000 + totalPnL,
-        equity: 10000 + totalPnL,
-        drawdown: maxDrawdown
-      });
-    };
+    let peak = 10000
+    let equity = 10000
+    let maxDrawdown = 0
 
-    loadDashboardData();
-    const interval = setInterval(loadDashboardData, 5000); // Update every 5 seconds
-    return () => clearInterval(interval);
-  }, []);
+    closedTrades.forEach((trade) => {
+      equity += Number(trade.pnl || 0)
+      peak = Math.max(peak, equity)
+      maxDrawdown = Math.max(maxDrawdown, ((peak - equity) / peak) * 100)
+    })
+
+    return {
+      totalTrades: trades.length,
+      closedTrades,
+      totalPnL,
+      winRate,
+      balance: 10000 + totalPnL,
+      avgWin,
+      avgLoss,
+      drawdown: maxDrawdown,
+    }
+  }, [trades])
 
   useEffect(() => {
-    if (chartRef.current && !chartInstanceRef.current) {
-      // Generate equity curve from localStorage data
-      const allTrades = JSON.parse(localStorage.getItem('phoenixTrades') || '[]').sort((a, b) => new Date(a.date) - new Date(b.date));
-      
-      let currentEquity = 10000;
-      const equityData = [10000];
-      const labels = ['Start'];
-      
-      allTrades.forEach((trade, index) => {
-        if (trade.pnl) {
-          currentEquity += trade.pnl;
-          equityData.push(currentEquity);
-          labels.push(`Trade ${index + 1}`);
-        }
-      });
-      
-      // Add more data points if needed
-      if (equityData.length < 10) {
-        const lastValue = equityData[equityData.length - 1];
-        for (let i = equityData.length; i < 10; i++) {
-          equityData.push(lastValue + (Math.random() - 0.5) * 50);
-          labels.push(`Day ${i}`);
-        }
-      }
+    if (!chartRef.current) {
+      return
+    }
 
-      chartInstanceRef.current = new Chart(chartRef.current, {
-        type: 'line',
-        data: {
-          labels,
-          datasets: [{
+    if (chartInstanceRef.current) {
+      chartInstanceRef.current.destroy()
+    }
+
+    const sortedTrades = [...metrics.closedTrades].sort(
+      (left, right) => new Date(left.timestamp) - new Date(right.timestamp),
+    )
+
+    let equity = 10000
+    const equityData = [equity]
+    const labels = ['Start']
+
+    sortedTrades.forEach((trade, index) => {
+      equity += Number(trade.pnl || 0)
+      equityData.push(equity)
+      labels.push(`Trade ${index + 1}`)
+    })
+
+    chartInstanceRef.current = new Chart(chartRef.current, {
+      type: 'line',
+      data: {
+        labels,
+        datasets: [
+          {
             data: equityData,
             borderColor: '#ff6b00',
             borderWidth: 2,
@@ -92,40 +77,29 @@ const PhoenixDashboard = () => {
             pointHoverRadius: 4,
             pointHoverBackgroundColor: '#ff6b00',
             fill: true,
-            backgroundColor: (ctx) => {
-              const g = ctx.chart.ctx.createLinearGradient(0, 0, 0, 200)
-              g.addColorStop(0, 'rgba(255,107,0,0.2)')
-              g.addColorStop(1, 'rgba(255,107,0,0)')
-              return g
+            backgroundColor: (context) => {
+              const gradient = context.chart.ctx.createLinearGradient(0, 0, 0, 200)
+              gradient.addColorStop(0, 'rgba(255,107,0,0.2)')
+              gradient.addColorStop(1, 'rgba(255,107,0,0)')
+              return gradient
             },
-            tension: 0.4
-          }]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: {
-            legend: { display: false },
-            tooltip: {
-              backgroundColor: '#1a1a1a',
-              borderColor: '#2a2a2a',
-              borderWidth: 1,
-              titleColor: '#888',
-              bodyColor: '#fff',
-              callbacks: { label: ctx => ' $' + ctx.parsed.y.toLocaleString() }
-            }
+            tension: 0.4,
           },
-          scales: {
-            x: { grid: { color: '#141414' }, ticks: { color: '#444', font: { size: 10 } } },
-            y: {
-              grid: { color: '#141414' },
-              ticks: { color: '#444', font: { size: 10 }, callback: v => '$' + v.toLocaleString() },
-              min: 9800
-            }
-          }
-        }
-      })
-    }
+        ],
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            callbacks: {
+              label: (context) => ` $${context.parsed.y.toLocaleString()}`,
+            },
+          },
+        },
+      },
+    })
 
     return () => {
       if (chartInstanceRef.current) {
@@ -133,109 +107,79 @@ const PhoenixDashboard = () => {
         chartInstanceRef.current = null
       }
     }
-  }, [])
+  }, [metrics.closedTrades])
 
-  useEffect(() => {
-    setTimeout(() => {
-      const progressFill = document.querySelector('.progress-fill')
-      const targetFill = document.querySelector('.target-fill')
-      if (progressFill) progressFill.style.width = '20%'
-      if (targetFill) targetFill.style.width = '20%'
-    }, 300)
-  }, [])
+  const recentTrades = trades.slice(0, 4)
 
   return (
     <div className="main">
       <div className="topbar">
         <div>
           <div className="page-title">Dashboard</div>
-          <div className="page-sub">$10k Phoenix Challenge · Evaluation Phase</div>
+          <div className="page-sub">$10k Phoenix Challenge | Evaluation Phase</div>
         </div>
         <div className="topbar-right">
-          <div className="streak-badge">{'\ud83d\udd25'} 3 day streak</div>
-          <button className="btn-outline" onClick={() => {
-            const trades = JSON.parse(localStorage.getItem('phoenixTrades') || '[]');
-            const dataStr = JSON.stringify(trades, null, 2);
-            const dataBlob = new Blob([dataStr], { type: 'application/json' });
-            const url = URL.createObjectURL(dataBlob);
-            const link = document.createElement('a');
-            link.href = url;
-            link.download = 'trades-export.json';
-            link.click();
-          }}>Export Report</button>
-          <button className="btn-primary" onClick={() => {
-            window.location.href = '/journal';
-          }}>+ New Trade</button>
+          <div className="streak-badge">Open {trades.filter((trade) => trade.status === 'open').length}</div>
         </div>
       </div>
 
       <div className="content">
-        {/* Challenge Banner */}
         <div className="challenge-banner">
           <div>
             <div className="challenge-label">Phoenix Challenge</div>
             <div className="challenge-title">$10,000 Evaluation Account</div>
           </div>
-          <div className="progress-wrap">
-            <div className="progress-label">
-              <span>Progress to target</span>
-              <span style={{ color: '#ff8c3a' }}>20%</span>
-            </div>
-            <div className="progress-bar">
-              <div className="progress-fill" style={{ width: '20%' }}></div>
-            </div>
-          </div>
           <div className="challenge-right">
             <div className="chal-stat">
-              <div className="chal-stat-val" style={{ color: '#22c55e' }}>$10,196</div>
+              <div className="chal-stat-val" style={{ color: '#22c55e' }}>
+                ${metrics.balance.toFixed(2)}
+              </div>
               <div className="chal-stat-label">Current Balance</div>
             </div>
             <div className="chal-stat">
-              <div className="chal-stat-val" style={{ color: '#fff' }}>$20,000</div>
-              <div className="chal-stat-label">Profit Target</div>
+              <div className="chal-stat-val" style={{ color: '#fff' }}>
+                {metrics.winRate.toFixed(1)}%
+              </div>
+              <div className="chal-stat-label">Win Rate</div>
             </div>
             <div className="chal-stat">
-              <div className="chal-stat-val" style={{ color: '#ef4444' }}>$9,200</div>
-              <div className="chal-stat-label">Drawdown Floor</div>
+              <div className="chal-stat-val" style={{ color: '#ef4444' }}>
+                {metrics.drawdown.toFixed(2)}%
+              </div>
+              <div className="chal-stat-label">Drawdown</div>
             </div>
           </div>
         </div>
 
-        {/* Stats Grid */}
         <div className="stats-grid">
           <div className="stat-card positive">
-            <div className="stat-icon green">{'\ud83d\udcb0'}</div>
-            <div className="stat-label">Account Balance</div>
-            <div className="stat-value white">$10,196</div>
-            <div className="stat-change up">{'\u2191'} +$196 today</div>
+            <div className="stat-label">Total PnL</div>
+            <div className="stat-value white">${metrics.totalPnL.toFixed(2)}</div>
+            <div className="stat-change up">{metrics.totalTrades} total trades</div>
           </div>
           <div className="stat-card positive">
-            <div className="stat-icon green">{'\ud83d\udcc8'}</div>
-            <div className="stat-label">Win Rate</div>
-            <div className="stat-value green">60.00%</div>
-            <div className="stat-change up">6W · 4L · 0BE</div>
+            <div className="stat-label">Average Win</div>
+            <div className="stat-value green">${metrics.avgWin.toFixed(2)}</div>
+            <div className="stat-change up">Closed trades only</div>
           </div>
           <div className="stat-card warning">
-            <div className="stat-icon orange">{'\u26a1'}</div>
-            <div className="stat-label">Max Drawdown</div>
-            <div className="stat-value white">2.1%</div>
-            <div className="stat-change neutral">Floor: $9,200</div>
+            <div className="stat-label">Average Loss</div>
+            <div className="stat-value white">${metrics.avgLoss.toFixed(2)}</div>
+            <div className="stat-change neutral">Risk control baseline</div>
           </div>
           <div className="stat-card info">
-            <div className="stat-icon blue">{'\u2696\ufe0f'}</div>
-            <div className="stat-label">Profit Factor</div>
-            <div className="stat-value white">1.80</div>
-            <div className="stat-change up">Avg $200 / trade</div>
+            <div className="stat-label">Open Trades</div>
+            <div className="stat-value white">{trades.filter((trade) => trade.status === 'open').length}</div>
+            <div className="stat-change up">Shared provider state</div>
           </div>
         </div>
 
-        {/* Chart + Rules */}
         <div className="chart-section">
           <div className="chart-card">
             <div className="chart-header">
               <div className="chart-title">Equity Curve</div>
               <div className="chart-tabs">
-                {['1D', '1W', '1M', 'All'].map(timeframe => (
+                {['1D', '1W', '1M', 'All'].map((timeframe) => (
                   <div
                     key={timeframe}
                     className={`chart-tab ${chartTimeframe === timeframe ? 'active' : ''}`}
@@ -246,64 +190,43 @@ const PhoenixDashboard = () => {
                 ))}
               </div>
             </div>
-            <div style={{ position: 'relative', height: '200px' }}>
-              <canvas ref={chartRef}></canvas>
+            <div style={{ position: 'relative', height: '220px' }}>
+              <canvas ref={chartRef} />
             </div>
           </div>
           <div className="rules-card">
-            <div className="rules-title">
-              Rules Monitor
-              <span className="rules-badge">LIVE</span>
-            </div>
+            <div className="rules-title">Rules Monitor</div>
             <div className="rule-item">
               <div className="rule-top">
                 <div className="rule-name">Daily Loss Limit</div>
-                <div className="rule-val" style={{ color: '#22c55e' }}>-$34 / $500</div>
+                <div className="rule-val" style={{ color: '#22c55e' }}>
+                  ${metrics.avgLoss.toFixed(2)} avg loss
+                </div>
               </div>
-              <div className="rule-bar">
-                <div className="rule-fill safe" style={{ width: '6.8%' }}></div>
-              </div>
-              <div className="rule-status">6.8% used · Safe zone</div>
             </div>
             <div className="rule-item">
               <div className="rule-top">
                 <div className="rule-name">Max Drawdown</div>
-                <div className="rule-val" style={{ color: '#ff8c00' }}>-$210 / $800</div>
+                <div className="rule-val" style={{ color: '#ff8c00' }}>
+                  {metrics.drawdown.toFixed(2)}%
+                </div>
               </div>
-              <div className="rule-bar">
-                <div className="rule-fill warn" style={{ width: '26%' }}></div>
-              </div>
-              <div className="rule-status">26% used · Monitor closely</div>
             </div>
             <div className="rule-item">
               <div className="rule-top">
-                <div className="rule-name">Consecutive Losses</div>
-                <div className="rule-val" style={{ color: '#22c55e' }}>2 / 5 max</div>
-              </div>
-              <div className="rule-bar">
-                <div className="rule-fill safe" style={{ width: '40%' }}></div>
-              </div>
-              <div className="rule-status">40% used · Under control</div>
-            </div>
-            <div className="target-box">
-              <div className="target-label">{'\ud83c\udfaf'} Profit Target</div>
-              <div className="target-bar">
-                <div className="target-fill" style={{ width: '20%' }}></div>
-              </div>
-              <div className="target-row">
-                <div className="target-current">$10,196 current</div>
-                <div className="target-goal">$20,000 goal</div>
+                <div className="rule-name">Profit Progress</div>
+                <div className="rule-val" style={{ color: '#22c55e' }}>
+                  ${metrics.totalPnL.toFixed(2)}
+                </div>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Bottom Grid */}
         <div className="bottom-grid">
           <div className="trades-card">
             <div className="chart-header">
               <div className="chart-title">Recent Trades</div>
-              <div style={{ fontSize: '11px', color: '#ff8c3a', cursor: 'pointer' }}>View all {'\u2192'}</div>
             </div>
             <div className="table-wrap">
               <table>
@@ -312,101 +235,29 @@ const PhoenixDashboard = () => {
                     <th>Pair</th>
                     <th>Type</th>
                     <th>Date</th>
-                    <th>P&amp;L</th>
+                    <th>PnL</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
-                    <td>XAU/USD</td>
-                    <td><span className="badge buy">BUY</span></td>
-                    <td style={{ color: '#555' }}>Jan 2</td>
-                    <td className="pnl-pos">+$126.00</td>
-                  </tr>
-                  <tr>
-                    <td>XAU/USD</td>
-                    <td><span className="badge sell">SELL</span></td>
-                    <td style={{ color: '#555' }}>Jan 5</td>
-                    <td className="pnl-neg">-$50.00</td>
-                  </tr>
-                  <tr>
-                    <td>XAU/USD</td>
-                    <td><span className="badge buy">BUY</span></td>
-                    <td style={{ color: '#555' }}>Jan 5</td>
-                    <td className="pnl-pos">+$160.92</td>
-                  </tr>
-                  <tr>
-                    <td>XAU/USD</td>
-                    <td><span className="badge buy">BUY</span></td>
-                    <td style={{ color: '#555' }}>Jan 2</td>
-                    <td className="pnl-neg">-$40.00</td>
-                  </tr>
+                  {recentTrades.map((trade) => (
+                    <tr key={trade.id}>
+                      <td>{trade.pair}</td>
+                      <td>{trade.type}</td>
+                      <td style={{ color: '#555' }}>{trade.date}</td>
+                      <td className={Number(trade.pnl) >= 0 ? 'pnl-pos' : 'pnl-neg'}>
+                        {Number(trade.pnl).toFixed(2)}
+                      </td>
+                    </tr>
+                  ))}
+                  {!recentTrades.length && (
+                    <tr>
+                      <td colSpan="4" style={{ color: '#777' }}>
+                        No trades saved yet.
+                      </td>
+                    </tr>
+                  )}
                 </tbody>
               </table>
-            </div>
-          </div>
-
-          <div className="session-card">
-            <div className="chart-header">
-              <div className="chart-title">Trade Heatmap</div>
-              <div style={{ fontSize: '11px', color: '#555' }}>Jan 2026</div>
-            </div>
-            <div className="session-labels">
-              <div className="session-col-label">M</div>
-              <div className="session-col-label">T</div>
-              <div className="session-col-label">W</div>
-              <div className="session-col-label">T</div>
-              <div className="session-col-label">F</div>
-              <div className="session-col-label">S</div>
-              <div className="session-col-label">S</div>
-            </div>
-            <div className="session-grid">
-              <div className="day-cell day-empty"></div>
-              <div className="day-cell day-empty"></div>
-              <div className="day-cell day-empty"></div>
-              <div className="day-cell day-empty"></div>
-              <div className="day-cell day-empty"></div>
-              <div className="day-cell" style={{ background: '#0f0f0f', borderRadius: '5px' }}></div>
-              <div className="day-cell" style={{ background: '#0f0f0f', borderRadius: '5px' }}></div>
-              <div className="day-cell day-win" style={{ background: 'rgba(34, 197, 94, 0.18)', border: '1px solid rgba(34, 197, 94, 0.25)' }}>+$126</div>
-              <div className="day-cell day-empty"></div>
-              <div className="day-cell day-empty"></div>
-              <div className="day-cell day-empty"></div>
-              <div className="day-cell day-empty"></div>
-              <div className="day-cell" style={{ background: '#0f0f0f', borderRadius: '5px' }}></div>
-              <div className="day-cell" style={{ background: '#0f0f0f', borderRadius: '5px' }}></div>
-              <div className="day-cell day-empty"></div>
-              <div className="day-cell day-empty"></div>
-              <div className="day-cell day-empty"></div>
-              <div className="day-cell day-empty"></div>
-              <div className="day-cell day-empty"></div>
-              <div className="day-cell" style={{ background: '#0f0f0f', borderRadius: '5px' }}></div>
-              <div className="day-cell" style={{ background: '#0f0f0f', borderRadius: '5px' }}></div>
-              <div className="day-cell day-empty"></div>
-              <div className="day-cell day-empty"></div>
-              <div className="day-cell day-empty"></div>
-              <div className="day-cell day-empty"></div>
-              <div className="day-cell day-empty"></div>
-              <div className="day-cell" style={{ background: '#0f0f0f', borderRadius: '5px' }}></div>
-              <div className="day-cell" style={{ background: '#0f0f0f', borderRadius: '5px' }}></div>
-              <div className="day-cell day-loss" style={{ background: 'rgba(239, 68, 68, 0.18)', border: '1px solid rgba(239, 68, 68, 0.25)' }}>-$90</div>
-              <div className="day-cell day-win" style={{ background: 'rgba(34, 197, 94, 0.18)', border: '1px solid rgba(34, 197, 94, 0.25)' }}>+$160</div>
-              <div className="day-cell day-empty"></div>
-              <div className="day-cell day-empty"></div>
-              <div className="day-cell day-empty"></div>
-              <div className="day-cell" style={{ background: '#0f0f0f', borderRadius: '5px' }}></div>
-              <div className="day-cell" style={{ background: '#0f0f0f', borderRadius: '5px' }}></div>
-              <div className="day-cell day-empty"></div>
-              <div className="day-cell day-empty"></div>
-              <div className="day-cell day-empty"></div>
-              <div className="day-cell day-empty"></div>
-              <div className="day-cell day-empty"></div>
-              <div className="day-cell" style={{ background: '#0f0f0f', borderRadius: '5px' }}></div>
-              <div className="day-cell" style={{ background: '#0f0f0f', borderRadius: '5px' }}></div>
-            </div>
-            <div style={{ display: 'flex', gap: '12px', marginTop: '12px', fontSize: '10px', color: '#555' }}>
-              <span><span style={{ display: 'inline-block', width: '8px', height: '8px', borderRadius: '2px', background: 'rgba(34,197,94,0.3)', marginRight: '4px' }}></span>Win</span>
-              <span><span style={{ display: 'inline-block', width: '8px', height: '8px', borderRadius: '2px', background: 'rgba(239,68,68,0.3)', marginRight: '4px' }}></span>Loss</span>
-              <span><span style={{ display: 'inline-block', width: '8px', height: '8px', borderRadius: '2px', background: '#161616', marginRight: '4px' }}></span>No trade</span>
             </div>
           </div>
         </div>
@@ -414,5 +265,3 @@ const PhoenixDashboard = () => {
     </div>
   )
 }
-
-export default PhoenixDashboard

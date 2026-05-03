@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Chart } from 'chart.js/auto'
 
@@ -7,19 +7,6 @@ const PhoenixBacktest = ({ setActivePage }) => {
   const [sessions, setSessions] = useState([])
   const [selectedSession, setSelectedSession] = useState(null)
   const [showNewSession, setShowNewSession] = useState(false)
-
-  // Load sessions from localStorage
-  useEffect(() => {
-    const savedSessions = localStorage.getItem('phoenixBacktestSessions');
-    if (savedSessions) {
-      setSessions(JSON.parse(savedSessions));
-    }
-  }, []);
-
-  // Save sessions to localStorage
-  useEffect(() => {
-    localStorage.setItem('phoenixBacktestSessions', JSON.stringify(sessions));
-  }, [sessions]);
 
   const ORANGE = '#ff6b00'
   const TEAL = '#00c4b4'

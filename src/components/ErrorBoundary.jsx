@@ -1,4 +1,5 @@
 import React from 'react'
+import { logError } from '../lib/errorLogger'
 
 class ErrorBoundary extends React.Component {
   constructor(props) {
@@ -15,7 +16,7 @@ class ErrorBoundary extends React.Component {
       error: error,
       errorInfo: errorInfo
     })
-    console.error('Error caught by boundary:', error, errorInfo)
+    logError(error, { componentStack: errorInfo?.componentStack, boundary: 'ErrorBoundary' })
   }
 
   render() {
@@ -34,10 +35,13 @@ class ErrorBoundary extends React.Component {
               </p>
             </div>
             <button
-              onClick={() => this.setState({ hasError: false, error: null, errorInfo: null })}
+              onClick={() => {
+                this.setState({ hasError: false, error: null, errorInfo: null })
+                window.location.reload()
+              }}
               className="btn-luxury bg-emerald/20 border-emerald/50 text-emerald-glow hover:bg-emerald/30 hover:border-emerald/70"
             >
-              Try Again
+              Reload Page
             </button>
           </div>
         </div>

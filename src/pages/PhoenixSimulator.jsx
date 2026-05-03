@@ -24,26 +24,6 @@ const PhoenixSimulator = () => {
   const [selectedScenario, setSelectedScenario] = useState(null)
   const [simulationHistory, setSimulationHistory] = useState([])
 
-  // Load simulation data from localStorage
-  useEffect(() => {
-    const savedData = localStorage.getItem('phoenixSimulatorData');
-    if (savedData) {
-      const data = JSON.parse(savedData);
-      setSimulationData(data.simulationData || simulationData);
-      setSimulationHistory(data.simulationHistory || []);
-    }
-  }, []);
-
-  // Save simulation data to localStorage
-  useEffect(() => {
-    const data = {
-      simulationData,
-      simulationHistory,
-      timestamp: new Date().toISOString()
-    };
-    localStorage.setItem('phoenixSimulatorData', JSON.stringify(data));
-  }, [simulationData, simulationHistory]);
-
   const chartRefs = {
     equityChart: useRef(null),
     pnlChart: useRef(null),
@@ -438,11 +418,6 @@ const PhoenixSimulator = () => {
               <div className="trades-actions">
                 <button className="btn-outline" onClick={() => {
                   setSimulationHistory([]);
-                  localStorage.setItem('phoenixSimulatorData', JSON.stringify({
-                    simulationData,
-                    simulationHistory: [],
-                    timestamp: new Date().toISOString()
-                  }));
                 }}>Clear History</button>
                 <button className="btn-outline" onClick={() => {
                   const dataStr = JSON.stringify(simulationHistory, null, 2);

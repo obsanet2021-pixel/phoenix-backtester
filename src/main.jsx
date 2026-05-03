@@ -5,16 +5,16 @@ import { onCLS, onINP, onFCP, onLCP, onTTFB } from 'web-vitals'
 import './index.css'
 import './styles/globals.css'
 import App from './App.jsx'
+import ErrorBoundary from './components/ErrorBoundary'
+import { logPerformance } from './lib/errorLogger'
 
 // Web Vitals monitoring
 const logWebVitals = (metric) => {
-  console.log('[Web Vitals]', {
-    name: metric.name,
-    value: metric.value,
+  logPerformance(metric.name, metric.value, {
     rating: metric.rating,
     delta: metric.delta,
     id: metric.id,
-    navigationType: metric.navigationType
+    navigationType: metric.navigationType,
   })
   
   // Send to analytics service (optional - uncomment when ready)
@@ -36,8 +36,10 @@ onTTFB(logWebVitals)
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
+    <ErrorBoundary>
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    </ErrorBoundary>
   </StrictMode>,
 )

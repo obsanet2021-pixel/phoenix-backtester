@@ -92,20 +92,6 @@ const PhoenixChallenge = () => {
     }
   ]
 
-  // Load user progress from localStorage
-  useEffect(() => {
-    const savedProgress = localStorage.getItem('phoenixChallengeProgress');
-    if (savedProgress) {
-      const data = JSON.parse(savedProgress);
-      setUserProgress(data);
-    }
-  }, []);
-
-  // Save progress to localStorage
-  useEffect(() => {
-    localStorage.setItem('phoenixChallengeProgress', JSON.stringify(userProgress));
-  }, [userProgress]);
-
   const startChallenge = (challenge) => {
     if (challenge.status === 'locked') {
       alert('This challenge is locked! Complete previous challenges first.');

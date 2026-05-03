@@ -1,16 +1,8 @@
-import { Routes, Route, Navigate } from 'react-router-dom'
+import { Suspense, lazy } from 'react'
+import { Navigate, Route, Routes } from 'react-router-dom'
 import ErrorBoundary from './components/ErrorBoundary'
 import PhoenixSidebar from './components/ui/PhoenixSidebar'
-import PhoenixJournal from './pages/PhoenixJournal'
-import PhoenixDashboard from './pages/PhoenixDashboard'
-import PhoenixAnalytics from './pages/PhoenixAnalytics'
-import PhoenixReports from './pages/PhoenixReports'
-import PhoenixBacktest from './pages/PhoenixBacktest'
-import PhoenixTrades from './pages/PhoenixTrades'
-import PhoenixSimulator from './pages/PhoenixSimulator'
-import PhoenixChallenge from './pages/PhoenixChallenge'
-import PhoenixChart from './pages/PhoenixChart'
-import PhoenixBacktester from './components/PhoenixBacktesterNew'
+import PageLoader from './components/ui/PageLoader'
 import Welcome from './pages/Welcome'
 import Login from './pages/Login'
 import PrivacyPolicy from './pages/PrivacyPolicy'
@@ -18,156 +10,76 @@ import TermsOfService from './pages/TermsOfService'
 import RiskDisclaimer from './pages/RiskDisclaimer'
 import Contact from './pages/Contact'
 import { AuthProvider, useAuth } from './context/AuthContext'
+import { TradesProvider } from './context/TradesContext'
 
-function ProtectedRoute({ children }) {
-  const { isAuthenticated } = useAuth()
-  if (!isAuthenticated) {
-    return <Navigate to="/login" />
+const PhoenixJournal = lazy(() => import('./pages/PhoenixJournal'))
+const PhoenixDashboard = lazy(() => import('./pages/PhoenixDashboard'))
+const PhoenixAnalytics = lazy(() => import('./pages/PhoenixAnalytics'))
+const PhoenixReports = lazy(() => import('./pages/PhoenixReports'))
+const PhoenixBacktest = lazy(() => import('./pages/PhoenixBacktest'))
+const PhoenixTrades = lazy(() => import('./pages/PhoenixTrades'))
+const PhoenixSimulator = lazy(() => import('./pages/PhoenixSimulator'))
+const PhoenixChallenge = lazy(() => import('./pages/PhoenixChallenge'))
+const PhoenixChart = lazy(() => import('./pages/PhoenixChart'))
+const PhoenixBacktester = lazy(() => import('./components/PhoenixBacktesterNew'))
+
+export function ProtectedRoute({ children }) {
+  const { isAuthenticated, loading, isConfigured } = useAuth()
+
+  if (loading) {
+    return <PageLoader title="Loading session..." />
   }
+
+  if (isConfigured && !isAuthenticated) {
+    return <Navigate to="/login" replace />
+  }
+
   return children
+}
+
+function SuspendedPage({ title, children }) {
+  return (
+    <Suspense fallback={<PageLoader title={title} />}>
+      {children}
+    </Suspense>
+  )
+}
+
+function ProtectedLayout({ title, children }) {
+  return (
+    <ProtectedRoute>
+      <div className="app">
+        <PhoenixSidebar />
+        <div className="main">
+          <ErrorBoundary>
+            <SuspendedPage title={title}>{children}</SuspendedPage>
+          </ErrorBoundary>
+        </div>
+      </div>
+    </ProtectedRoute>
+  )
 }
 
 function AppContent() {
   return (
     <Routes>
-      {/* Welcome landing page */}
       <Route path="/" element={<Welcome />} />
-      
-      {/* Login page */}
       <Route path="/login" element={<Login />} />
-      
-      {/* Privacy Policy */}
       <Route path="/privacy" element={<PrivacyPolicy />} />
-      
-      {/* Terms of Service */}
       <Route path="/terms" element={<TermsOfService />} />
-      
-      {/* Risk Disclaimer */}
       <Route path="/disclaimer" element={<RiskDisclaimer />} />
-      
-      {/* Contact */}
       <Route path="/contact" element={<Contact />} />
-      
-      {/* Dashboard routes with sidebar */}
-      <Route path="/dashboard" element={
-        <ProtectedRoute>
-          <div className="app">
-            <PhoenixSidebar />
-            <div className="main">
-              <ErrorBoundary>
-                <PhoenixDashboard />
-              </ErrorBoundary>
-            </div>
-          </div>
-        </ProtectedRoute>
-      } />
-      
-      <Route path="/journal" element={
-        <ProtectedRoute>
-          <div className="app">
-            <PhoenixSidebar />
-            <div className="main">
-              <ErrorBoundary>
-                <PhoenixJournal />
-              </ErrorBoundary>
-            </div>
-          </div>
-        </ProtectedRoute>
-      } />
-      
-      <Route path="/analytics" element={
-        <ProtectedRoute>
-          <div className="app">
-            <PhoenixSidebar />
-            <div className="main">
-              <ErrorBoundary>
-                <PhoenixAnalytics />
-              </ErrorBoundary>
-            </div>
-          </div>
-        </ProtectedRoute>
-      } />
-      
-      <Route path="/reports" element={
-        <ProtectedRoute>
-          <div className="app">
-            <PhoenixSidebar />
-            <div className="main">
-              <ErrorBoundary>
-                <PhoenixReports />
-              </ErrorBoundary>
-            </div>
-          </div>
-        </ProtectedRoute>
-      } />
-      
-      <Route path="/trades" element={
-        <ProtectedRoute>
-          <div className="app">
-            <PhoenixSidebar />
-            <div className="main">
-              <ErrorBoundary>
-                <PhoenixTrades />
-              </ErrorBoundary>
-            </div>
-          </div>
-        </ProtectedRoute>
-      } />
-      
-      <Route path="/backtest" element={
-        <ProtectedRoute>
-          <div className="app">
-            <PhoenixSidebar />
-            <div className="main">
-              <ErrorBoundary>
-                <PhoenixBacktest />
-              </ErrorBoundary>
-            </div>
-          </div>
-        </ProtectedRoute>
-      } />
-      
-      <Route path="/simulator" element={
-        <ProtectedRoute>
-          <div className="app">
-            <PhoenixSidebar />
-            <div className="main">
-              <ErrorBoundary>
-                <PhoenixSimulator />
-              </ErrorBoundary>
-            </div>
-          </div>
-        </ProtectedRoute>
-      } />
-      
-      <Route path="/challenge" element={
-        <ProtectedRoute>
-          <div className="app">
-            <PhoenixSidebar />
-            <div className="main">
-              <ErrorBoundary>
-                <PhoenixChallenge />
-              </ErrorBoundary>
-            </div>
-          </div>
-        </ProtectedRoute>
-      } />
-      
-      <Route path="/chart" element={
-        <ProtectedRoute>
-          <div className="app">
-            <PhoenixSidebar />
-            <div className="main">
-              <ErrorBoundary>
-                <PhoenixChart />
-              </ErrorBoundary>
-            </div>
-          </div>
-        </ProtectedRoute>
-      } />
-      
-      {/* Phoenix Backtester standalone route */}
-      <Route path="/phoenix-backtester" element={<PhoenixBacktester />} />
+
+      <Route path="/dashboard" element={<ProtectedLayout title="Loading dashboard..."><PhoenixDashboard /></ProtectedLayout>} />
+      <Route path="/journal" element={<ProtectedLayout title="Loading journal..."><PhoenixJournal /></ProtectedLayout>} />
+      <Route path="/analytics" element={<ProtectedLayout title="Loading analytics..."><PhoenixAnalytics /></ProtectedLayout>} />
+      <Route path="/reports" element={<ProtectedLayout title="Loading reports..."><PhoenixReports /></ProtectedLayout>} />
+      <Route path="/trades" element={<ProtectedLayout title="Loading trades..."><PhoenixTrades /></ProtectedLayout>} />
+      <Route path="/backtest" element={<ProtectedLayout title="Loading backtests..."><PhoenixBacktest /></ProtectedLayout>} />
+      <Route path="/simulator" element={<ProtectedLayout title="Loading simulator..."><PhoenixSimulator /></ProtectedLayout>} />
+      <Route path="/challenge" element={<ProtectedLayout title="Loading challenge..."><PhoenixChallenge /></ProtectedLayout>} />
+      <Route path="/chart" element={<ProtectedLayout title="Loading chart..."><PhoenixChart /></ProtectedLayout>} />
+      <Route path="/phoenix-backtester" element={<ProtectedRoute><SuspendedPage title="Loading backtester..."><PhoenixBacktester /></SuspendedPage></ProtectedRoute>} />
     </Routes>
   )
 }
@@ -175,7 +87,9 @@ function AppContent() {
 function App() {
   return (
     <AuthProvider>
-      <AppContent />
+      <TradesProvider>
+        <AppContent />
+      </TradesProvider>
     </AuthProvider>
   )
 }
